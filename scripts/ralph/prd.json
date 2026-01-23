@@ -14,8 +14,7 @@
         "Export both types from the types barrel file",
         "npm run typecheck passes with no errors"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-002",
@@ -30,8 +29,7 @@
         "All functions are typed and exported",
         "npm run typecheck passes"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-003",
@@ -46,8 +44,7 @@
         "npm run typecheck passes",
         "Verify component renders correctly in browser"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-004",
@@ -62,8 +59,7 @@
         "npm run typecheck passes",
         "Verify in browser: can change priority selection"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-005",
@@ -77,8 +73,7 @@
         "npm run typecheck passes",
         "Verify in browser: badges appear on task cards"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-006",
@@ -92,8 +87,7 @@
         "npm run typecheck passes",
         "Verify in browser: can create task with priority"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-007",
@@ -106,8 +100,7 @@
         "Active filter is visually highlighted",
         "npm run typecheck passes"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-008",
@@ -122,8 +115,7 @@
         "npm run typecheck passes",
         "Verify in browser: filtering works correctly"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-009",
@@ -136,8 +128,7 @@
         "Test sortByPriority sorts correctly (high first, low last)",
         "All tests pass: npm run test"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     },
     {
       "id": "US-010",
@@ -149,8 +140,7 @@
         "Include usage examples",
         "Document the utility functions"
       ],
-      "passes": false,
-      "notes": ""
+      "passes": false
     }
   ]
 }
