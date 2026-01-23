@@ -192,7 +192,7 @@
         "Create src/components/TimeDisplay.test.tsx with tests: formats 90min as 1hr 30m, 45min as 45m, 120min as 2hr, 0/undefined as --, variant styles apply",
         "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify time displays formatted correctly (1hr 30m, 45m, 2hr), consumed variant shows purple color, close browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-013",

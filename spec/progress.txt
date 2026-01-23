@@ -186,3 +186,20 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (16/16 tests)
 
+## 2026-01-23 17:43 - US-012
+- Created TimeDisplay component in src/components/TimeDisplay.tsx
+- Props: minutes (number | undefined), variant ('default' | 'consumed')
+- Formats time as compact display: 1hr 30m, 45m, 2hr, -- for zero/undefined
+- Default variant: text-gray-600, consumed variant: text-purple-600 font-medium
+- text-sm tabular-nums for consistent spacing
+- Created comprehensive tests in src/components/TimeDisplay.test.tsx
+- Tests verify formatting for 90min, 45min, 120min, 0, undefined
+- Tests verify variant styles apply correctly
+- Updated App.tsx with TimeDisplay test section showing all formats
+- Exported from src/components/index.ts
+- Files changed: src/components/TimeDisplay.tsx, src/components/TimeDisplay.test.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: formatTime helper function encapsulated within component
+- Pattern: variant styles use Record type for type-safe mapping
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
