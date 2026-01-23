@@ -1,0 +1,18 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  // Safelist for dynamic priority colors (Ralph will use these)
+  safelist: [
+    'bg-red-100', 'bg-red-500', 'text-red-700', 'border-red-300',
+    'bg-yellow-100', 'bg-yellow-500', 'text-yellow-700', 'border-yellow-300',
+    'bg-gray-100', 'bg-gray-500', 'text-gray-700', 'border-gray-300',
+    'ring-red-500', 'ring-yellow-500', 'ring-gray-500',
+  ],
+}

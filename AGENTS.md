@@ -1,0 +1,169 @@
+# AGENTS.md - Codebase Conventions
+
+This file documents patterns and conventions for AI coding agents (and human developers) working in this codebase.
+
+## Project Overview
+
+A simple task management application built with:
+- **Vite** - Build tool and dev server
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Utility-first styling
+- **Vitest** - Testing framework
+
+## Directory Structure
+
+```
+src/
+├── components/     # React components
+│   ├── index.ts    # Barrel exports
+│   └── *.tsx       # Component files
+├── types/          # TypeScript type definitions
+│   └── index.ts    # All types exported here
+├── utils/          # Utility functions
+│   └── *.ts        # Pure functions, helpers
+├── test/           # Test setup
+│   └── setup.ts    # Vitest configuration
+├── App.tsx         # Root component
+├── main.tsx        # Entry point
+└── index.css       # Global styles + Tailwind
+
+scripts/ralph/      # Ralph loop configuration
+├── ralph.sh        # Main loop script
+├── ralph-once.sh   # Single iteration script
+├── ralph-status.sh # Status checker
+├── PROMPT.md       # AI agent instructions
+├── prd.json        # Product requirements
+└── progress.txt    # Progress tracking
+```
+
+## Code Conventions
+
+### TypeScript
+
+- **Explicit types:** Always type function parameters and return values
+- **No `any`:** Use `unknown` if type is truly unknown, then narrow
+- **Interfaces over types:** Prefer `interface` for object shapes
+- **Path aliases:** Use `@/` to import from `src/`
+
+```typescript
+// ✅ Good
+import type { Task } from '@/types'
+
+function getTask(id: string): Task | undefined {
+  // ...
+}
+
+// ❌ Bad
+function getTask(id): any {
+  // ...
+}
+```
+
+### React Components
+
+- **Functional components only:** No class components
+- **Props interface:** Define props with explicit interface
+- **Destructure props:** In function signature
+- **Export named:** Use named exports, not default (except App.tsx)
+
+```typescript
+// ✅ Good
+interface ButtonProps {
+  label: string
+  onClick: () => void
+  disabled?: boolean
+}
+
+export function Button({ label, onClick, disabled = false }: ButtonProps) {
+  return (
+    <button onClick={onClick} disabled={disabled}>
+      {label}
+    </button>
+  )
+}
+```
+
+### Styling with Tailwind
+
+- **Utility classes:** Prefer Tailwind utilities over custom CSS
+- **Component classes:** Use `@layer components` in `index.css` for reusable patterns
+- **Dynamic classes:** Use template literals, ensure classes are in safelist
+- **Consistent spacing:** Use Tailwind's spacing scale (4, 8, 12, 16...)
+
+```typescript
+// ✅ Good - explicit classes
+<div className="bg-red-100 text-red-700">High priority</div>
+
+// ❌ Bad - dynamic class construction (won't be in CSS bundle)
+<div className={`bg-${color}-100`}>...</div>
+```
+
+### File Naming
+
+- **Components:** `PascalCase.tsx` (e.g., `TaskCard.tsx`)
+- **Utilities:** `camelCase.ts` (e.g., `priority.ts`)
+- **Tests:** `*.test.ts` or `*.test.tsx`
+- **Types:** Defined in `types/index.ts`
+
+### Testing
+
+- **Test files:** Co-locate with source or in `__tests__/`
+- **Naming:** `describe` → component/function name, `it` → behavior
+- **React Testing Library:** For component tests
+
+```typescript
+// src/utils/priority.test.ts
+import { describe, it, expect } from 'vitest'
+import { getPriorityLabel } from './priority'
+
+describe('getPriorityLabel', () => {
+  it('returns "High" for high priority', () => {
+    expect(getPriorityLabel('high')).toBe('High')
+  })
+})
+```
+
+## Common Tasks
+
+### Adding a new component
+
+1. Create `src/components/ComponentName.tsx`
+2. Define props interface
+3. Export from `src/components/index.ts`
+4. Import using `@/components`
+
+### Adding a new type
+
+1. Add to `src/types/index.ts`
+2. Export from the same file
+3. Import using `import type { TypeName } from '@/types'`
+
+### Running quality checks
+
+```bash
+npm run typecheck  # TypeScript errors
+npm run lint       # ESLint issues
+npm run test       # Run tests
+```
+
+## Known Gotchas
+
+1. **Tailwind dynamic classes:** Must be in `safelist` in `tailwind.config.js`
+2. **Path aliases:** `@/` only works in `src/`, not in config files
+3. **Vitest globals:** `describe`, `it`, `expect` are global (no import needed)
+
+## Current Feature Work
+
+Ralph is implementing a **Priority System** with these components:
+- `Priority` type (high | medium | low)
+- `PriorityBadge` - Visual indicator
+- `PrioritySelect` - Dropdown for selection
+- `PriorityFilter` - Filter tasks by priority
+- Utility functions in `src/utils/priority.ts`
+
+See `scripts/ralph/prd.json` for detailed requirements.
+
+---
+
+*This file is automatically read by AI coding agents. Update it when you discover new patterns or gotchas.*
