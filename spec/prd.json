@@ -56,7 +56,7 @@
         "npm run typecheck passes",
         "Create src/hooks/useTasks.test.ts with tests for add/delete/toggle"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",

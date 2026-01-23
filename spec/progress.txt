@@ -73,3 +73,17 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (8/8 tests)
 
+## 2026-01-23 16:19 - US-004
+- Created useTasks hook in src/hooks/useTasks.tsx
+- Returns tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete
+- Uses useLiveQuery from dexie-react-hooks for reactive task updates
+- addTask creates tasks with auto timestamps and default priority of medium
+- deleteTask and toggleComplete show toast notifications with Undo button (5s duration)
+- Undo functionality restores deleted tasks or reverts completion state
+- Files changed: src/hooks/useTasks.tsx, src/hooks/useTasks.test.tsx, package.json
+- Added dexie-react-hooks dependency
+- Pattern: Hooks with JSX (toast render functions) must use .tsx extension
+- Pattern: Toast undo buttons use inline styles with purple accent color (#a78bfa)
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
