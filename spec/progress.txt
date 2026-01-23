@@ -342,3 +342,20 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (29/29 tests)
 
+## 2026-01-23 18:22 - US-023
+- Created comprehensive utility tests for dateUtils and filters
+- Created src/utils/dateUtils.test.ts with 21 tests covering:
+  - groupTasksByDate: today, tomorrow, ISO dates, no due dates, multiple tasks
+  - formatDateLabel: TODAY, TOMORROW, formatted dates
+  - isOverdue: completed tasks, no due date, past/today/future dates
+  - formatTime: various formats (90m, 45m, 120m, 0, undefined, edge cases)
+- Created src/utils/filters.test.ts with 14 tests covering:
+  - filterTasks: current, overdue, completed filters with edge cases
+  - getFilterCounts: correct counts for all filter types, empty lists, single filter types
+- Fixed TypeScript strict null checks with non-null assertions where appropriate
+- Files changed: src/utils/dateUtils.test.ts, src/utils/filters.test.ts, spec/prd.json
+- Pattern: Used type assertions (as string) and non-null assertions (!) for test expectations
+- Pattern: Changed from .find().toBeUndefined() to .some().toBe(false) to avoid null check issues
+- npm run typecheck passes
+- npm run test passes (64/64 tests)
+
