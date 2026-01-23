@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TaskDateGroup, TaskInput, FilterTabs } from '@/components';
+import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge } from '@/components';
 import type { Task, FilterType } from '@/types';
 
 function App() {
@@ -65,6 +65,23 @@ function App() {
         />
         <div className="mb-6">
           <TaskInput onAddTask={handleAddTask} />
+        </div>
+        <div className="mb-6 bg-white rounded-xl shadow-card p-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">Priority Badge Test</h3>
+          <div className="flex gap-4">
+            <div className="flex items-center">
+              <PriorityBadge priority="high" />
+              <span className="text-sm">High</span>
+            </div>
+            <div className="flex items-center">
+              <PriorityBadge priority="medium" />
+              <span className="text-sm">Medium</span>
+            </div>
+            <div className="flex items-center">
+              <PriorityBadge priority="low" />
+              <span className="text-sm">Low</span>
+            </div>
+          </div>
         </div>
         <TaskDateGroup
           label="TODAY"

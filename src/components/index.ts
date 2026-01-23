@@ -6,3 +6,4 @@ export { TaskRow } from './TaskRow';
 export { TaskDateGroup } from './TaskDateGroup';
 export { TaskInput } from './TaskInput';
 export { FilterTabs } from './FilterTabs';
+export { PriorityBadge } from './PriorityBadge';
