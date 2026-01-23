@@ -254,3 +254,18 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (23/23 tests)
 
+## 2026-01-23 17:49 - US-017
+- Created AppHeader component in src/components/AppHeader.tsx
+- Props: isDark (boolean), onToggleDarkMode (function)
+- Left side: 'Tasks' title in text-2xl font-bold text-navy-900
+- Right side: Today's date formatted with date-fns, dark mode toggle button
+- Toggle button: Moon/Sun icons from lucide-react, hover:bg-gray-100
+- py-6 mb-2 spacing
+- Exported from src/components/index.ts
+- Updated App.tsx with isDark state and AppHeader component
+- Files changed: src/components/AppHeader.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used date-fns format() for readable date display (EEEE, MMMM d, yyyy)
+- Pattern: Icon toggle button with aria-label for accessibility
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+

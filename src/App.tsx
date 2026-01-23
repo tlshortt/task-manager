@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay, ProgressBar } from '@/components';
+import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay, ProgressBar, AppHeader } from '@/components';
 import type { Task, FilterType } from '@/types';
 
 function App() {
   const [filter, setFilter] = useState<FilterType>('current');
+  const [isDark, setIsDark] = useState(false);
 
   // Sample tasks for visual verification
   const sampleTasks: Task[] = [
@@ -71,6 +72,7 @@ function App() {
         }}
       />
       <div className="max-w-4xl mx-auto">
+        <AppHeader isDark={isDark} onToggleDarkMode={() => setIsDark(!isDark)} />
         <FilterTabs
           filter={filter}
           onFilterChange={setFilter}
