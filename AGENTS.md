@@ -38,6 +38,15 @@ scripts/ralph/      # Ralph loop configuration
 ├── PROMPT.md       # AI agent instructions
 ├── prd.json        # Product requirements
 └── progress.txt    # Progress tracking
+
+skills/             # AI agent skills (reusable prompts)
+├── prd/            # PRD Generator skill
+│   └── SKILL.md    # Conversational PRD creation
+└── ralph/          # Ralph PRD Converter skill
+    └── SKILL.md    # Convert PRD markdown to prd.json
+
+tasks/              # Generated PRD documents
+└── prd-*.md        # PRDs created by the prd skill
 ```
 
 ## Code Conventions
@@ -150,10 +159,44 @@ npm run lint       # ESLint issues
 npm run test       # Run tests
 ```
 
+## Using Skills
+
+This codebase includes AI agent skills for streamlined workflows.
+
+### Creating a PRD (Product Requirements Document)
+
+Instead of manually writing `prd.json`, use the PRD skill:
+
+```
+Load the prd skill and create a PRD for [your feature description]
+```
+
+The skill will:
+1. Ask 3-5 clarifying questions (respond like "1A, 2C, 3B")
+2. Generate a structured PRD
+3. Save to `tasks/prd-[feature-name].md`
+
+### Converting PRD to Ralph format
+
+After creating a PRD, convert it to the JSON format Ralph uses:
+
+```
+Load the ralph skill and convert tasks/prd-[feature-name].md to prd.json
+```
+
+This creates `scripts/ralph/prd.json` with properly sized user stories.
+
+### Full workflow
+
+1. Create PRD: `Load prd skill, create PRD for task filtering`
+2. Convert to JSON: `Load ralph skill, convert tasks/prd-task-filtering.md`
+3. Run Ralph: `./scripts/ralph/ralph.sh`
+
 ## Known Gotchas
 
 1. **Tailwind dynamic classes:** Must be in `safelist` in `tailwind.config.js`
 2. **Path aliases:** `@/` only works in `src/`, not in config files
 3. **Vitest globals:** `describe`, `it`, `expect` are global (no import needed)
+4. **PRD story size:** Each user story must be completable in one Ralph iteration
 
 _This file is automatically read by AI coding agents. Update it when you discover new patterns or gotchas._
