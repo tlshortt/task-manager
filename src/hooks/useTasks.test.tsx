@@ -40,7 +40,7 @@ describe('useTasks', () => {
       await result.current.addTask({
         title: 'Test Task',
         completed: false,
-        priority: undefined as any,
+        priority: undefined as unknown as 'medium',
       });
     });
 
