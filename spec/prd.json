@@ -368,7 +368,7 @@
         "Create src/components/FilterTabs.test.tsx: renders tabs, click handler, active styling",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-025",
