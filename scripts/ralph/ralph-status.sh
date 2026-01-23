@@ -7,7 +7,8 @@
 # ============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PRD_FILE="$SCRIPT_DIR/prd.json"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PRD_FILE="$PROJECT_ROOT/spec/prd.json"
 
 # Colors
 GREEN='\033[0;32m'
@@ -74,8 +75,8 @@ if [ "$pending" -gt 0 ]; then
 fi
 
 # Show recent progress entries
-if [ -f "$SCRIPT_DIR/progress.txt" ]; then
-  recent=$(grep -A 3 "^## 20" "$SCRIPT_DIR/progress.txt" | tail -8)
+if [ -f "$PROJECT_ROOT/spec/progress.txt" ]; then
+  recent=$(grep -A 3 "^## 20" "$PROJECT_ROOT/spec/progress.txt" | tail -8)
   if [ -n "$recent" ]; then
     echo -e "${GRAY}Recent progress:${NC}"
     echo "$recent" | head -8 | sed 's/^/  /'

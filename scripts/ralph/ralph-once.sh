@@ -16,8 +16,8 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PRD_FILE="$SCRIPT_DIR/prd.json"
-PROMPT_FILE="$SCRIPT_DIR/PROMPT.md"
+PRD_FILE="$PROJECT_ROOT/spec/prd.json"
+PROMPT_FILE="$PROJECT_ROOT/spec/PROMPT.md"
 
 # Default AI tool
 AI_TOOL="claude"
@@ -53,7 +53,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m'
 
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
-PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
+PROGRESS_FILE="$PROJECT_ROOT/spec/progress.txt"
 LOG_FILE="$SCRIPT_DIR/ralph.log"
 
 echo ""
