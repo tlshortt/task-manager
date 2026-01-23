@@ -52,6 +52,10 @@ RED='\033[0;31m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
+ARCHIVE_DIR="$SCRIPT_DIR/archive"
+PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
+LOG_FILE="$SCRIPT_DIR/ralph.log"
+
 echo ""
 echo "╔════════════════════════════════════════════════════════════════╗"
 echo "║          🔍 Ralph Once - Human-in-the-Loop Mode                ║"
@@ -112,6 +116,53 @@ check_git_clean() {
 }
 
 check_git_clean
+
+# Check for branch mismatch and auto-archive if needed
+check_and_archive() {
+  if [ ! -f "$PRD_FILE" ]; then
+    return 0
+  fi
+  
+  local prd_branch=$(jq -r '.branchName // empty' "$PRD_FILE" 2>/dev/null)
+  if [ -z "$prd_branch" ]; then
+    echo -e "${YELLOW}⚠️ prd.json has no branchName field${NC}"
+    return 0
+  fi
+  
+  local current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [ -z "$current_branch" ]; then
+    return 0
+  fi
+  
+  if [ "$prd_branch" = "$current_branch" ]; then
+    return 0
+  fi
+  
+  echo -e "${BLUE}Branch mismatch: prd.json='$prd_branch' vs git='$current_branch'${NC}"
+  
+  local date_prefix=$(date '+%Y-%m-%d')
+  local sanitized_branch=$(echo "$prd_branch" | sed 's|/|-|g' | sed 's|[^a-zA-Z0-9_-]||g')
+  local archive_folder="$ARCHIVE_DIR/${date_prefix}-${sanitized_branch}"
+  
+  mkdir -p "$archive_folder"
+  
+  [ -f "$PRD_FILE" ] && cp "$PRD_FILE" "$archive_folder/prd.json" && echo -e "${GREEN}✅ Archived prd.json${NC}"
+  [ -f "$PROGRESS_FILE" ] && cp "$PROGRESS_FILE" "$archive_folder/progress.txt" && echo -e "${GREEN}✅ Archived progress.txt${NC}"
+  [ -f "$LOG_FILE" ] && cp "$LOG_FILE" "$archive_folder/ralph.log" && echo -e "${GREEN}✅ Archived ralph.log${NC}"
+  
+  echo "# Ralph Progress Log" > "$PROGRESS_FILE"
+  echo "# New feature branch: $current_branch" >> "$PROGRESS_FILE"
+  echo "" >> "$PROGRESS_FILE"
+  
+  echo ""
+  echo -e "${YELLOW}⚠️  PRD was for '$prd_branch' but you're on '$current_branch'${NC}"
+  echo -e "${YELLOW}Old files archived to: $archive_folder${NC}"
+  echo -e "${YELLOW}Please update prd.json for the new feature.${NC}"
+  echo ""
+  exit 0
+}
+
+check_and_archive
 
 # Validate PRD schema
 echo -e "${BLUE}Validating PRD schema...${NC}"

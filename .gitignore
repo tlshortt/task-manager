@@ -31,6 +31,9 @@ coverage/
 # scripts/ralph/ralph.log
 scripts/ralph/.ralph.lock
 
+# Ralph archives (old prd.json/progress.txt from previous features)
+scripts/ralph/archive/
+
 # Temporary files
 *.tmp
 *.temp

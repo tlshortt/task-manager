@@ -39,6 +39,7 @@ PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 PROMPT_FILE="$SCRIPT_DIR/PROMPT.md"
 LOG_FILE="$SCRIPT_DIR/ralph.log"
 LOCK_FILE="$SCRIPT_DIR/.ralph.lock"
+ARCHIVE_DIR="$SCRIPT_DIR/archive"
 TIMEOUT_SECONDS=${ITERATION_TIMEOUT:-600}  # Default 10 minutes
 CONSECUTIVE_FAILURES=0
 MAX_CONSECUTIVE_FAILURES=${MAX_CONSECUTIVE_FAILURES:-3}
@@ -306,6 +307,84 @@ show_status() {
   echo ""
 }
 
+# ============================================================================
+# Auto-Archive: Archives old prd.json and progress.txt when branchName changes
+# ============================================================================
+
+check_and_archive() {
+  # Skip if no PRD file exists
+  if [ ! -f "$PRD_FILE" ]; then
+    return 0
+  fi
+  
+  # Get branchName from prd.json
+  local prd_branch=$(jq -r '.branchName // empty' "$PRD_FILE" 2>/dev/null)
+  if [ -z "$prd_branch" ]; then
+    warning "prd.json has no branchName field, skipping archive check"
+    return 0
+  fi
+  
+  # Get current git branch
+  local current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+  if [ -z "$current_branch" ]; then
+    warning "Could not determine current git branch"
+    return 0
+  fi
+  
+  # Compare branches - if they match, no archive needed
+  if [ "$prd_branch" = "$current_branch" ]; then
+    return 0
+  fi
+  
+  # Branches differ - archive the old files
+  log "Branch mismatch detected: prd.json='$prd_branch' vs git='$current_branch'"
+  
+  # Create archive folder name: YYYY-MM-DD-branchName (sanitized)
+  local date_prefix=$(date '+%Y-%m-%d')
+  local sanitized_branch=$(echo "$prd_branch" | sed 's|/|-|g' | sed 's|[^a-zA-Z0-9_-]||g')
+  local archive_folder="$ARCHIVE_DIR/${date_prefix}-${sanitized_branch}"
+  
+  # Create archive directory
+  mkdir -p "$archive_folder"
+  
+  # Archive prd.json
+  if [ -f "$PRD_FILE" ]; then
+    cp "$PRD_FILE" "$archive_folder/prd.json"
+    success "Archived prd.json → $archive_folder/prd.json"
+  fi
+  
+  # Archive progress.txt
+  if [ -f "$PROGRESS_FILE" ]; then
+    cp "$PROGRESS_FILE" "$archive_folder/progress.txt"
+    success "Archived progress.txt → $archive_folder/progress.txt"
+  fi
+  
+  # Archive ralph.log if it exists
+  if [ -f "$LOG_FILE" ]; then
+    cp "$LOG_FILE" "$archive_folder/ralph.log"
+    success "Archived ralph.log → $archive_folder/ralph.log"
+  fi
+  
+  log "Archive complete: $archive_folder"
+  
+  # Reset progress.txt for new feature
+  echo "# Ralph Progress Log" > "$PROGRESS_FILE"
+  echo "# This file tracks progress across iterations" >> "$PROGRESS_FILE"
+  echo "# Archived from: $prd_branch" >> "$PROGRESS_FILE"
+  echo "# New feature branch: $current_branch" >> "$PROGRESS_FILE"
+  echo "" >> "$PROGRESS_FILE"
+  log "Reset progress.txt for new feature"
+  
+  # Warn user they need a new prd.json
+  echo ""
+  warning "⚠️  PRD was for branch '$prd_branch' but you're on '$current_branch'"
+  warning "Old files archived to: $archive_folder"
+  warning "Please update prd.json for the new feature before running Ralph."
+  echo ""
+  
+  exit 0
+}
+
 acquire_lock() {
   # Check if lock file exists
   if [ -f "$LOCK_FILE" ]; then
@@ -369,6 +448,9 @@ main() {
   acquire_lock
   
   check_prerequisites
+  
+  # Check for branch mismatch and auto-archive if needed
+  check_and_archive
   
   # Pre-start git clean check
   check_git_clean
