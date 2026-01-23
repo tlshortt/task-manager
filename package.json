@@ -13,7 +13,8 @@
     "test:watch": "vitest",
     "ralph": "./scripts/ralph/ralph.sh",
     "ralph:once": "./scripts/ralph/ralph-once.sh",
-    "ralph:status": "./scripts/ralph/ralph-status.sh"
+    "ralph:status": "./scripts/ralph/ralph-status.sh",
+    "ralph:validate": "./scripts/ralph/validate-prd.sh"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -125,6 +125,7 @@ ralph-starter-kit/
 | `npm run ralph` | Run Ralph loop (default 10 iterations) |
 | `npm run ralph:once` | Run single Ralph iteration (HITL) |
 | `npm run ralph:status` | Check PRD completion status |
+| `npm run ralph:validate` | Validate PRD schema |
 
 ## The Sample Feature: Task Priorities
 
@@ -177,6 +178,24 @@ Edit `scripts/ralph/prd.json` to define your own tasks:
 - **Verifiable:** Include "npm run typecheck passes" or similar
 - **Ordered:** Use priority numbers (1 = first)
 
+### Validating Your PRD
+
+Before running Ralph, validate your PRD schema:
+
+```bash
+./scripts/ralph/validate-prd.sh
+```
+
+This checks for:
+- ✅ Required fields (projectName, branchName, description, userStories)
+- ✅ Correct types (e.g., `passes` must be boolean, not string)
+- ✅ Non-empty userStories array
+- ✅ Unique user story IDs
+- ✅ Sequential priorities starting at 1
+- ✅ Non-empty acceptance criteria
+
+The validation runs automatically when you start Ralph, but you can run it manually to catch errors early.
+
 ## Monitoring Progress
 
 ### Check Status
@@ -225,6 +244,13 @@ Check if all PRD items already have `passes: true`
 - Check `ralph.log` for errors
 - Task might be too big - split into smaller items
 - Add more specific acceptance criteria
+
+## Improvements & Future Features
+
+See [IMPROVEMENTS.md](scripts/ralph/IMPROVEMENTS.md) for:
+- ✅ Implemented improvements (PRD validation)
+- 🔄 Suggested improvements (pre-flight checks, rollback, cost tracking, etc.)
+- Implementation priorities and complexity estimates
 
 ## Resources
 

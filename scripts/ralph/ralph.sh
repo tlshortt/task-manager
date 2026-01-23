@@ -141,6 +141,14 @@ check_prerequisites() {
     exit 1
   fi
   
+  # Validate PRD schema
+  log "Validating PRD schema..."
+  if ! "$SCRIPT_DIR/validate-prd.sh" "$PRD_FILE" > /dev/null 2>&1; then
+    error "PRD schema validation failed. Run ./scripts/ralph/validate-prd.sh for details."
+    "$SCRIPT_DIR/validate-prd.sh" "$PRD_FILE"
+    exit 1
+  fi
+  
   success "All prerequisites met"
 }
 

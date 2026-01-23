@@ -84,6 +84,16 @@ check_git_clean() {
 
 check_git_clean
 
+# Validate PRD schema
+echo -e "${BLUE}Validating PRD schema...${NC}"
+if ! "$SCRIPT_DIR/validate-prd.sh" "$PRD_FILE" > /dev/null 2>&1; then
+  echo -e "${RED}ERROR: PRD schema validation failed${NC}"
+  "$SCRIPT_DIR/validate-prd.sh" "$PRD_FILE"
+  exit 1
+fi
+echo -e "${GREEN}✅ PRD schema is valid${NC}"
+echo ""
+
 # Show current status
 echo -e "${BLUE}Current PRD Status:${NC}"
 jq -r '.userStories[] | "  [\(if .passes then "✅" else "⬜" end)] \(.id): \(.title)"' "$PRD_FILE"
