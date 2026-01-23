@@ -13,7 +13,7 @@
         "All three packages appear in package.json dependencies",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-002",
