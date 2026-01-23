@@ -77,6 +77,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Task indexes: completed, priority, dueDate, createdAt
 - [ ] Export db instance
 - [ ] npm run typecheck passes
+- [ ] Create src/db/index.test.ts with tests: database opens, tasks table exists, indexes work
 
 ### US-004: Create useTasks Hook
 
@@ -91,6 +92,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] toggleComplete shows toast with 5s Undo button
 - [ ] Tasks update reactively via useLiveQuery
 - [ ] npm run typecheck passes
+- [ ] Create src/hooks/useTasks.test.ts with tests for add/delete/toggle
 
 ### US-005: Configure Tailwind Theme
 
@@ -100,8 +102,9 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 
 - [ ] Update tailwind.config.js with custom colors: navy-800 (#1e293b), navy-900 (#0f172a), purple-accent (#8b5cf6), blue-accent (#3b82f6)
 - [ ] Add custom shadow: shadow-card (0 2px 8px rgba(0,0,0,0.08))
-- [ ] Add custom border-radius if needed
+- [ ] Add custom border-radius if needed: rounded-xl default
 - [ ] npm run typecheck passes
+- [ ] Visual verification: start dev server (npm run dev), agent-browser open http://localhost:5173, snapshot -i, verify test elements with custom colors exist, close browser
 
 ### US-006: Create TaskTableHeader Component
 
@@ -116,6 +119,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Rounded-t-xl on first render, border-b border-gray-100
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify header columns visible (Task, Estimated, Consumed, Status), close browser
 
 ### US-007: Create TaskRow Component
 
@@ -134,7 +138,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] py-4 px-4 border-b border-gray-100 last:border-b-0
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify task row renders with checkbox, priority dot, title, time displays, hover shows action icons, close browser
 
 ### US-008: Create TaskDateGroup Component
 
@@ -151,7 +155,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] mb-6 spacing between groups
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify date group header (TODAY (4) format), white card with rounded corners, chevron icon clickable, close browser
 
 ### US-009: Create TaskInput Component
 
@@ -168,7 +172,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Date picker appears on deadline click
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify input field with plus icon, deadline button visible, fill input with test text, press Enter, verify input clears, click deadline button, verify date picker appears, close browser
 
 ### US-010: Create FilterTabs Component
 
@@ -185,7 +189,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Count badge: bg-gray-100 rounded-full px-2 text-xs ml-2
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify three tabs (Current, Overdue, Completed) visible, active tab has purple border, count badges visible, click each tab, verify active state changes, close browser
 
 ### US-011: Create PriorityBadge Component
 
@@ -199,6 +203,8 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] w-2 h-2 rounded-full inline-block mr-2
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Create src/components/PriorityBadge.test.tsx with tests: renders correct color for high/medium/low
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify all 3 priority colors display correctly (red, amber, gray), close browser
 
 ### US-012: Create TimeDisplay Component
 
@@ -213,6 +219,8 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] text-sm tabular-nums
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Create src/components/TimeDisplay.test.tsx with tests: formats 90min as 1hr 30m, 45min as 45m, 120min as 2hr, 0/undefined as --, variant styles apply
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify time displays formatted correctly (1hr 30m, 45m, 2hr), consumed variant shows purple color, close browser
 
 ### US-013: Create ProgressBar Component
 
@@ -228,6 +236,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Width: calculated as (consumed/estimated)*100, max 100%
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify progress bar renders with gradient fill (purple-blue), test over-budget state shows red fill, verify width calculation, close browser
 
 ### US-014: Create Date Utilities
 
@@ -269,7 +278,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Undo button: text-purple-400 hover:text-purple-300
 - [ ] Duration: 5000ms
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, trigger delete/complete action, wait for toast, verify toast appears bottom-center with navy background, undo button visible, verify toast dismisses after 5s, close browser
 
 ### US-017: Create AppHeader Component
 
@@ -283,7 +292,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] py-6 mb-2
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify 'Tasks' title visible left side, today's date visible right side, dark mode toggle button visible, close browser
 
 ### US-018: Create useDarkMode Hook
 
@@ -297,6 +306,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Falls back to prefers-color-scheme
 - [ ] Toggles "dark" class on documentElement
 - [ ] npm run typecheck passes
+- [ ] Create src/hooks/useDarkMode.test.ts with toggle/persistence tests
 
 ### US-019: Create MainLayout Component
 
@@ -311,7 +321,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Smooth transitions on dark mode toggle
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
-- [ ] Verify in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify layout centered with max-width, all components (header, tabs, input, groups) visible, toggle dark mode, verify smooth transition and dark background, close browser
 
 ### US-020: Integrate App with MainLayout
 
@@ -325,7 +335,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Toaster rendered for notifications
 - [ ] Dark mode toggle in header
 - [ ] npm run typecheck passes
-- [ ] Verify full CRUD flow in browser
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, fill task input, press Enter, verify task appears, click checkbox, verify completion, click delete icon, verify undo toast, click filter tabs, verify filtering works, toggle dark mode, verify persistence on reload, close browser
 
 ### US-021: Create TaskSkeleton Component
 
@@ -340,6 +350,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Skeleton card wrapper matches TaskDateGroup card style
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify skeleton placeholders render with pulse animation, verify count prop works (default 3), verify dark mode styling, close browser
 
 ### US-022: Create EmptyState Component
 
@@ -354,6 +365,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Centered, text-gray-500, py-12
 - [ ] Exported from src/components/index.ts
 - [ ] npm run typecheck passes
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify empty state shows 'No tasks yet' for current filter, switch to overdue filter, verify 'No overdue tasks' message, switch to completed filter, verify 'No completed tasks' message, close browser
 
 ### US-023: Write Utility Tests
 
@@ -364,7 +376,7 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 - [ ] Create src/utils/dateUtils.test.ts
 - [ ] Create src/utils/filters.test.ts
 - [ ] Test groupTasksByDate, formatDateLabel, isOverdue, formatTime
-- [ ] Test filterTasks for each filter type
+- [ ] Test filterTasks and getFilterCounts
 - [ ] npm run test passes
 
 ### US-024: Write Component Tests
@@ -373,9 +385,8 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 
 **Acceptance Criteria:**
 
-- [ ] Create src/components/TaskRow.test.tsx
-- [ ] Create src/components/FilterTabs.test.tsx
-- [ ] Test render, interactions, handlers called
+- [ ] Create src/components/TaskRow.test.tsx: renders, checkbox toggle, delete handler
+- [ ] Create src/components/FilterTabs.test.tsx: renders tabs, click handler, active styling
 - [ ] npm run test passes
 
 ### US-025: Polish and Accessibility
@@ -384,14 +395,14 @@ Based on: https://dribbble.com/shots/23623559-Task-Tracking-Productivity-App
 
 **Acceptance Criteria:**
 
-- [ ] All interactive elements have aria-labels
-- [ ] Keyboard navigation works (Tab, Enter, Escape)
+- [ ] All buttons/inputs have aria-label or visible text
+- [ ] Keyboard nav: Tab, Enter, Escape work
 - [ ] Focus states: ring-2 ring-purple-500 ring-offset-2
-- [ ] Mobile: touch targets min 44px
-- [ ] All components have dark: variants
+- [ ] Mobile: min touch target 44px
+- [ ] All components use dark: Tailwind variants
 - [ ] Hover states use transition-colors duration-150
 - [ ] npm run typecheck passes
-- [ ] Verify in browser at 375px, 768px, 1280px
+- [ ] Visual verification: start dev server, agent-browser open http://localhost:5173, resize 375px, snapshot -i, verify mobile layout, resize 768px, verify tablet layout, resize 1280px, verify desktop layout, test Tab key navigation, verify focus rings, test Enter/Escape keys, close browser
 
 ## Functional Requirements
 
