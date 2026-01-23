@@ -25,7 +25,7 @@
         "Create Task interface with: id?, title, description?, completed, priority, dueDate?, estimatedMinutes?, consumedMinutes?, createdAt, updatedAt",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-003",
