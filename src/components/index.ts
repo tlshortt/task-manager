@@ -8,3 +8,4 @@ export { TaskInput } from './TaskInput';
 export { FilterTabs } from './FilterTabs';
 export { PriorityBadge } from './PriorityBadge';
 export { TimeDisplay } from './TimeDisplay';
+export { ProgressBar } from './ProgressBar';
