@@ -61,3 +61,15 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - Pattern: All types exported from single index.ts file for clean imports
 
+## 2026-01-23 16:16 - US-003
+- Created Dexie database in src/db/index.ts
+- Database name: todoApp
+- Table: tasks with auto-increment id
+- Indexes: completed, priority, dueDate, createdAt
+- Created comprehensive tests in src/db/index.test.ts
+- Files changed: src/db/index.ts, src/db/index.test.ts, src/test/setup.ts, package.json
+- Added fake-indexeddb for testing IndexedDB in Node environment
+- Pattern: Boolean fields cannot be directly queried in IndexedDB, use filter() instead
+- npm run typecheck passes
+- npm run test passes (8/8 tests)
+
