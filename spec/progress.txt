@@ -124,3 +124,19 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: getPriorityColor() maps priority to Tailwind color classes
 - npm run typecheck passes
 
+## 2026-01-23 16:43 - US-008
+- Created TaskDateGroup component in src/components/TaskDateGroup.tsx
+- Props: label, count, tasks, onToggle, onUpdate, onDelete
+- Header format: "TODAY (4)" in text-xs font-semibold text-gray-500 uppercase tracking-wider
+- Collapsible with chevron icon, smooth rotate transition
+- Card wrapper: bg-white rounded-xl shadow-card overflow-hidden
+- Renders TaskRow for each task inside card
+- mb-6 spacing between groups
+- Exported from src/components/index.ts
+- Updated App.tsx for visual verification
+- Updated App.test.tsx to match new component
+- Files changed: src/components/TaskDateGroup.tsx, src/components/index.ts, src/App.tsx, src/App.test.tsx
+- Pattern: useState for collapse state, ChevronDown icon from lucide-react
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
