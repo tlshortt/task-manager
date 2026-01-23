@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'navy-800': '#1e293b',
+        'navy-900': '#0f172a',
+        'purple-accent': '#8b5cf6',
+        'blue-accent': '#3b82f6',
+      },
+      boxShadow: {
+        'card': '0 2px 8px rgba(0,0,0,0.08)',
+      },
+    },
   },
   plugins: [],
   // Safelist for dynamic priority colors (Ralph will use these)

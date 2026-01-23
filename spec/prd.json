@@ -69,7 +69,7 @@
         "npm run typecheck passes",
         "Visual verification: start dev server (npm run dev), agent-browser open http://localhost:5173, snapshot -i, verify test elements with custom colors exist, close browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-006",
