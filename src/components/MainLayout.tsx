@@ -3,6 +3,7 @@ import { AppHeader } from './AppHeader';
 import { FilterTabs } from './FilterTabs';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
+import { EmptyState } from './EmptyState';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { filterTasks, getFilterCounts } from '@/utils/filters';
@@ -80,7 +81,7 @@ export function MainLayout() {
         {isLoading ? (
           <div className="text-center text-gray-500 py-12">Loading tasks...</div>
         ) : sortedGroups.length === 0 ? (
-          <div className="text-center text-gray-500 py-12">No tasks to display</div>
+          <EmptyState filter={filter} />
         ) : (
           sortedGroups.map(([dateKey, dateTasks]) => {
             const date = dateKey === 'today'
