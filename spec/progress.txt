@@ -230,3 +230,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: All utility functions are pure functions with explicit types
 - npm run typecheck passes
 
+## 2026-01-23 - US-015
+- Created filter utility functions in src/utils/filters.ts
+- Implemented filterTasks(): filters tasks by current, overdue, or completed status
+- Implemented getFilterCounts(): returns count object for all filter types
+- Current filter: tasks not completed and not overdue
+- Overdue filter: tasks past due date and not completed
+- Completed filter: completed tasks
+- Uses isOverdue() from dateUtils for consistent overdue logic
+- Files changed: src/utils/filters.ts, spec/prd.json
+- Pattern: Utility functions follow pure function pattern with explicit types
+- npm run typecheck passes
+

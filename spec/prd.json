@@ -236,7 +236,7 @@
         "getFilterCounts(tasks): returns { current, overdue, completed }",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-016",
