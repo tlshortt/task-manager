@@ -1,4 +1,4 @@
-import { TaskDateGroup } from '@/components';
+import { TaskDateGroup, TaskInput } from '@/components';
 import type { Task } from '@/types';
 
 function App() {
@@ -48,9 +48,16 @@ function App() {
     console.log('Delete task:', task.id);
   };
 
+  const handleAddTask = (title: string, dueDate?: Date) => {
+    console.log('Add task:', title, dueDate);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-4xl mx-auto">
+        <div className="mb-6">
+          <TaskInput onAddTask={handleAddTask} />
+        </div>
         <TaskDateGroup
           label="TODAY"
           count={4}
