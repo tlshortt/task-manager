@@ -2,7 +2,7 @@
 
 A complete starter template for using the **Ralph Loop** - an autonomous AI coding technique that runs AI agents in a loop until all tasks are complete.
 
-This project includes a working Vite + React + TypeScript application with a sample feature (task priorities) ready to be built by Ralph.
+This project includes a clean Vite + React + TypeScript application ready for you to build features with Ralph.
 
 ## What is the Ralph Loop?
 
@@ -136,22 +136,16 @@ ralph-starter-kit/
 | `npm run ralph:status`   | Check PRD completion status            |
 | `npm run ralph:validate` | Validate PRD schema                    |
 
-## The Sample Feature: Task Priorities
+## Creating Your First PRD
 
-The included PRD defines a **Priority System** feature with 10 user stories:
+Start by defining what you want to build. You can either:
 
-1. ✅ Create Priority type
-2. ✅ Add priority utilities
-3. ✅ Create PriorityBadge component
-4. ✅ Create PrioritySelect component
-5. ✅ Integrate badge into TaskCard
-6. ✅ Add select to TaskForm
-7. ✅ Create PriorityFilter component
-8. ✅ Integrate filtering into TaskList
-9. ✅ Add unit tests
-10. ✅ Update documentation
+1. **Use the PRD skill** to create a PRD interactively:
+   ```
+   Load the prd skill and create a PRD for [your feature description]
+   ```
 
-Ralph will implement these one by one, committing after each.
+2. **Manually create** a PRD by editing `spec/prd.json`
 
 ## Customizing the PRD
 
