@@ -15,7 +15,7 @@
         "npm run typecheck passes with no errors"
       ],
       "passes": false,
-      "notes": "This is foundational - must be done first"
+      "notes": ""
     },
     {
       "id": "US-002",
@@ -150,7 +150,7 @@
         "Document the utility functions"
       ],
       "passes": false,
-      "notes": "Low priority - do last"
+      "notes": ""
     }
   ]
 }
