@@ -284,3 +284,22 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (29/29 tests)
 
+## 2026-01-23 17:53 - US-019
+- Created MainLayout component in src/components/MainLayout.tsx
+- Integrates useDarkMode and useTasks hooks
+- Manages filter state and groups tasks by date
+- Layout: centered max-w-4xl mx-auto px-6
+- Dark mode support: bg-gray-50 dark:bg-slate-900 with smooth transitions
+- Contains AppHeader, FilterTabs, TaskInput, and TaskDateGroup components
+- Handles task CRUD operations via useTasks hooks (add, toggle, update, delete)
+- Groups and sorts tasks: today first, tomorrow second, then chronologically
+- Shows loading state and empty state when no tasks
+- Exported from src/components/index.ts
+- Updated App.tsx to use MainLayout instead of manual layout
+- Updated App.test.tsx to test MainLayout rendering
+- Files changed: src/components/MainLayout.tsx, src/components/index.ts, src/App.tsx, src/App.test.tsx, spec/prd.json
+- Pattern: MainLayout acts as smart component managing all app state and data flow
+- Pattern: Dark mode transitions use transition-colors duration-200 for smooth visual changes
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
