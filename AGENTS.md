@@ -5,6 +5,7 @@ This file documents patterns and conventions for AI coding agents (and human dev
 ## Project Overview
 
 A simple task management application built with:
+
 - **Vite** - Build tool and dev server
 - **React 18** - UI framework
 - **TypeScript** - Type safety
@@ -41,14 +42,14 @@ scripts/ralph/      # Ralph loop configuration
 
 ### TypeScript
 
-- **Explicit types:** Always type function parameters and return values
+- **Favor implicit types when possible:** Only explicity type function parameters and return values when it is ambiguous
 - **No `any`:** Use `unknown` if type is truly unknown, then narrow
 - **Interfaces over types:** Prefer `interface` for object shapes
 - **Path aliases:** Use `@/` to import from `src/`
 
 ```typescript
 // ✅ Good
-import type { Task } from '@/types'
+import type { Task } from "@/types";
 
 function getTask(id: string): Task | undefined {
   // ...
@@ -114,14 +115,14 @@ export function Button({ label, onClick, disabled = false }: ButtonProps) {
 
 ```typescript
 // src/utils/priority.test.ts
-import { describe, it, expect } from 'vitest'
-import { getPriorityLabel } from './priority'
+import { describe, it, expect } from "vitest";
+import { getPriorityLabel } from "./priority";
 
-describe('getPriorityLabel', () => {
+describe("getPriorityLabel", () => {
   it('returns "High" for high priority', () => {
-    expect(getPriorityLabel('high')).toBe('High')
-  })
-})
+    expect(getPriorityLabel("high")).toBe("High");
+  });
+});
 ```
 
 ## Common Tasks
@@ -153,17 +154,4 @@ npm run test       # Run tests
 2. **Path aliases:** `@/` only works in `src/`, not in config files
 3. **Vitest globals:** `describe`, `it`, `expect` are global (no import needed)
 
-## Current Feature Work
-
-Ralph is implementing a **Priority System** with these components:
-- `Priority` type (high | medium | low)
-- `PriorityBadge` - Visual indicator
-- `PrioritySelect` - Dropdown for selection
-- `PriorityFilter` - Filter tasks by priority
-- Utility functions in `src/utils/priority.ts`
-
-See `scripts/ralph/prd.json` for detailed requirements.
-
----
-
-*This file is automatically read by AI coding agents. Update it when you discover new patterns or gotchas.*
+_This file is automatically read by AI coding agents. Update it when you discover new patterns or gotchas._
