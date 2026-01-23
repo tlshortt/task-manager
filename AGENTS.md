@@ -1,3 +1,5 @@
+In all interactions and commit messages, be extremely concise and sacrifice grammar for the sake of concision.
+
 # AGENTS.md - Codebase Conventions
 
 This file documents patterns and conventions for AI coding agents (and human developers) working in this codebase.

@@ -125,4 +125,4 @@ Check if ALL user stories now have `passes: true`:
 
 ---
 
-Now begin: Determine the next priority, incomplete task and implement it.
+Now begin: Determine the next priority, incomplete task and implement it. Only work on single task.
