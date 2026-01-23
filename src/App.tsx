@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge } from '@/components';
+import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay } from '@/components';
 import type { Task, FilterType } from '@/types';
 
 function App() {
@@ -80,6 +80,31 @@ function App() {
             <div className="flex items-center">
               <PriorityBadge priority="low" />
               <span className="text-sm">Low</span>
+            </div>
+          </div>
+        </div>
+        <div className="mb-6 bg-white rounded-xl shadow-card p-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-2">TimeDisplay Test</h3>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 w-32">90 minutes:</span>
+              <TimeDisplay minutes={90} />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 w-32">45 minutes:</span>
+              <TimeDisplay minutes={45} />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 w-32">120 minutes:</span>
+              <TimeDisplay minutes={120} />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 w-32">0 minutes:</span>
+              <TimeDisplay minutes={0} />
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-500 w-32">Consumed variant:</span>
+              <TimeDisplay minutes={90} variant="consumed" />
             </div>
           </div>
         </div>
