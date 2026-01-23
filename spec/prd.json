@@ -37,7 +37,8 @@
         "Tables: tasks (auto-increment id)",
         "Task indexes: completed, priority, dueDate, createdAt",
         "Export db instance",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Create src/db/index.test.ts with tests: database opens, tasks table exists, indexes work"
       ],
       "passes": false
     },
@@ -52,7 +53,8 @@
         "deleteTask shows toast with 5s Undo button",
         "toggleComplete shows toast with 5s Undo button",
         "Tasks update reactively via useLiveQuery",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Create src/hooks/useTasks.test.ts with tests for add/delete/toggle"
       ],
       "passes": false
     },
@@ -64,7 +66,8 @@
         "Update tailwind.config.js with custom colors: navy-800 (#1e293b), navy-900 (#0f172a), purple-accent (#8b5cf6), blue-accent (#3b82f6)",
         "Add custom shadow: shadow-card (0 2px 8px rgba(0,0,0,0.08))",
         "Add custom border-radius if needed: rounded-xl default",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Visual verification: start dev server (npm run dev), agent-browser open http://localhost:5173, snapshot -i, verify test elements with custom colors exist, close browser"
       ],
       "passes": false
     },
@@ -79,7 +82,8 @@
         "text-xs uppercase text-gray-500 font-medium tracking-wide",
         "Rounded-t-xl on first render, border-b border-gray-100",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify header columns visible (Task, Estimated, Consumed, Status), close browser"
       ],
       "passes": false
     },
@@ -99,7 +103,7 @@
         "py-4 px-4 border-b border-gray-100 last:border-b-0",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify task row renders with checkbox, priority dot, title, time displays, hover shows action icons, close browser"
       ],
       "passes": false
     },
@@ -117,7 +121,7 @@
         "mb-6 spacing between groups",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify date group header (TODAY (4) format), white card with rounded corners, chevron icon clickable, close browser"
       ],
       "passes": false
     },
@@ -135,7 +139,7 @@
         "Date picker appears on deadline click",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify input field with plus icon, deadline button visible, fill input with test text, press Enter, verify input clears, click deadline button, verify date picker appears, close browser"
       ],
       "passes": false
     },
@@ -153,7 +157,7 @@
         "Count badge: bg-gray-100 rounded-full px-2 text-xs ml-2",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify three tabs (Current, Overdue, Completed) visible, active tab has purple border, count badges visible, click each tab, verify active state changes, close browser"
       ],
       "passes": false
     },
@@ -167,7 +171,9 @@
         "Colored dot: high=bg-red-500, medium=bg-amber-500, low=bg-gray-400",
         "w-2 h-2 rounded-full inline-block mr-2",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Create src/components/PriorityBadge.test.tsx with tests: renders correct color for high/medium/low",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify all 3 priority colors display correctly (red, amber, gray), close browser"
       ],
       "passes": false
     },
@@ -182,7 +188,9 @@
         "default: text-gray-600, consumed: text-purple-600 font-medium",
         "text-sm tabular-nums",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Create src/components/TimeDisplay.test.tsx with tests: formats 90min as 1hr 30m, 45min as 45m, 120min as 2hr, 0/undefined as --, variant styles apply",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify time displays formatted correctly (1hr 30m, 45m, 2hr), consumed variant shows purple color, close browser"
       ],
       "passes": false
     },
@@ -198,7 +206,8 @@
         "If consumed > estimated: fill becomes bg-red-500",
         "Width: calculated as (consumed/estimated)*100, max 100%",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify progress bar renders with gradient fill (purple-blue), test over-budget state shows red fill, verify width calculation, close browser"
       ],
       "passes": false
     },
@@ -240,7 +249,7 @@
         "Undo button: text-purple-400 hover:text-purple-300",
         "Duration: 5000ms",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, trigger delete/complete action, wait for toast, verify toast appears bottom-center with navy background, undo button visible, verify toast dismisses after 5s, close browser"
       ],
       "passes": false
     },
@@ -255,7 +264,7 @@
         "py-6 mb-2",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify 'Tasks' title visible left side, today's date visible right side, dark mode toggle button visible, close browser"
       ],
       "passes": false
     },
@@ -269,7 +278,8 @@
         "Reads localStorage darkMode on mount",
         "Falls back to prefers-color-scheme",
         "Toggles dark class on document.documentElement",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Create src/hooks/useDarkMode.test.ts with toggle/persistence tests"
       ],
       "passes": false
     },
@@ -285,7 +295,7 @@
         "Smooth transitions on dark mode toggle",
         "Exported from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify layout centered with max-width, all components (header, tabs, input, groups) visible, toggle dark mode, verify smooth transition and dark background, close browser"
       ],
       "passes": false
     },
@@ -300,7 +310,7 @@
         "Toaster rendered for notifications",
         "Dark mode toggle in header",
         "npm run typecheck passes",
-        "Verify full CRUD flow in browser"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, fill task input, press Enter, verify task appears, click checkbox, verify completion, click delete icon, verify undo toast, click filter tabs, verify filtering works, toggle dark mode, verify persistence on reload, close browser"
       ],
       "passes": false
     },
@@ -315,7 +325,8 @@
         "Props: count (default 3)",
         "Skeleton card wrapper matches TaskDateGroup card style",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify skeleton placeholders render with pulse animation, verify count prop works (default 3), verify dark mode styling, close browser"
       ],
       "passes": false
     },
@@ -330,7 +341,8 @@
         "Message: No tasks yet / No overdue tasks / etc",
         "Centered, text-gray-500, py-12",
         "Exported from src/components/index.ts",
-        "npm run typecheck passes"
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify empty state shows 'No tasks yet' for current filter, switch to overdue filter, verify 'No overdue tasks' message, switch to completed filter, verify 'No completed tasks' message, close browser"
       ],
       "passes": false
     },
@@ -370,7 +382,7 @@
         "All components use dark: Tailwind variants",
         "Hover states use transition-colors duration-150",
         "npm run typecheck passes",
-        "Verify in browser at 375px, 768px, 1280px"
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, resize 375px, snapshot -i, verify mobile layout, resize 768px, verify tablet layout, resize 1280px, verify desktop layout, test Tab key navigation, verify focus rings, test Enter/Escape keys, close browser"
       ],
       "passes": false
     }
