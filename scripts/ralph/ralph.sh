@@ -7,12 +7,14 @@
 # 
 # Environment Variables:
 #   ITERATION_TIMEOUT - Timeout in seconds for each iteration (default: 600)
+#   MAX_CONSECUTIVE_FAILURES - Max consecutive failures before exit (default: 3)
 #
 # This script runs an AI coding agent (Claude Code) in a loop until:
 # 1. All tasks in prd.json are complete (passes: true)
 # 2. The agent outputs <promise>COMPLETE</promise>
 # 3. Max iterations is reached
-# 4. An iteration times out (configurable via ITERATION_TIMEOUT)
+# 4. Max consecutive failures is reached (prevents stuck tasks from burning iterations)
+# 5. An iteration times out (configurable via ITERATION_TIMEOUT)
 #
 # Prerequisites:
 # - Claude Code CLI installed: curl -fsSL https://claude.ai/install.sh | bash
@@ -33,6 +35,8 @@ LOG_FILE="$SCRIPT_DIR/ralph.log"
 LOCK_FILE="$SCRIPT_DIR/.ralph.lock"
 MAX_ITERATIONS=${1:-10}
 TIMEOUT_SECONDS=${ITERATION_TIMEOUT:-600}  # Default 10 minutes
+CONSECUTIVE_FAILURES=0
+MAX_CONSECUTIVE_FAILURES=${MAX_CONSECUTIVE_FAILURES:-3}
 
 # Colors for output
 RED='\033[0;31m'
@@ -298,6 +302,7 @@ main() {
   echo "=== Ralph Loop Started: $(date) ===" >> "$LOG_FILE"
   echo "Max iterations: $MAX_ITERATIONS" >> "$LOG_FILE"
   echo "Iteration timeout: ${TIMEOUT_SECONDS}s" >> "$LOG_FILE"
+  echo "Max consecutive failures: $MAX_CONSECUTIVE_FAILURES" >> "$LOG_FILE"
   
   show_status
   
@@ -333,15 +338,6 @@ main() {
       --dangerously-skip-permissions \
       2>&1) || timeout_exit_code=$?
     
-    # Handle timeout
-    if [ $timeout_exit_code -eq 124 ]; then
-      error "Iteration $i timed out after ${TIMEOUT_SECONDS} seconds"
-      warning "Claude command may have hung. Check ralph.log for details."
-      echo "=== Iteration $i Timed Out: $(date) ===" >> "$LOG_FILE"
-      # Continue to next iteration instead of exiting
-      continue
-    fi
-    
     # Log the result
     echo "$result" >> "$LOG_FILE"
     
@@ -349,6 +345,36 @@ main() {
     echo "$result" | head -100
     if [ $(echo "$result" | wc -l) -gt 100 ]; then
       echo "... (output truncated, see ralph.log for full output)"
+    fi
+    
+    # Check for failures and track consecutive failures
+    if [ $timeout_exit_code -ne 0 ] || ! echo "$result" | grep -q "passes.*true"; then
+      CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
+      log "Consecutive failures: $CONSECUTIVE_FAILURES/$MAX_CONSECUTIVE_FAILURES"
+      
+      if [ $timeout_exit_code -eq 124 ]; then
+        error "Iteration $i timed out after ${TIMEOUT_SECONDS} seconds"
+        warning "Claude command may have hung. Check ralph.log for details."
+        echo "=== Iteration $i Timed Out: $(date) ===" >> "$LOG_FILE"
+      else
+        warning "Iteration $i did not produce successful results"
+      fi
+      
+      if [ $CONSECUTIVE_FAILURES -ge $MAX_CONSECUTIVE_FAILURES ]; then
+        error "Max consecutive failures ($MAX_CONSECUTIVE_FAILURES) reached"
+        echo "=== Ralph Loop Ended (max consecutive failures): $(date) ===" >> "$LOG_FILE"
+        release_lock
+        exit 2
+      fi
+      
+      # Continue to next iteration
+      continue
+    else
+      # Success - reset consecutive failures counter
+      if [ $CONSECUTIVE_FAILURES -gt 0 ]; then
+        success "Success after $CONSECUTIVE_FAILURES consecutive failure(s) - resetting counter"
+      fi
+      CONSECUTIVE_FAILURES=0
     fi
     
     # Check for completion promise
