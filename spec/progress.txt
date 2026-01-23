@@ -52,3 +52,12 @@ Each iteration should APPEND to this file, never overwrite.
 - All packages added successfully to dependencies
 - npm run typecheck passes
 
+## 2026-01-23 16:15 - US-002
+- Defined TypeScript types in src/types/index.ts
+- Added Priority type: 'low' | 'medium' | 'high'
+- Added FilterType type: 'current' | 'overdue' | 'completed'
+- Added Task interface with all required fields (id, title, description, completed, priority, dueDate, estimatedMinutes, consumedMinutes, createdAt, updatedAt)
+- Files changed: src/types/index.ts, spec/prd.json
+- npm run typecheck passes
+- Pattern: All types exported from single index.ts file for clean imports
+
