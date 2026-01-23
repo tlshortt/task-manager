@@ -56,11 +56,11 @@ echo ""
 echo "User Stories:"
 echo "─────────────────────────────────────────────────────────────────"
 
-jq -r '.userStories | sort_by(.priority) | .[] | 
+jq -r '.userStories | .[] | 
   if .passes then
     "  ✅ [\(.id)] \(.title)"
   else
-    "  ⬜ [\(.id)] \(.title) (priority: \(.priority))"
+    "  ⬜ [\(.id)] \(.title)"
   end' "$PRD_FILE"
 
 echo ""
@@ -68,7 +68,7 @@ echo ""
 # Show next task if any pending
 if [ "$pending" -gt 0 ]; then
   echo -e "${YELLOW}Next task:${NC}"
-  jq -r '.userStories | map(select(.passes == false)) | sort_by(.priority) | .[0] | 
+  jq -r '.userStories | map(select(.passes == false)) | .[0] | 
     "  [\(.id)] \(.title)\n  \(.description)"' "$PRD_FILE"
   echo ""
 fi

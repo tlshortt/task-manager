@@ -94,7 +94,7 @@ validate_user_stories() {
     local story_path=".userStories[$story_index]"
     
     # Check required fields for each story
-    local required_story_fields=("id" "title" "description" "acceptanceCriteria" "priority" "passes")
+    local required_story_fields=("id" "title" "description" "acceptanceCriteria" "passes")
     
     for field in "${required_story_fields[@]}"; do
       local field_value=$(jq -r "${story_path}.${field}" "$PRD_FILE" 2>/dev/null)
@@ -134,12 +134,6 @@ validate_user_stories() {
       fi
     fi
     
-    if jq -e "${story_path}.priority" "$PRD_FILE" >/dev/null 2>&1; then
-      if ! jq -e "${story_path}.priority | type == \"number\"" "$PRD_FILE" >/dev/null 2>&1; then
-        add_error "User story [$story_index] field 'priority' must be a number"
-      fi
-    fi
-    
     if jq -e "${story_path}.passes" "$PRD_FILE" >/dev/null 2>&1; then
       if ! jq -e "${story_path}.passes | type == \"boolean\"" "$PRD_FILE" >/dev/null 2>&1; then
         add_error "User story [$story_index] field 'passes' must be a boolean (true or false, not a string)"
@@ -161,20 +155,6 @@ validate_unique_ids() {
   fi
 }
 
-validate_priority_sequence() {
-  # Check that priorities are sequential and start at 1
-  local priorities=$(jq -r '[.userStories[].priority] | sort | .[]' "$PRD_FILE" 2>/dev/null)
-  local expected=1
-  
-  while IFS= read -r priority; do
-    if [ "$priority" -ne "$expected" ]; then
-      add_error "Priority sequence error: expected priority $expected but found $priority (priorities should be sequential starting at 1)"
-      break
-    fi
-    expected=$((expected + 1))
-  done <<< "$priorities"
-}
-
 # ============================================================================
 # Main Validation
 # ============================================================================
@@ -191,7 +171,6 @@ main() {
   validate_field_types
   validate_user_stories
   validate_unique_ids
-  validate_priority_sequence
   
   # Report results
   if [ ${#ERRORS[@]} -eq 0 ]; then

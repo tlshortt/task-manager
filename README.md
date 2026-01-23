@@ -33,12 +33,6 @@ curl -fsSL https://claude.ai/install.sh | bash
 ```bash
 # macOS
 brew install jq
-
-# Ubuntu/Debian
-sudo apt install jq
-
-# Windows (with chocolatey)
-choco install jq
 ```
 
 ## Quick Start
@@ -115,17 +109,17 @@ ralph-starter-kit/
 
 ## NPM Scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Build for production |
-| `npm run typecheck` | Run TypeScript checks |
-| `npm run lint` | Run ESLint |
-| `npm run test` | Run Vitest tests |
-| `npm run ralph` | Run Ralph loop (default 10 iterations) |
-| `npm run ralph:once` | Run single Ralph iteration (HITL) |
-| `npm run ralph:status` | Check PRD completion status |
-| `npm run ralph:validate` | Validate PRD schema |
+| Script                   | Description                            |
+| ------------------------ | -------------------------------------- |
+| `npm run dev`            | Start Vite dev server                  |
+| `npm run build`          | Build for production                   |
+| `npm run typecheck`      | Run TypeScript checks                  |
+| `npm run lint`           | Run ESLint                             |
+| `npm run test`           | Run Vitest tests                       |
+| `npm run ralph`          | Run Ralph loop (default 10 iterations) |
+| `npm run ralph:once`     | Run single Ralph iteration (HITL)      |
+| `npm run ralph:status`   | Check PRD completion status            |
+| `npm run ralph:validate` | Validate PRD schema                    |
 
 ## The Sample Feature: Task Priorities
 
@@ -187,6 +181,7 @@ Before running Ralph, validate your PRD schema:
 ```
 
 This checks for:
+
 - ✅ Required fields (projectName, branchName, description, userStories)
 - ✅ Correct types (e.g., `passes` must be boolean, not string)
 - ✅ Non-empty userStories array
@@ -199,21 +194,25 @@ The validation runs automatically when you start Ralph, but you can run it manua
 ## Monitoring Progress
 
 ### Check Status
+
 ```bash
 npm run ralph:status
 ```
 
 ### View Progress Log
+
 ```bash
 cat scripts/ralph/progress.txt
 ```
 
 ### View Execution Log
+
 ```bash
 cat scripts/ralph/ralph.log
 ```
 
 ### Check Git History
+
 ```bash
 git log --oneline -20
 ```
@@ -229,18 +228,23 @@ git log --oneline -20
 ## Troubleshooting
 
 ### "Claude Code CLI not found"
+
 Install with: `curl -fsSL https://claude.ai/install.sh | bash`
 
 ### "jq not found"
+
 Install jq for your OS (see Prerequisites)
 
 ### "Permission denied"
+
 Run: `chmod +x scripts/ralph/*.sh`
 
 ### Ralph completes immediately
+
 Check if all PRD items already have `passes: true`
 
 ### Ralph gets stuck on a task
+
 - Check `ralph.log` for errors
 - Task might be too big - split into smaller items
 - Add more specific acceptance criteria
@@ -248,6 +252,7 @@ Check if all PRD items already have `passes: true`
 ## Improvements & Future Features
 
 See [IMPROVEMENTS.md](scripts/ralph/IMPROVEMENTS.md) for:
+
 - ✅ Implemented improvements (PRD validation)
 - 🔄 Suggested improvements (pre-flight checks, rollback, cost tracking, etc.)
 - Implementation priorities and complexity estimates

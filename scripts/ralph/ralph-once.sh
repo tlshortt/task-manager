@@ -101,7 +101,7 @@ echo ""
 
 # Show what task will be picked
 echo -e "${BLUE}Next task to work on:${NC}"
-jq -r '.userStories | map(select(.passes == false)) | sort_by(.priority) | .[0] | "  \(.id): \(.title)\n  Priority: \(.priority)\n  Acceptance Criteria:\n\(.acceptanceCriteria | map("    - " + .) | join("\n"))"' "$PRD_FILE"
+jq -r '.userStories | map(select(.passes == false)) | .[0] | "  \(.id): \(.title)\n  Acceptance Criteria:\n\(.acceptanceCriteria | map("    - " + .) | join("\n"))"' "$PRD_FILE"
 echo ""
 
 read -p "Press Enter to run Claude Code, or Ctrl+C to cancel..."

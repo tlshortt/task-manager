@@ -219,7 +219,7 @@ show_status() {
   if [ "$pending" -gt 0 ]; then
     echo ""
     echo "Pending tasks:"
-    jq -r '.userStories[] | select(.passes == false) | "  - [\(.id)] \(.title) (priority: \(.priority))"' "$PRD_FILE"
+    jq -r '.userStories[] | select(.passes == false) | "  - [\(.id)] \(.title)"' "$PRD_FILE"
   fi
   echo ""
 }
