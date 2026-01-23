@@ -175,7 +175,7 @@
         "Create src/components/PriorityBadge.test.tsx with tests: renders correct color for high/medium/low",
         "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify all 3 priority colors display correctly (red, amber, gray), close browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-012",

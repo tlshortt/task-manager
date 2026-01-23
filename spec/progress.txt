@@ -172,3 +172,17 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (13/13 tests)
 
+## 2026-01-23 17:42 - US-011
+- Created PriorityBadge component in src/components/PriorityBadge.tsx
+- Props: priority (Priority type)
+- Colored dots: high=bg-red-500, medium=bg-amber-500, low=bg-gray-400
+- w-2 h-2 rounded-full inline-block mr-2 styling
+- Exported from src/components/index.ts
+- Created tests in src/components/PriorityBadge.test.tsx
+- Tests verify correct color rendering for all priority levels
+- Updated App.tsx with visual test section showing all 3 priorities
+- Files changed: src/components/PriorityBadge.tsx, src/components/PriorityBadge.test.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used Record type for color mapping
+- npm run typecheck passes
+- npm run test passes (16/16 tests)
+
