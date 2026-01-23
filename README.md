@@ -96,13 +96,14 @@ ralph-starter-kit/
 │   ├── types/              # TypeScript types
 │   ├── utils/              # Utility functions
 │   └── App.tsx             # Root component
-├── scripts/ralph/          # Ralph loop configuration
+├── scripts/ralph/          # Ralph loop scripts
 │   ├── ralph.sh            # Main autonomous loop
 │   ├── ralph-once.sh       # Single iteration (HITL)
-│   ├── ralph-status.sh     # Check PRD status
-│   ├── PROMPT.md           # Instructions for AI agent
+│   └── ralph-status.sh     # Check PRD status
+├── spec/                   # Ralph specification files
 │   ├── prd.json            # Task definitions
-│   └── progress.txt        # Progress tracking
+│   ├── progress.txt        # Progress tracking
+│   └── PROMPT.md           # Instructions for AI agent
 ├── AGENTS.md               # Codebase conventions for AI
 └── README.md               # This file
 ```
@@ -140,7 +141,7 @@ Ralph will implement these one by one, committing after each.
 
 ## Customizing the PRD
 
-Edit `scripts/ralph/prd.json` to define your own tasks:
+Edit `spec/prd.json` to define your own tasks:
 
 ```json
 {
@@ -202,7 +203,7 @@ npm run ralph:status
 ### View Progress Log
 
 ```bash
-cat scripts/ralph/progress.txt
+cat spec/progress.txt
 ```
 
 ### View Execution Log

@@ -4,7 +4,7 @@ Convert PRDs to prd.json format for the Ralph autonomous agent system. Use when 
 
 ## The Job
 
-Take a PRD (markdown file or text) and convert it to `scripts/ralph/prd.json`.
+Take a PRD (markdown file or text) and convert it to `spec/prd.json`.
 
 ## Output Format
 
@@ -150,7 +150,7 @@ Add ability to mark tasks with different statuses.
 - Show status badge on each task
 ```
 
-**Output scripts/ralph/prd.json:**
+**Output spec/prd.json:**
 
 ```json
 {
@@ -229,12 +229,12 @@ Add ability to mark tasks with different statuses.
 
 **Before writing a new prd.json, check if there is an existing one from a different feature:**
 
-1. Read the current `scripts/ralph/prd.json` if it exists
+1. Read the current `spec/prd.json` if it exists
 2. Check if `branchName` differs from the new feature's branch name
-3. If different AND `scripts/ralph/progress.txt` has content beyond the header:
+3. If different AND `spec/progress.txt` has content beyond the header:
    - Create archive folder: `scripts/ralph/archive/YYYY-MM-DD-feature-name/`
-   - Copy current `prd.json` and `progress.txt` to archive
-   - Reset `progress.txt` with fresh header
+   - Copy current `spec/prd.json` and `spec/progress.txt` to archive
+   - Reset `spec/progress.txt` with fresh header
 
 **The ralph.sh script handles this automatically** when you run it, but if you are manually updating prd.json between runs, archive first.
 

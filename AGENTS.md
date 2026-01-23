@@ -31,13 +31,15 @@ src/
 ├── main.tsx        # Entry point
 └── index.css       # Global styles + Tailwind
 
-scripts/ralph/      # Ralph loop configuration
+scripts/ralph/      # Ralph loop scripts
 ├── ralph.sh        # Main loop script
 ├── ralph-once.sh   # Single iteration script
-├── ralph-status.sh # Status checker
-├── PROMPT.md       # AI agent instructions
+└── ralph-status.sh # Status checker
+
+spec/               # Ralph specification files
 ├── prd.json        # Product requirements
-└── progress.txt    # Progress tracking
+├── progress.txt    # Progress tracking
+└── PROMPT.md       # AI agent instructions
 
 skills/             # AI agent skills (reusable prompts)
 ├── prd/            # PRD Generator skill
@@ -184,7 +186,7 @@ After creating a PRD, convert it to the JSON format Ralph uses:
 Load the ralph skill and convert tasks/prd-[feature-name].md to prd.json
 ```
 
-This creates `scripts/ralph/prd.json` with properly sized user stories.
+This creates `spec/prd.json` with properly sized user stories.
 
 ### Full workflow
 

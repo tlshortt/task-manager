@@ -19,9 +19,10 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
 
-# Get PRD file path (default to scripts/ralph/prd.json)
+# Get PRD file path (default to spec/prd.json)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PRD_FILE="${1:-$SCRIPT_DIR/prd.json}"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+PRD_FILE="${1:-$PROJECT_ROOT/spec/prd.json}"
 
 ERRORS=()
 

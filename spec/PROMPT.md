@@ -1,12 +1,12 @@
-@scripts/ralph/prd.json @scripts/ralph/progress.txt @AGENTS.md
+@spec/prd.json @spec/progress.txt @AGENTS.md
 
 # Ralph Loop Instructions
 
 You are an autonomous AI coding agent running in a Ralph loop. Each iteration starts with fresh context. Your memory persists through:
 
 - Git history (commits from previous iterations)
-- progress.txt (learnings and context from previous work)
-- prd.json (which tasks are complete)
+- spec/progress.txt (learnings and context from previous work)
+- spec/prd.json (which tasks are complete)
 
 ## Your Mission
 
@@ -24,7 +24,7 @@ If the PRD is complete, output `<promise>COMPLETE</promise>`.
 
 ## Step 1: Select a Task
 
-Read `scripts/ralph/prd.json` and select a high priority, incomplete task where `passes: false`.
+Read `spec/prd.json` and select a high priority, incomplete task where `passes: false`.
 
 Analyze the codebase and PRD to determine which task to work on. Consider what dependencies exist, what code is already in place, and what would be a logical next step.
 
@@ -37,7 +37,7 @@ Analyze the codebase and PRD to determine which task to work on. Consider what d
 1. **Read existing code** before making changes
    - Understand the patterns already in use
    - Check AGENTS.md for codebase conventions
-   - Review progress.txt for recent learnings
+   - Review spec/progress.txt for recent learnings
 
 2. **Implement the change** following acceptance criteria exactly
 
@@ -64,10 +64,10 @@ Analyze the codebase and PRD to determine which task to work on. Consider what d
 1. **Update the PRD** - Set `passes: true` for the completed story:
 
    ```bash
-   jq '(.userStories[] | select(.id == "US-XXX")).passes = true' scripts/ralph/prd.json > tmp.json && mv tmp.json scripts/ralph/prd.json
+   jq '(.userStories[] | select(.id == "US-XXX")).passes = true' spec/prd.json > tmp.json && mv tmp.json spec/prd.json
    ```
 
-2. **Append to progress.txt** with a dated entry:
+2. **Append to spec/progress.txt** with a dated entry:
 
    ```
    ## YYYY-MM-DD HH:MM - [Task ID]

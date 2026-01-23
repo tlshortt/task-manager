@@ -34,9 +34,9 @@ set -e
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-PRD_FILE="$SCRIPT_DIR/prd.json"
-PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
-PROMPT_FILE="$SCRIPT_DIR/PROMPT.md"
+PRD_FILE="$PROJECT_ROOT/spec/prd.json"
+PROGRESS_FILE="$PROJECT_ROOT/spec/progress.txt"
+PROMPT_FILE="$PROJECT_ROOT/spec/PROMPT.md"
 LOG_FILE="$SCRIPT_DIR/ralph.log"
 LOCK_FILE="$SCRIPT_DIR/.ralph.lock"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
