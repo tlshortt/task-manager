@@ -93,17 +93,31 @@ npm run ralph 10  # Run up to 10 iterations
 ralph-starter-kit/
 ├── src/                    # Application source code
 │   ├── components/         # React components
+│   │   └── index.ts        # Component barrel exports
 │   ├── types/              # TypeScript types
-│   ├── utils/              # Utility functions
-│   └── App.tsx             # Root component
+│   ├── test/               # Test setup
+│   ├── App.tsx             # Root component
+│   ├── main.tsx            # Entry point
+│   └── index.css           # Global styles + Tailwind
 ├── scripts/ralph/          # Ralph loop scripts
 │   ├── ralph.sh            # Main autonomous loop
 │   ├── ralph-once.sh       # Single iteration (HITL)
-│   └── ralph-status.sh     # Check PRD status
+│   ├── ralph-status.sh     # Check PRD status
+│   └── validate-prd.sh     # Validate PRD schema
 ├── spec/                   # Ralph specification files
 │   ├── prd.json            # Task definitions
+│   ├── prd.json.example    # Example PRD template
 │   ├── progress.txt        # Progress tracking
 │   └── PROMPT.md           # Instructions for AI agent
+├── skills/                 # AI agent skills (reusable prompts)
+│   ├── agent-browser/      # Browser automation skill
+│   │   └── SKILL.md
+│   ├── prd/                # PRD Generator skill
+│   │   └── SKILL.md
+│   └── ralph/              # Ralph PRD Converter skill
+│       └── SKILL.md
+├── tasks/                  # Generated PRD documents
+│   └── prd-*.md            # PRDs created by the prd skill
 ├── AGENTS.md               # Codebase conventions for AI
 └── README.md               # This file
 ```
