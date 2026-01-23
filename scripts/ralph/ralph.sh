@@ -320,13 +320,14 @@ main() {
     check_git_clean
     
     # Check if all tasks are already complete
-    local pending=$(get_pending_count)
-    if [ "$pending" -eq 0 ]; then
+    local pending_before=$(get_pending_count)
+    if [ "$pending_before" -eq 0 ]; then
       success "All tasks already complete!"
       break
     fi
     
     log "Running Claude Code with prompt (timeout: ${TIMEOUT_SECONDS}s)..."
+    log "Pending tasks before iteration: $pending_before"
     
     # Run Claude Code with the prompt and timeout protection
     # Using --dangerously-skip-permissions for autonomous operation
@@ -347,8 +348,19 @@ main() {
       echo "... (output truncated, see ralph.log for full output)"
     fi
     
+    # Check for progress by comparing PRD state before/after iteration
+    # This is more reliable than grepping the output for "passes.*true"
+    local pending_after=$(get_pending_count)
+    local made_progress=false
+    
+    if [ "$pending_after" -lt "$pending_before" ]; then
+      made_progress=true
+      local tasks_completed=$((pending_before - pending_after))
+      success "Completed $tasks_completed task(s) this iteration (pending: $pending_before → $pending_after)"
+    fi
+    
     # Check for failures and track consecutive failures
-    if [ $timeout_exit_code -ne 0 ] || ! echo "$result" | grep -q "passes.*true"; then
+    if [ $timeout_exit_code -ne 0 ] || [ "$made_progress" = false ]; then
       CONSECUTIVE_FAILURES=$((CONSECUTIVE_FAILURES + 1))
       log "Consecutive failures: $CONSECUTIVE_FAILURES/$MAX_CONSECUTIVE_FAILURES"
       
@@ -357,7 +369,7 @@ main() {
         warning "Claude command may have hung. Check ralph.log for details."
         echo "=== Iteration $i Timed Out: $(date) ===" >> "$LOG_FILE"
       else
-        warning "Iteration $i did not produce successful results"
+        warning "Iteration $i did not complete any tasks (pending still $pending_after)"
       fi
       
       if [ $CONSECUTIVE_FAILURES -ge $MAX_CONSECUTIVE_FAILURES ]; then
