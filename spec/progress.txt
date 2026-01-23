@@ -316,3 +316,16 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (29/29 tests)
 
+## 2026-01-23 18:10 - US-021
+- Created TaskSkeleton component in src/components/TaskSkeleton.tsx
+- Props: count (default 3)
+- Matches TaskRow dimensions with animate-pulse animation
+- bg-gray-200 dark:bg-gray-700 rounded skeleton elements
+- Card wrapper matches TaskDateGroup style with dark mode support
+- Exported from src/components/index.ts
+- Files changed: src/components/TaskSkeleton.tsx, src/components/index.ts, spec/prd.json
+- Pattern: Used Array.from() to generate multiple skeleton rows
+- Pattern: Dark mode variants (dark:bg-gray-700, dark:border-gray-700) included
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
