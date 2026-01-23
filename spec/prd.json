@@ -344,7 +344,7 @@
         "npm run typecheck passes",
         "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify empty state shows 'No tasks yet' for current filter, switch to overdue filter, verify 'No overdue tasks' message, switch to completed filter, verify 'No completed tasks' message, close browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-023",

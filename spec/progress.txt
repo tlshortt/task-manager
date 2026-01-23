@@ -329,3 +329,16 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (29/29 tests)
 
+## 2026-01-23 18:11 - US-022
+- Created EmptyState component in src/components/EmptyState.tsx
+- Props: filter (FilterType) for context-aware messaging
+- Three states: current (No tasks yet), overdue (No overdue tasks), completed (No completed tasks)
+- Icons from lucide-react: Inbox, Clock, CheckCircle
+- Styling: centered, text-gray-500, py-12 with icon, message, subtitle
+- Integrated into MainLayout replacing generic empty message
+- Exported from src/components/index.ts
+- Files changed: src/components/EmptyState.tsx, src/components/index.ts, src/components/MainLayout.tsx, spec/prd.json
+- Pattern: Switch statement maps filter type to appropriate icon and messaging
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+

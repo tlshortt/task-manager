@@ -12,3 +12,4 @@ export { ProgressBar } from './ProgressBar';
 export { AppHeader } from './AppHeader';
 export { MainLayout } from './MainLayout';
 export { TaskSkeleton } from './TaskSkeleton';
+export { EmptyState } from './EmptyState';
