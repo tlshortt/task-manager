@@ -3,13 +3,16 @@
 # ============================================================================
 # Ralph Loop - Autonomous AI Coding Agent Loop
 # ============================================================================
-# Usage: ./scripts/ralph/ralph.sh [max_iterations]
+# Usage: ./scripts/ralph/ralph.sh [max_iterations] [--tool claude|amp|cursor]
 # 
+# Options:
+#   --tool <tool>  AI tool to use: claude (default), amp, or cursor
+#
 # Environment Variables:
 #   ITERATION_TIMEOUT - Timeout in seconds for each iteration (default: 600)
 #   MAX_CONSECUTIVE_FAILURES - Max consecutive failures before exit (default: 3)
 #
-# This script runs an AI coding agent (Claude Code) in a loop until:
+# This script runs an AI coding agent in a loop until:
 # 1. All tasks in prd.json are complete (passes: true)
 # 2. The agent outputs <promise>COMPLETE</promise>
 # 3. Max iterations is reached
@@ -17,7 +20,10 @@
 # 5. An iteration times out (configurable via ITERATION_TIMEOUT)
 #
 # Prerequisites:
-# - Claude Code CLI installed: curl -fsSL https://claude.ai/install.sh | bash
+# - AI CLI installed (one of):
+#   - Claude Code: curl -fsSL https://claude.ai/install.sh | bash
+#   - Amp CLI: npm install -g @anthropic-ai/amp
+#   - Cursor CLI: Install from cursor.sh
 # - jq installed: brew install jq (macOS) or apt install jq (Linux)
 # - timeout command: built-in on Linux, or install coreutils on macOS (brew install coreutils)
 # - A git repository initialized in this project
@@ -33,10 +39,40 @@ PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 PROMPT_FILE="$SCRIPT_DIR/PROMPT.md"
 LOG_FILE="$SCRIPT_DIR/ralph.log"
 LOCK_FILE="$SCRIPT_DIR/.ralph.lock"
-MAX_ITERATIONS=${1:-10}
 TIMEOUT_SECONDS=${ITERATION_TIMEOUT:-600}  # Default 10 minutes
 CONSECUTIVE_FAILURES=0
 MAX_CONSECUTIVE_FAILURES=${MAX_CONSECUTIVE_FAILURES:-3}
+
+# Default values
+MAX_ITERATIONS=10
+AI_TOOL="claude"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --tool)
+      AI_TOOL="$2"
+      shift 2
+      ;;
+    *)
+      # Assume it's max_iterations if it's a number
+      if [[ "$1" =~ ^[0-9]+$ ]]; then
+        MAX_ITERATIONS="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+# Validate AI_TOOL
+case "$AI_TOOL" in
+  claude|amp|cursor)
+    ;;
+  *)
+    echo "Error: Invalid tool '$AI_TOOL'. Must be one of: claude, amp, cursor"
+    exit 1
+    ;;
+esac
 
 # Colors for output
 RED='\033[0;31m'
@@ -122,11 +158,41 @@ check_git_clean() {
   success "Git repository is clean"
 }
 
+get_tool_command() {
+  case "$AI_TOOL" in
+    claude)
+      echo "claude"
+      ;;
+    amp)
+      echo "amp"
+      ;;
+    cursor)
+      echo "agent"
+      ;;
+  esac
+}
+
+get_tool_install_instructions() {
+  case "$AI_TOOL" in
+    claude)
+      echo "Install with: curl -fsSL https://claude.ai/install.sh | bash"
+      ;;
+    amp)
+      echo "Install with: npm install -g @anthropic-ai/amp"
+      ;;
+    cursor)
+      echo "Install from: https://cursor.sh"
+      ;;
+  esac
+}
+
 check_prerequisites() {
   log "Checking prerequisites..."
+  log "Using AI tool: $AI_TOOL"
   
-  if ! command -v claude &> /dev/null; then
-    error "Claude Code CLI not found. Install with: curl -fsSL https://claude.ai/install.sh | bash"
+  local tool_cmd=$(get_tool_command)
+  if ! command -v "$tool_cmd" &> /dev/null; then
+    error "$AI_TOOL CLI not found. $(get_tool_install_instructions)"
     exit 1
   fi
   
@@ -191,6 +257,22 @@ run_with_timeout() {
   fi
   
   return $exit_code
+}
+
+run_ai_tool() {
+  local prompt="$1"
+  
+  case "$AI_TOOL" in
+    claude)
+      claude -p "$prompt" --output-format text --dangerously-skip-permissions
+      ;;
+    amp)
+      amp run --prompt "$prompt" --yes
+      ;;
+    cursor)
+      agent --prompt "$prompt"
+      ;;
+  esac
 }
 
 get_pending_count() {
@@ -300,6 +382,7 @@ main() {
   
   # Initialize log file
   echo "=== Ralph Loop Started: $(date) ===" >> "$LOG_FILE"
+  echo "AI tool: $AI_TOOL" >> "$LOG_FILE"
   echo "Max iterations: $MAX_ITERATIONS" >> "$LOG_FILE"
   echo "Iteration timeout: ${TIMEOUT_SECONDS}s" >> "$LOG_FILE"
   echo "Max consecutive failures: $MAX_CONSECUTIVE_FAILURES" >> "$LOG_FILE"
@@ -326,18 +409,13 @@ main() {
       break
     fi
     
-    log "Running Claude Code with prompt (timeout: ${TIMEOUT_SECONDS}s)..."
+    log "Running $AI_TOOL with prompt (timeout: ${TIMEOUT_SECONDS}s)..."
     log "Pending tasks before iteration: $pending_before"
     
-    # Run Claude Code with the prompt and timeout protection
-    # Using --dangerously-skip-permissions for autonomous operation
-    # Remove this flag if you want to approve each action
+    # Run AI tool with the prompt and timeout protection
     local result
     local timeout_exit_code=0
-    result=$(run_with_timeout "$TIMEOUT_SECONDS" claude -p "$(cat "$PROMPT_FILE")" \
-      --output-format text \
-      --dangerously-skip-permissions \
-      2>&1) || timeout_exit_code=$?
+    result=$(run_with_timeout "$TIMEOUT_SECONDS" bash -c "$(declare -f run_ai_tool); AI_TOOL='$AI_TOOL'; run_ai_tool \"\$(cat '$PROMPT_FILE')\"" 2>&1) || timeout_exit_code=$?
     
     # Log the result
     echo "$result" >> "$LOG_FILE"
@@ -366,7 +444,7 @@ main() {
       
       if [ $timeout_exit_code -eq 124 ]; then
         error "Iteration $i timed out after ${TIMEOUT_SECONDS} seconds"
-        warning "Claude command may have hung. Check ralph.log for details."
+        warning "$AI_TOOL command may have hung. Check ralph.log for details."
         echo "=== Iteration $i Timed Out: $(date) ===" >> "$LOG_FILE"
       else
         warning "Iteration $i did not complete any tasks (pending still $pending_after)"

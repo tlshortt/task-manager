@@ -3,7 +3,10 @@
 # ============================================================================
 # Ralph Once - Single Iteration for Human-in-the-Loop Mode
 # ============================================================================
-# Usage: ./scripts/ralph/ralph-once.sh
+# Usage: ./scripts/ralph/ralph-once.sh [--tool claude|amp|cursor]
+#
+# Options:
+#   --tool <tool>  AI tool to use: claude (default), amp, or cursor
 #
 # Runs a single Ralph iteration so you can watch and intervene.
 # Great for learning how Ralph works or for risky changes.
@@ -15,6 +18,32 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 PRD_FILE="$SCRIPT_DIR/prd.json"
 PROMPT_FILE="$SCRIPT_DIR/PROMPT.md"
+
+# Default AI tool
+AI_TOOL="claude"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --tool)
+      AI_TOOL="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Validate AI_TOOL
+case "$AI_TOOL" in
+  claude|amp|cursor)
+    ;;
+  *)
+    echo "Error: Invalid tool '$AI_TOOL'. Must be one of: claude, amp, cursor"
+    exit 1
+    ;;
+esac
 
 # Colors
 GREEN='\033[0;32m'
@@ -104,14 +133,35 @@ echo -e "${BLUE}Next task to work on:${NC}"
 jq -r '.userStories | map(select(.passes == false)) | .[0] | "  \(.id): \(.title)\n  Acceptance Criteria:\n\(.acceptanceCriteria | map("    - " + .) | join("\n"))"' "$PRD_FILE"
 echo ""
 
-read -p "Press Enter to run Claude Code, or Ctrl+C to cancel..."
+read -p "Press Enter to run $AI_TOOL, or Ctrl+C to cancel..."
 echo ""
 
 cd "$PROJECT_ROOT"
 
-# Run Claude Code interactively (no --dangerously-skip-permissions)
-# This will prompt you to approve actions
-claude -p "$(cat "$PROMPT_FILE")" --output-format text
+# Function to run AI tool interactively
+run_ai_tool_interactive() {
+  local prompt="$1"
+  
+  case "$AI_TOOL" in
+    claude)
+      # No --dangerously-skip-permissions for interactive mode
+      claude -p "$prompt" --output-format text
+      ;;
+    amp)
+      # No --yes for interactive mode
+      amp run --prompt "$prompt"
+      ;;
+    cursor)
+      agent --prompt "$prompt"
+      ;;
+  esac
+}
+
+echo -e "${BLUE}Using AI tool: $AI_TOOL${NC}"
+echo ""
+
+# Run AI tool interactively
+run_ai_tool_interactive "$(cat "$PROMPT_FILE")"
 
 echo ""
 echo -e "${GREEN}✅ Single iteration complete${NC}"
