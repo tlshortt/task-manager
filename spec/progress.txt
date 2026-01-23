@@ -107,3 +107,20 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Component follows functional React pattern with Tailwind utilities
 - npm run typecheck passes (all tests pass)
 
+## 2026-01-23 16:42 - US-007
+- Created TaskRow component in src/components/TaskRow.tsx
+- Installed lucide-react for icons (play, check, trash)
+- Props: task, onToggle, onUpdate, onDelete
+- Layout: checkbox, priority dot, title, estimated time, consumed time, action icons
+- Checkbox: rounded-md border-2, checked state shows purple bg with checkmark
+- Priority dots: high=red, medium=amber, low=gray
+- Time format helper: 1hr 30m (compact format)
+- Action icons appear on hover with opacity transition
+- Completed tasks: line-through, text-gray-400
+- Hover state: bg-gray-50 transition-colors
+- Files changed: src/components/TaskRow.tsx, src/components/index.ts, src/App.tsx, package.json
+- Pattern: Used lucide-react for consistent icon system
+- Pattern: Helper function formatTime() provides compact time display
+- Pattern: getPriorityColor() maps priority to Tailwind color classes
+- npm run typecheck passes
+
