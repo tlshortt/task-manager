@@ -40,7 +40,7 @@
         "npm run typecheck passes",
         "Create src/db/index.test.ts with tests: database opens, tasks table exists, indexes work"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-004",
