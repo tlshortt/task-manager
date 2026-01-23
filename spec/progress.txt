@@ -303,3 +303,16 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (29/29 tests)
 
+## 2026-01-23 17:55 - US-020
+- Verified App integration with MainLayout - already complete
+- App.tsx renders MainLayout component with Toaster for notifications
+- MainLayout integrates useTasks and useDarkMode hooks
+- Filter state managed in MainLayout, passed to FilterTabs
+- All task CRUD operations (add, toggle, update, delete) working via handlers
+- Dark mode toggle in AppHeader component
+- All acceptance criteria met
+- Files verified: src/App.tsx, src/components/MainLayout.tsx
+- Pattern: MainLayout acts as main orchestrator, App.tsx minimal wrapper with global Toaster
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+

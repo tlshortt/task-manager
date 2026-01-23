@@ -312,7 +312,7 @@
         "npm run typecheck passes",
         "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, fill task input, press Enter, verify task appears, click checkbox, verify completion, click delete icon, verify undo toast, click filter tabs, verify filtering works, toggle dark mode, verify persistence on reload, close browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-021",
