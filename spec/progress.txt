@@ -359,3 +359,27 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (64/64 tests)
 
+## 2026-01-23 18:24 - US-024
+- Created comprehensive component tests for TaskRow and FilterTabs
+- Created src/components/TaskRow.test.tsx with 7 tests covering:
+  - Rendering task title and information
+  - Checkbox toggle handler
+  - Delete handler
+  - Completed styling (line-through, purple checkbox)
+  - Time display formatting (1hr 30m, 45m, --)
+  - Priority color rendering
+- Created src/components/FilterTabs.test.tsx with 6 tests covering:
+  - Tab rendering with labels
+  - Count badge display
+  - Click handler
+  - Active tab styling (text-navy-900, border-purple-600)
+  - Inactive tab styling
+  - Filter switching behavior
+- Fixed issue with multiple buttons having same aria-label by using specific CSS selectors
+- Fixed unused variable warning in TypeScript
+- Files changed: src/components/TaskRow.test.tsx, src/components/FilterTabs.test.tsx, spec/prd.json
+- Pattern: When multiple elements share aria-labels, use container.querySelector with specific CSS classes
+- Pattern: Testing library tests follow describe/it pattern with vi.fn() for mocks
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+
