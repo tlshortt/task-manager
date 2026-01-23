@@ -95,3 +95,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Custom colors and shadows extend Tailwind's default theme
 - npm run typecheck passes
 
+## 2026-01-23 16:31 - US-006
+- Created TaskTableHeader component in src/components/TaskTableHeader.tsx
+- Four columns: Task (flex-1), Estimated (w-28), Consumed (w-28), Status (w-24)
+- Sticky header with bg-gray-50/80 backdrop-blur effect
+- text-xs uppercase text-gray-500 font-medium tracking-wide styling
+- Rounded-t-xl border-b border-gray-100
+- Exported from src/components/index.ts
+- Updated App.tsx to display component for visual verification
+- Files changed: src/components/TaskTableHeader.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Component follows functional React pattern with Tailwind utilities
+- npm run typecheck passes (all tests pass)
+
