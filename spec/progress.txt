@@ -140,3 +140,20 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (13/13 tests)
 
+## 2026-01-23 16:44 - US-009
+- Created TaskInput component in src/components/TaskInput.tsx
+- Props: onAddTask with title and optional dueDate
+- Layout: Plus icon + input field + Set deadline button
+- Input: border-0 focus:ring-0, placeholder text-gray-400
+- Deadline button: text-sm text-gray-500 hover:text-purple-600, calendar icon
+- Date picker appears on deadline click with native date input
+- Enter key submits and clears input
+- Card styling: bg-white rounded-xl shadow-card p-4
+- Exported from src/components/index.ts
+- Updated App.tsx for visual verification
+- Files changed: src/components/TaskInput.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Used lucide-react Plus and Calendar icons
+- Pattern: State management with useState for title, dueDate, and showDatePicker
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
