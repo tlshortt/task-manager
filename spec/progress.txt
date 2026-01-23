@@ -269,3 +269,18 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (23/23 tests)
 
+## 2026-01-23 17:51 - US-018
+- Created useDarkMode hook in src/hooks/useDarkMode.ts
+- Returns { isDark, toggle }
+- Reads from localStorage 'darkMode' on mount
+- Falls back to window.matchMedia('prefers-color-scheme: dark') if no localStorage value
+- Toggles 'dark' class on document.documentElement
+- Persists dark mode preference to localStorage
+- Created comprehensive tests in src/hooks/useDarkMode.test.ts
+- Added matchMedia mock to src/test/setup.ts for test environment
+- Files changed: src/hooks/useDarkMode.ts, src/hooks/useDarkMode.test.ts, src/test/setup.ts, spec/prd.json
+- Pattern: Test environment needs matchMedia mock for dark mode functionality
+- Pattern: Hook uses useEffect to sync dark class and localStorage with state
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
