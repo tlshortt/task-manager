@@ -242,3 +242,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Utility functions follow pure function pattern with explicit types
 - npm run typecheck passes
 
+## 2026-01-23 17:48 - US-016
+- Added Toaster from react-hot-toast to App.tsx
+- Position: bottom-center
+- Toast style: bg-navy-900 (#0f172a), white text, rounded-xl, shadow-lg
+- Duration: 5000ms
+- Undo button already implemented in useTasks hook with purple-400 color (#a78bfa)
+- Files changed: src/App.tsx, spec/prd.json
+- Pattern: Toaster configured globally in App.tsx with toastOptions
+- Pattern: Toast notifications already working from US-004 with undo functionality
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+

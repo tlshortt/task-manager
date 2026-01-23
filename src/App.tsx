@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay, ProgressBar } from '@/components';
 import type { Task, FilterType } from '@/types';
 
@@ -57,6 +58,18 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      <Toaster
+        position="bottom-center"
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#0f172a',
+            color: '#fff',
+            borderRadius: '0.75rem',
+            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+          },
+        }}
+      />
       <div className="max-w-4xl mx-auto">
         <FilterTabs
           filter={filter}
