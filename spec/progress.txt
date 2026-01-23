@@ -157,3 +157,18 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (13/13 tests)
 
+## 2026-01-23 17:14 - US-010
+- Created FilterTabs component in src/components/FilterTabs.tsx
+- Props: filter (FilterType), onFilterChange callback, counts object
+- Three tabs: Current, Overdue, Completed with count badges
+- Active tab: font-medium text-navy-900 border-b-2 border-purple-600
+- Inactive tabs: text-gray-500 hover:text-gray-700
+- Horizontal flex layout with gap-8
+- Count badges: bg-gray-100 rounded-full px-2 text-xs ml-2
+- Exported from src/components/index.ts
+- Updated App.tsx with useState for filter state and FilterTabs demo
+- Files changed: src/components/FilterTabs.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Tab component uses button elements with dynamic className based on active state
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
