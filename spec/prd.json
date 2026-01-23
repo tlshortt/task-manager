@@ -357,7 +357,7 @@
         "Test filterTasks and getFilterCounts",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-024",
