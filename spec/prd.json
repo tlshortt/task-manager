@@ -224,7 +224,7 @@
         "Uses date-fns",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-015",

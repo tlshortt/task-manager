@@ -219,3 +219,14 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (23/23 tests)
 
+## 2026-01-23 - US-014
+- Created date utility functions in src/utils/dateUtils.ts
+- Implemented groupTasksByDate(): groups tasks by 'today', 'tomorrow', or ISO date string
+- Implemented formatDateLabel(): formats dates as TODAY, TOMORROW, or MON 29 JAN
+- Implemented isOverdue(): checks if task has past due date and not completed
+- Implemented formatTime(): formats minutes as compact time (1hr 30m, 45m, 2hr, --)
+- Uses date-fns for all date operations (format, isToday, isTomorrow, startOfDay, isBefore)
+- Files changed: src/utils/dateUtils.ts, spec/prd.json
+- Pattern: All utility functions are pure functions with explicit types
+- npm run typecheck passes
+
