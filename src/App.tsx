@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay } from '@/components';
+import { TaskDateGroup, TaskInput, FilterTabs, PriorityBadge, TimeDisplay, ProgressBar } from '@/components';
 import type { Task, FilterType } from '@/types';
 
 function App() {
@@ -105,6 +105,39 @@ function App() {
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-500 w-32">Consumed variant:</span>
               <TimeDisplay minutes={90} variant="consumed" />
+            </div>
+          </div>
+        </div>
+        <div className="mb-6 bg-white rounded-xl shadow-card p-4">
+          <h3 className="text-sm font-medium text-gray-700 mb-3">ProgressBar Test</h3>
+          <div className="flex flex-col gap-4">
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm text-gray-500">Normal (30/90 min)</span>
+                <span className="text-sm text-gray-600">33%</span>
+              </div>
+              <ProgressBar consumed={30} estimated={90} />
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm text-gray-500">Half (60/120 min)</span>
+                <span className="text-sm text-gray-600">50%</span>
+              </div>
+              <ProgressBar consumed={60} estimated={120} />
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm text-gray-500">Nearly done (80/90 min)</span>
+                <span className="text-sm text-gray-600">89%</span>
+              </div>
+              <ProgressBar consumed={80} estimated={90} />
+            </div>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-sm text-gray-500">Over budget (100/60 min)</span>
+                <span className="text-sm text-red-600">Over!</span>
+              </div>
+              <ProgressBar consumed={100} estimated={60} />
             </div>
           </div>
         </div>

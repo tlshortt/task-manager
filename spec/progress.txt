@@ -203,3 +203,19 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (23/23 tests)
 
+## 2026-01-23 17:45 - US-013
+- Created ProgressBar component in src/components/ProgressBar.tsx
+- Props: consumed (number), estimated (number)
+- Percentage bar with bg-gray-200 rounded-full h-1.5 base
+- Fill uses gradient bg-gradient-to-r from-purple-500 to-blue-500 for normal state
+- Over-budget state (consumed > estimated) shows bg-red-500
+- Width calculated as (consumed/estimated)*100, capped at 100%
+- Added smooth transition-all duration-300 for animated width changes
+- Exported from src/components/index.ts
+- Updated App.tsx with comprehensive visual test showing 4 progress states (33%, 50%, 89%, over-budget)
+- Files changed: src/components/ProgressBar.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used Math.min() to cap percentage at 100%
+- Pattern: Conditional className for gradient vs red fill based on budget status
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
