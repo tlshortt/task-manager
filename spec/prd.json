@@ -31,7 +31,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-003",
@@ -49,7 +49,7 @@
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-004",
@@ -66,7 +66,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-005",
@@ -81,7 +81,7 @@
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": true
+      "passes": false
     }
   ]
 }
