@@ -86,7 +86,7 @@ export function TaskRow({ task, onToggle, onUpdate: _onUpdate, onDelete }: TaskR
           className="p-2 min-w-[44px] min-h-[44px] hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center"
           aria-label={`Delete ${task.title}`}
         >
-          <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+          <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
         </button>
       </div>
     </div>
