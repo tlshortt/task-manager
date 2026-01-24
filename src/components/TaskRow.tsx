@@ -1,5 +1,5 @@
 import type { Task } from '@/types';
-import { Play, Check, Trash2 } from 'lucide-react';
+import { Check, Trash2 } from 'lucide-react';
 
 interface TaskRowProps {
   task: Task;
@@ -34,27 +34,24 @@ function getPriorityColor(priority: Task['priority']): string {
   }
 }
 
-export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
+export function TaskRow({ task, onToggle, onUpdate: _onUpdate, onDelete }: TaskRowProps) {
   return (
     <div className="group flex items-center py-4 px-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
-      {/* Checkbox */}
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        <button
-          onClick={() => onToggle(task)}
-          className={`min-w-[44px] min-h-[44px] w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 ${
-            task.completed
-              ? 'bg-purple-600 border-purple-600 dark:bg-purple-500 dark:border-purple-500'
-              : 'border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500'
-          }`}
-          aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
-          aria-checked={task.completed}
-          role="checkbox"
-        >
-          {task.completed && (
-            <Check className="w-3 h-3 text-white" strokeWidth={3} />
-          )}
-        </button>
+      {/* Check button */}
+      <button
+        onClick={() => onToggle(task)}
+        className={`p-2 min-w-[44px] min-h-[44px] rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-2 ${
+          task.completed
+            ? 'bg-purple-100 dark:bg-purple-900 hover:bg-purple-200 dark:hover:bg-purple-800'
+            : 'hover:bg-gray-200 dark:hover:bg-gray-600'
+        }`}
+        aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
+      >
+        <Check className={`w-4 h-4 ${task.completed ? 'text-purple-600 dark:text-purple-400' : 'text-gray-600 dark:text-gray-300'}`} />
+      </button>
 
+      {/* Task info */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
         {/* Priority dot */}
         <span
           className={`w-2 h-2 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`}
@@ -84,20 +81,6 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
 
       {/* Action icons */}
       <div className="w-16 sm:w-24 flex items-center justify-center gap-1 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
-        <button
-          onClick={() => onUpdate(task)}
-          className="p-2 min-w-[44px] min-h-[44px] hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 hidden sm:flex items-center justify-center"
-          aria-label={`Start timer for ${task.title}`}
-        >
-          <Play className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-        </button>
-        <button
-          onClick={() => onToggle(task)}
-          className="p-2 min-w-[44px] min-h-[44px] hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 hidden sm:flex items-center justify-center"
-          aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
-        >
-          <Check className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-        </button>
         <button
           onClick={() => onDelete(task)}
           className="p-2 min-w-[44px] min-h-[44px] hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center"
