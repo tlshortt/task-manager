@@ -1,0 +1,425 @@
+{
+  "projectName": "Styled To-Do List Application",
+  "branchName": "feature/todo-list-app",
+  "description": "Clean to-do app focused on visual polish: rounded cards, shadows, clean typography, progress/time tracking. No sidebars.",
+  "created": "2026-01-23",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Install Dependencies",
+      "description": "As a developer, I need the required npm packages installed.",
+      "acceptanceCriteria": [
+        "Run npm install dexie date-fns react-hot-toast successfully",
+        "All three packages appear in package.json dependencies",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "title": "Define Types",
+      "description": "As a developer, I need TypeScript types for type safety.",
+      "acceptanceCriteria": [
+        "Create Priority type: 'low' | 'medium' | 'high' in src/types/index.ts",
+        "Create FilterType type: 'current' | 'overdue' | 'completed'",
+        "Create Task interface with: id?, title, description?, completed, priority, dueDate?, estimatedMinutes?, consumedMinutes?, createdAt, updatedAt",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-003",
+      "title": "Create Dexie Database",
+      "description": "As a developer, I need IndexedDB for persistent storage.",
+      "acceptanceCriteria": [
+        "Create src/db/index.ts with Dexie database",
+        "Database name: todoApp",
+        "Tables: tasks (auto-increment id)",
+        "Task indexes: completed, priority, dueDate, createdAt",
+        "Export db instance",
+        "npm run typecheck passes",
+        "Create src/db/index.test.ts with tests: database opens, tasks table exists, indexes work"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-004",
+      "title": "Create useTasks Hook",
+      "description": "As a developer, I need a hook for task CRUD with undo.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useTasks.ts",
+        "Returns: tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete",
+        "addTask creates with auto timestamps, default priority medium",
+        "deleteTask shows toast with 5s Undo button",
+        "toggleComplete shows toast with 5s Undo button",
+        "Tasks update reactively via useLiveQuery",
+        "npm run typecheck passes",
+        "Create src/hooks/useTasks.test.ts with tests for add/delete/toggle"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-005",
+      "title": "Configure Tailwind Theme",
+      "description": "As a developer, I need custom Tailwind config for the design system.",
+      "acceptanceCriteria": [
+        "Update tailwind.config.js with custom colors: navy-800 (#1e293b), navy-900 (#0f172a), purple-accent (#8b5cf6), blue-accent (#3b82f6)",
+        "Add custom shadow: shadow-card (0 2px 8px rgba(0,0,0,0.08))",
+        "Add custom border-radius if needed: rounded-xl default",
+        "npm run typecheck passes",
+        "Visual verification: start dev server (npm run dev), agent-browser open http://localhost:5173, snapshot -i, verify test elements with custom colors exist, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-006",
+      "title": "Create TaskTableHeader Component",
+      "description": "As a user, I want column headers for the task table.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskTableHeader.tsx",
+        "Columns: Task (flex-1), Estimated (w-28), Consumed (w-28), Status (w-24)",
+        "Sticky header, bg-gray-50/80 backdrop-blur",
+        "text-xs uppercase text-gray-500 font-medium tracking-wide",
+        "Rounded-t-xl on first render, border-b border-gray-100",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify header columns visible (Task, Estimated, Consumed, Status), close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-007",
+      "title": "Create TaskRow Component",
+      "description": "As a user, I want task rows with clean design.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskRow.tsx",
+        "Props: task, onToggle, onUpdate, onDelete",
+        "Layout: checkbox, priority dot, title, estimated time, consumed time, action icons",
+        "Checkbox: rounded-md border-2 border-gray-300, checked=bg-purple-600 with checkmark",
+        "Time format: 1hr 30m (compact)",
+        "Action icons: play, check, trash on hover (opacity-0 group-hover:opacity-100)",
+        "Completed: line-through, text-gray-400",
+        "Hover: bg-gray-50 transition-colors",
+        "py-4 px-4 border-b border-gray-100 last:border-b-0",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify task row renders with checkbox, priority dot, title, time displays, hover shows action icons, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-008",
+      "title": "Create TaskDateGroup Component",
+      "description": "As a user, I want tasks grouped by date with clean headers.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskDateGroup.tsx",
+        "Props: label, count, tasks, onToggle, onUpdate, onDelete",
+        "Header: TODAY (4) format in text-xs font-semibold text-gray-500 uppercase tracking-wider",
+        "Renders TaskRow for each task inside white card",
+        "Card wrapper: bg-white rounded-xl shadow-card",
+        "Collapsible with chevron icon, smooth transition",
+        "mb-6 spacing between groups",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify date group header (TODAY (4) format), white card with rounded corners, chevron icon clickable, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-009",
+      "title": "Create TaskInput Component",
+      "description": "As a user, I want inline task input with modern styling.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskInput.tsx",
+        "bg-white rounded-xl shadow-card p-4",
+        "Plus icon (text-purple-600) + input field + Set deadline button",
+        "Input: border-0 focus:ring-0, placeholder text-gray-400",
+        "Deadline button: text-sm text-gray-500 hover:text-purple-600, calendar icon",
+        "Enter submits and clears input",
+        "Date picker appears on deadline click",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify input field with plus icon, deadline button visible, fill input with test text, press Enter, verify input clears, click deadline button, verify date picker appears, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-010",
+      "title": "Create FilterTabs Component",
+      "description": "As a user, I want tab filters with active state styling.",
+      "acceptanceCriteria": [
+        "Create src/components/FilterTabs.tsx",
+        "Props: filter, onFilterChange, counts",
+        "Tabs: Current, Overdue, Completed",
+        "Active: font-medium text-navy-900 border-b-2 border-purple-600 pb-2",
+        "Inactive: text-gray-500 hover:text-gray-700",
+        "Horizontal flex gap-8",
+        "Count badge: bg-gray-100 rounded-full px-2 text-xs ml-2",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify three tabs (Current, Overdue, Completed) visible, active tab has purple border, count badges visible, click each tab, verify active state changes, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-011",
+      "title": "Create PriorityBadge Component",
+      "description": "As a user, I want colored priority indicators.",
+      "acceptanceCriteria": [
+        "Create src/components/PriorityBadge.tsx",
+        "Props: priority: Priority",
+        "Colored dot: high=bg-red-500, medium=bg-amber-500, low=bg-gray-400",
+        "w-2 h-2 rounded-full inline-block mr-2",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Create src/components/PriorityBadge.test.tsx with tests: renders correct color for high/medium/low",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify all 3 priority colors display correctly (red, amber, gray), close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-012",
+      "title": "Create TimeDisplay Component",
+      "description": "As a user, I want formatted time display.",
+      "acceptanceCriteria": [
+        "Create src/components/TimeDisplay.tsx",
+        "Props: minutes: number, variant?: 'default' | 'consumed'",
+        "Format: 1hr 30m, 45m, 2hr, -- if zero/undefined",
+        "default: text-gray-600, consumed: text-purple-600 font-medium",
+        "text-sm tabular-nums",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Create src/components/TimeDisplay.test.tsx with tests: formats 90min as 1hr 30m, 45min as 45m, 120min as 2hr, 0/undefined as --, variant styles apply",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify time displays formatted correctly (1hr 30m, 45m, 2hr), consumed variant shows purple color, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-013",
+      "title": "Create ProgressBar Component",
+      "description": "As a user, I want visual progress on time-tracked tasks.",
+      "acceptanceCriteria": [
+        "Create src/components/ProgressBar.tsx",
+        "Props: consumed: number, estimated: number",
+        "Show percentage bar: bg-gray-200 rounded-full h-1.5",
+        "Fill: bg-gradient-to-r from-purple-500 to-blue-500",
+        "If consumed > estimated: fill becomes bg-red-500",
+        "Width: calculated as (consumed/estimated)*100, max 100%",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify progress bar renders with gradient fill (purple-blue), test over-budget state shows red fill, verify width calculation, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-014",
+      "title": "Create Date Utilities",
+      "description": "As a developer, I need date helper functions.",
+      "acceptanceCriteria": [
+        "Create src/utils/dateUtils.ts",
+        "groupTasksByDate(tasks): Map<string, Task[]> with today, tomorrow, date keys",
+        "formatDateLabel(date): TODAY, TOMORROW, MON 29 JAN",
+        "isOverdue(task): dueDate < today and not completed",
+        "formatTime(minutes): 1hr 30m format (compact)",
+        "Uses date-fns",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-015",
+      "title": "Create Filter Utilities",
+      "description": "As a developer, I need filter functions.",
+      "acceptanceCriteria": [
+        "Create src/utils/filters.ts",
+        "filterTasks(tasks, filter): Current=not completed+not overdue, Overdue=past+not completed, Completed=completed",
+        "getFilterCounts(tasks): returns { current, overdue, completed }",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-016",
+      "title": "Configure Toast Notifications",
+      "description": "As a user, I want action feedback with undo.",
+      "acceptanceCriteria": [
+        "Add Toaster from react-hot-toast to App.tsx",
+        "Position: bottom-center",
+        "Toast style: bg-navy-900 text-white rounded-xl shadow-lg",
+        "Undo button: text-purple-400 hover:text-purple-300",
+        "Duration: 5000ms",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, trigger delete/complete action, wait for toast, verify toast appears bottom-center with navy background, undo button visible, verify toast dismisses after 5s, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-017",
+      "title": "Create AppHeader Component",
+      "description": "As a user, I want a clean header with title and controls.",
+      "acceptanceCriteria": [
+        "Create src/components/AppHeader.tsx",
+        "Left: App title 'Tasks' in text-2xl font-bold text-navy-900",
+        "Right: Today's date in text-gray-500, dark mode toggle button",
+        "py-6 mb-2",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify 'Tasks' title visible left side, today's date visible right side, dark mode toggle button visible, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-018",
+      "title": "Create useDarkMode Hook",
+      "description": "As a user, I want dark mode toggle.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useDarkMode.ts",
+        "Returns { isDark, toggle }",
+        "Reads localStorage darkMode on mount",
+        "Falls back to prefers-color-scheme",
+        "Toggles dark class on document.documentElement",
+        "npm run typecheck passes",
+        "Create src/hooks/useDarkMode.test.ts with toggle/persistence tests"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-019",
+      "title": "Create MainLayout Component",
+      "description": "As a user, I want centered content with proper spacing.",
+      "acceptanceCriteria": [
+        "Create src/components/MainLayout.tsx",
+        "Centered: max-w-4xl mx-auto px-6",
+        "bg-gray-50 dark:bg-slate-900 min-h-screen",
+        "Contains: AppHeader, FilterTabs, TaskInput, TaskDateGroups",
+        "Smooth transitions on dark mode toggle",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify layout centered with max-width, all components (header, tabs, input, groups) visible, toggle dark mode, verify smooth transition and dark background, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-020",
+      "title": "Integrate App with MainLayout",
+      "description": "As a user, I want the complete app working.",
+      "acceptanceCriteria": [
+        "App.tsx renders MainLayout",
+        "useTasks hook provides data and handlers",
+        "Filter state in App, passed to FilterTabs and used to filter tasks",
+        "Toaster rendered for notifications",
+        "Dark mode toggle in header",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, fill task input, press Enter, verify task appears, click checkbox, verify completion, click delete icon, verify undo toast, click filter tabs, verify filtering works, toggle dark mode, verify persistence on reload, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-021",
+      "title": "Create TaskSkeleton Component",
+      "description": "As a user, I want loading placeholders.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskSkeleton.tsx",
+        "Matches TaskRow dimensions",
+        "animate-pulse bg-gray-200 dark:bg-gray-700 rounded",
+        "Props: count (default 3)",
+        "Skeleton card wrapper matches TaskDateGroup card style",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify skeleton placeholders render with pulse animation, verify count prop works (default 3), verify dark mode styling, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-022",
+      "title": "Create EmptyState Component",
+      "description": "As a user, I want a friendly empty state.",
+      "acceptanceCriteria": [
+        "Create src/components/EmptyState.tsx",
+        "Props: filter (to show context-aware message)",
+        "Illustration or icon placeholder",
+        "Message: No tasks yet / No overdue tasks / etc",
+        "Centered, text-gray-500, py-12",
+        "Exported from src/components/index.ts",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, snapshot -i, verify empty state shows 'No tasks yet' for current filter, switch to overdue filter, verify 'No overdue tasks' message, switch to completed filter, verify 'No completed tasks' message, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-023",
+      "title": "Write Utility Tests",
+      "description": "As a developer, I need utility tests.",
+      "acceptanceCriteria": [
+        "Create src/utils/dateUtils.test.ts",
+        "Create src/utils/filters.test.ts",
+        "Test groupTasksByDate, formatDateLabel, isOverdue, formatTime",
+        "Test filterTasks and getFilterCounts",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-024",
+      "title": "Write Component Tests",
+      "description": "As a developer, I need component tests.",
+      "acceptanceCriteria": [
+        "Create src/components/TaskRow.test.tsx: renders, checkbox toggle, delete handler",
+        "Create src/components/FilterTabs.test.tsx: renders tabs, click handler, active styling",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-025",
+      "title": "Polish and Accessibility",
+      "description": "As a user, I want a polished, accessible experience.",
+      "acceptanceCriteria": [
+        "All buttons/inputs have aria-label or visible text",
+        "Keyboard nav: Tab, Enter, Escape work",
+        "Focus states: ring-2 ring-purple-500 ring-offset-2",
+        "Mobile: min touch target 44px",
+        "All components use dark: Tailwind variants",
+        "Hover states use transition-colors duration-150",
+        "npm run typecheck passes",
+        "Visual verification: start dev server, agent-browser open http://localhost:5173, resize 375px, snapshot -i, verify mobile layout, resize 768px, verify tablet layout, resize 1280px, verify desktop layout, test Tab key navigation, verify focus rings, test Enter/Escape keys, close browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-026",
+      "title": "Fix groupTasksByDate for Tasks Without Due Date",
+      "description": "As a user, I want tasks without due dates to render in a 'No Due Date' group.",
+      "acceptanceCriteria": [
+        "Update groupTasksByDate in src/utils/dateUtils.ts to group tasks without dueDate under key 'no-date' instead of skipping them",
+        "Add test in src/utils/dateUtils.test.ts for tasks without dueDate grouped under 'no-date'",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-027",
+      "title": "Update MainLayout to Render No-Date Group",
+      "description": "As a user, I want the 'No Due Date' group rendered last with appropriate label.",
+      "acceptanceCriteria": [
+        "Update MainLayout sorting logic to place 'no-date' group last",
+        "Use label 'NO DUE DATE' for the group header",
+        "npm run typecheck passes",
+        "Verify in browser: add task without due date, verify it appears under 'NO DUE DATE' group"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-028",
+      "title": "Fix Dark Mode Toggle",
+      "description": "As a user, I want the dark mode toggle button to work.",
+      "acceptanceCriteria": [
+        "Add darkMode: 'class' to tailwind.config.js at top level",
+        "npm run typecheck passes",
+        "Verify in browser: click dark mode toggle, verify background changes to dark, click again, verify returns to light"
+      ],
+      "passes": true
+    }
+  ]
+}
