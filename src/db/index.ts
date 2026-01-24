@@ -8,3 +8,5 @@ export function createTodoDatabase() {
   });
   return db as Dexie & { tasks: Table<Task> };
 }
+
+export const db = createTodoDatabase();
