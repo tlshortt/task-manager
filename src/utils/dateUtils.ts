@@ -18,10 +18,11 @@ export function groupTasksByDate(tasks: Task[]): Map<string, Task[]> {
   const groups = new Map<string, Task[]>();
 
   for (const task of tasks) {
-    if (!task.dueDate) continue;
-
     let key: string;
-    if (isToday(task.dueDate)) {
+
+    if (!task.dueDate) {
+      key = 'no-date';
+    } else if (isToday(task.dueDate)) {
       key = 'today';
     } else if (isTomorrow(task.dueDate)) {
       key = 'tomorrow';

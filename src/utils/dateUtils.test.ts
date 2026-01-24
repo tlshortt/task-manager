@@ -77,7 +77,7 @@ describe('groupTasksByDate', () => {
     expect(groupedTasks!).toHaveLength(1);
   });
 
-  it('skips tasks without due dates', () => {
+  it('groups tasks without due dates under no-date key', () => {
     const tasks: Task[] = [
       {
         id: 1,
@@ -90,7 +90,8 @@ describe('groupTasksByDate', () => {
     ];
 
     const groups = groupTasksByDate(tasks);
-    expect(groups.size).toBe(0);
+    expect(groups.has('no-date')).toBe(true);
+    expect(groups.get('no-date')).toHaveLength(1);
   });
 
   it('groups multiple tasks correctly', () => {
