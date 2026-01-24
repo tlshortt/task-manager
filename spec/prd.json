@@ -66,7 +66,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",
