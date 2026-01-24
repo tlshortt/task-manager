@@ -202,6 +202,14 @@ check_prerequisites() {
     exit 1
   fi
   
+  # Check for ccusage (optional - for cost display)
+  if command -v ccusage &>/dev/null; then
+    CCUSAGE_AVAILABLE=true
+  else
+    CCUSAGE_AVAILABLE=false
+    warning "ccusage not found - cost display disabled"
+  fi
+  
   if [ ! -f "$PRD_FILE" ]; then
     error "PRD file not found at $PRD_FILE"
     exit 1
@@ -305,6 +313,13 @@ show_status() {
     jq -r '.userStories[] | select(.passes == false) | "  - [\(.id)] \(.title)"' "$PRD_FILE"
   fi
   echo ""
+}
+
+show_cost() {
+  if [[ "$CCUSAGE_AVAILABLE" == "true" ]]; then
+    local cost=$(ccusage daily --json 2>/dev/null | jq -r '.[-1].cost // "0.00"')
+    echo "💰 Today's cost: \$${cost}"
+  fi
 }
 
 # ============================================================================
@@ -561,6 +576,7 @@ main() {
     
     # Show updated status
     show_status
+    show_cost
     
     log "Iteration $i complete. Pausing before next iteration..."
     sleep 3
