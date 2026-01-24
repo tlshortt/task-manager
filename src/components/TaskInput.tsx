@@ -46,7 +46,14 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4">
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
-        <Plus className="w-5 h-5 text-purple-600 dark:text-purple-400 flex-shrink-0" aria-hidden="true" />
+        <button
+          type="submit"
+          aria-label="Add task"
+          disabled={!title.trim()}
+          className="p-1 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+        >
+          <Plus className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+        </button>
 
         <input
           type="text"

@@ -31,13 +31,13 @@ describe('TaskRow', () => {
     expect(screen.getByText('Test Task')).toBeInTheDocument();
   });
 
-  it('calls onToggle when checkbox is clicked', async () => {
+  it('calls onToggle when check button is clicked', async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
     const onUpdate = vi.fn();
     const onDelete = vi.fn();
 
-    const { container } = render(
+    render(
       <TaskRow
         task={mockTask}
         onToggle={onToggle}
@@ -46,11 +46,9 @@ describe('TaskRow', () => {
       />
     );
 
-    // Get the checkbox specifically (first button in the row)
-    const checkbox = container.querySelector('button.w-5.h-5.rounded-md');
-    if (checkbox) {
-      await user.click(checkbox);
-    }
+    // Get the check button by aria-label
+    const checkButton = screen.getByRole('button', { name: 'Mark Test Task complete' });
+    await user.click(checkButton);
 
     expect(onToggle).toHaveBeenCalledWith(mockTask);
     expect(onToggle).toHaveBeenCalledTimes(1);
@@ -84,7 +82,7 @@ describe('TaskRow', () => {
     const onUpdate = vi.fn();
     const onDelete = vi.fn();
 
-    const { container } = render(
+    render(
       <TaskRow
         task={completedTask}
         onToggle={onToggle}
@@ -97,8 +95,8 @@ describe('TaskRow', () => {
     expect(title.className).toContain('line-through');
     expect(title.className).toContain('text-gray-400');
 
-    const checkbox = container.querySelector('.bg-purple-600');
-    expect(checkbox).toBeInTheDocument();
+    const checkButton = screen.getByRole('button', { name: 'Mark Test Task incomplete' });
+    expect(checkButton.className).toContain('bg-purple-100');
   });
 
   it('displays estimated and consumed time', () => {
