@@ -441,3 +441,16 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: void statements suppress TypeScript unused warnings for variables that will be used in next iteration
 - npm run typecheck passes
 
+## 2026-01-23 23:50 - US-002
+- Implemented inline title editing for TaskRow component
+- Added startEditing, cancelEditing, saveEdit functions
+- Clicking title enters edit mode with pre-filled input
+- useEffect auto-focuses input when editing starts
+- Enter key saves changes via onUpdate, empty titles rejected
+- Escape key and blur cancel editing
+- Hover shows purple text hint that field is editable
+- Files changed: src/components/TaskRow.tsx, spec/prd.json
+- Pattern: useEffect with editingField dependency for auto-focus timing
+- Pattern: trim() and check for empty string before saving title
+- npm run typecheck passes
+- Browser verification: title editing works correctly with all keyboard shortcuts

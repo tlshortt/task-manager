@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Task } from '@/types';
 import { Check, Trash2 } from 'lucide-react';
 
@@ -42,13 +42,40 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Suppress unused variable warnings - these will be used in subsequent stories
-  void editingField;
-  void setEditingField;
-  void editValue;
-  void setEditValue;
-  void inputRef;
-  void onUpdate;
+  // Auto-focus input when entering edit mode
+  useEffect(() => {
+    if (editingField && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editingField]);
+
+  const startEditing = (field: EditingField, currentValue: string) => {
+    setEditingField(field);
+    setEditValue(currentValue);
+  };
+
+  const cancelEditing = () => {
+    setEditingField(null);
+    setEditValue('');
+  };
+
+  const saveEdit = () => {
+    if (editingField === 'title') {
+      const trimmedValue = editValue.trim();
+      if (trimmedValue) {
+        onUpdate({ ...task, title: trimmedValue });
+      }
+    }
+    cancelEditing();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      cancelEditing();
+    }
+  };
 
   return (
     <div className="group flex items-center py-4 px-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
@@ -75,13 +102,27 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
         />
 
         {/* Title */}
-        <span
-          className={`text-sm truncate ${
-            task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
-          }`}
-        >
-          {task.title}
-        </span>
+        {editingField === 'title' ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={editValue}
+            onChange={(e) => setEditValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={cancelEditing}
+            className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+            aria-label="Edit task title"
+          />
+        ) : (
+          <span
+            onClick={() => startEditing('title', task.title)}
+            className={`text-sm truncate cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
+              task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
+            }`}
+          >
+            {task.title}
+          </span>
+        )}
       </div>
 
       {/* Estimated time */}
