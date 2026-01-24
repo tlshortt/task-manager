@@ -466,3 +466,18 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Use Math.round() for decimal hour calculations to get integer minutes
 - npm run typecheck passes
 - npm run test passes for dateUtils (33/33 tests)
+## 2026-01-24 00:04 - US-004
+- Implemented inline editing for estimated and consumed time fields in TaskRow
+- Added parseTime import from dateUtils for parsing user input
+- Modified saveEdit to handle 'estimated' and 'consumed' fields
+- Time fields now render as clickable divs with hover state
+- Clicking time field enters edit mode with input pre-filled with current value
+- Input matches column width (w-20 sm:w-28) and centered text
+- Enter saves parsed time via onUpdate, Escape/blur cancel
+- Fixed TimeDisplay component to use formatTime from dateUtils (returns "--" for 0/undefined)
+- Removed duplicate formatTime function from TaskRow, now imports from dateUtils
+- Files changed: src/components/TaskRow.tsx, src/components/TimeDisplay.tsx
+- Pattern: Consolidated formatTime usage to single source in dateUtils for consistency
+- npm run typecheck passes
+- npm run test passes (96/96 tests)
+- Browser verified: time fields editable with keyboard shortcuts working
