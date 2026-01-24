@@ -481,3 +481,18 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (96/96 tests)
 - Browser verified: time fields editable with keyboard shortcuts working
+
+## 2026-01-24 09:00 - US-005
+- Added comprehensive tests for TaskRow inline editing functionality
+- Created 6 new test cases in src/components/TaskRow.test.tsx
+- Test: clicking title enters edit mode with auto-focused input
+- Test: Enter key saves changes and exits edit mode
+- Test: Escape key cancels edit without saving
+- Test: blur (Tab key) cancels edit without saving
+- Test: estimated time field can be edited with parseTime
+- Test: consumed time field can be edited with parseTime
+- Fixed test interaction pattern: use user.clear() + user.keyboard() for inputs to avoid blur issues
+- Files changed: src/components/TaskRow.test.tsx, spec/prd.json
+- Pattern: userEvent.keyboard() more reliable than userEvent.type() for preventing unwanted blur events
+- npm run typecheck passes
+- npm run test passes (102/102 tests)
