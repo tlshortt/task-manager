@@ -403,3 +403,12 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Mobile-first responsive design with sm: breakpoint for larger screens
 - npm run typecheck passes
 - npm run test passes (77/77 tests)
+## 2026-01-23 22:19 - US-026
+- Fixed groupTasksByDate to include tasks without due dates
+- Tasks without dueDate now grouped under 'no-date' key instead of being skipped
+- Updated test from "skips tasks without due dates" to "groups tasks without due dates under no-date key"
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts, spec/prd.json
+- Pattern: no-date group will be rendered last in MainLayout (US-027)
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+
