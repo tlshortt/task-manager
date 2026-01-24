@@ -520,3 +520,10 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Input fields for time editing use formatted time strings as initial values
 - npm run typecheck passes
 - npm run test passes (102/102 tests - 13 TaskRow tests total)
+
+## 2026-01-24 09:20 - PRD Update
+- Marked US-003 and US-004 as complete in prd.json
+- US-003 (parseTime utility) was implemented on 2026-01-23 23:55 with all acceptance criteria met
+- US-004 (time field editing) was implemented on 2026-01-24 00:04 with all acceptance criteria met
+- All user stories now marked as passes: true
+- Files changed: spec/prd.json
