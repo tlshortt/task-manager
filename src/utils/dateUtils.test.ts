@@ -3,7 +3,8 @@ import {
   groupTasksByDate,
   formatDateLabel,
   isOverdue,
-  formatTime
+  formatTime,
+  parseTime
 } from './dateUtils';
 import type { Task } from '@/types';
 
@@ -269,5 +270,60 @@ describe('formatTime', () => {
 
   it('formats 185 minutes as 3hr 5m', () => {
     expect(formatTime(185)).toBe('3hr 5m');
+  });
+});
+
+describe('parseTime', () => {
+  it('parses 90m to 90', () => {
+    expect(parseTime('90m')).toBe(90);
+  });
+
+  it('parses 1hr to 60', () => {
+    expect(parseTime('1hr')).toBe(60);
+  });
+
+  it('parses 1hr 30m to 90', () => {
+    expect(parseTime('1hr 30m')).toBe(90);
+  });
+
+  it('parses 1.5hr to 90', () => {
+    expect(parseTime('1.5hr')).toBe(90);
+  });
+
+  it('parses plain number 45 to 45', () => {
+    expect(parseTime('45')).toBe(45);
+  });
+
+  it('returns undefined for invalid input', () => {
+    expect(parseTime('invalid')).toBeUndefined();
+    expect(parseTime('')).toBeUndefined();
+    expect(parseTime('abc123')).toBeUndefined();
+  });
+
+  it('handles whitespace gracefully', () => {
+    expect(parseTime('  90m  ')).toBe(90);
+    expect(parseTime(' 1hr 30m ')).toBe(90);
+  });
+
+  it('is case insensitive', () => {
+    expect(parseTime('90M')).toBe(90);
+    expect(parseTime('1HR')).toBe(60);
+    expect(parseTime('1Hr 30M')).toBe(90);
+  });
+
+  it('parses 2hr to 120', () => {
+    expect(parseTime('2hr')).toBe(120);
+  });
+
+  it('parses decimal hours 2.5hr to 150', () => {
+    expect(parseTime('2.5hr')).toBe(150);
+  });
+
+  it('parses short form 1h to 60', () => {
+    expect(parseTime('1h')).toBe(60);
+  });
+
+  it('parses 1h 30m to 90', () => {
+    expect(parseTime('1h 30m')).toBe(90);
   });
 });

@@ -83,3 +83,56 @@ export function formatTime(minutes?: number): string {
   }
   return `${hours}hr ${mins}m`;
 }
+
+/**
+ * Parses time string to minutes
+ * Formats: '90m', '1hr', '1hr 30m', '1.5hr', '45'
+ * Returns undefined for invalid input
+ */
+export function parseTime(input: string): number | undefined {
+  if (!input || typeof input !== 'string') {
+    return undefined;
+  }
+
+  const trimmed = input.trim().toLowerCase();
+
+  // Plain number
+  if (/^\d+$/.test(trimmed)) {
+    const num = parseInt(trimmed, 10);
+    return isNaN(num) ? undefined : num;
+  }
+
+  // Decimal hours: 1.5hr
+  const decimalHrMatch = trimmed.match(/^(\d+(?:\.\d+)?)\s*hr?$/);
+  if (decimalHrMatch && decimalHrMatch[1]) {
+    const hours = parseFloat(decimalHrMatch[1]);
+    return isNaN(hours) ? undefined : Math.round(hours * 60);
+  }
+
+  // Minutes only: 90m
+  const minutesMatch = trimmed.match(/^(\d+)\s*m$/);
+  if (minutesMatch && minutesMatch[1]) {
+    const mins = parseInt(minutesMatch[1], 10);
+    return isNaN(mins) ? undefined : mins;
+  }
+
+  // Hours and minutes: 1hr 30m
+  const hourMinMatch = trimmed.match(/^(\d+)\s*hr?\s+(\d+)\s*m$/);
+  if (hourMinMatch && hourMinMatch[1] && hourMinMatch[2]) {
+    const hours = parseInt(hourMinMatch[1], 10);
+    const mins = parseInt(hourMinMatch[2], 10);
+    if (isNaN(hours) || isNaN(mins)) {
+      return undefined;
+    }
+    return hours * 60 + mins;
+  }
+
+  // Hours only: 1hr
+  const hoursMatch = trimmed.match(/^(\d+)\s*hr?$/);
+  if (hoursMatch && hoursMatch[1]) {
+    const hours = parseInt(hoursMatch[1], 10);
+    return isNaN(hours) ? undefined : hours * 60;
+  }
+
+  return undefined;
+}

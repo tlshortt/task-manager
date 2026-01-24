@@ -454,3 +454,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: trim() and check for empty string before saving title
 - npm run typecheck passes
 - Browser verification: title editing works correctly with all keyboard shortcuts
+
+## 2026-01-23 23:55 - US-003
+- Created parseTime utility function in src/utils/dateUtils.ts
+- Parses various time formats: '90m', '1hr', '1hr 30m', '1.5hr', plain numbers
+- Returns undefined for invalid input
+- Handles whitespace and case-insensitive input
+- Added comprehensive tests in src/utils/dateUtils.test.ts (12 test cases)
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts, spec/prd.json
+- Pattern: Regex match groups can be undefined, check with && match[1] before using
+- Pattern: Use Math.round() for decimal hour calculations to get integer minutes
+- npm run typecheck passes
+- npm run test passes for dateUtils (33/33 tests)
