@@ -421,3 +421,11 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (77/77 tests)
 
+## 2026-01-23 - US-028
+- Fixed dark mode toggle by adding darkMode: 'class' to tailwind.config.js
+- This enables Tailwind to use class-based dark mode (toggling 'dark' class on document root)
+- Files changed: tailwind.config.js, spec/prd.json
+- Pattern: Tailwind requires explicit darkMode config for class-based dark mode
+- npm run typecheck passes
+- Dev server verified working at localhost:5173
+
