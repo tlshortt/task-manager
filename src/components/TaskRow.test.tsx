@@ -159,4 +159,168 @@ describe('TaskRow', () => {
     const priorityDot = container.querySelector('.bg-red-500');
     expect(priorityDot).toBeInTheDocument();
   });
+
+  it('clicking title enters edit mode', async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={mockTask}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const title = screen.getByText('Test Task');
+    await user.click(title);
+
+    const input = screen.getByRole('textbox');
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveValue('Test Task');
+    expect(input).toHaveFocus();
+  });
+
+  it('Enter key saves and exits edit mode', async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={mockTask}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const title = screen.getByText('Test Task');
+    await user.click(title);
+
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.keyboard('Updated Task');
+    await user.keyboard('{Enter}');
+
+    expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, title: 'Updated Task' });
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+  });
+
+  it('Escape key cancels edit', async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={mockTask}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const title = screen.getByText('Test Task');
+    await user.click(title);
+
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.keyboard('Should Not Save');
+    await user.keyboard('{Escape}');
+
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+    expect(screen.getByText('Test Task')).toBeInTheDocument();
+  });
+
+  it('blur cancels edit', async () => {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={mockTask}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const title = screen.getByText('Test Task');
+    await user.click(title);
+
+    const input = screen.getByRole('textbox');
+    await user.clear(input);
+    await user.keyboard('Should Not Save');
+    await user.keyboard('{Tab}');
+
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+  });
+
+  it('estimated time field can be edited', async () => {
+    const user = userEvent.setup();
+    const taskWithTime: Task = { ...mockTask, estimatedMinutes: 60 };
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={taskWithTime}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const estimatedTime = screen.getByText('1hr');
+    await user.click(estimatedTime);
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveValue('1hr');
+
+    await user.clear(input);
+    await user.keyboard('90m');
+    await user.keyboard('{Enter}');
+
+    expect(onUpdate).toHaveBeenCalledWith({ ...taskWithTime, estimatedMinutes: 90 });
+  });
+
+  it('consumed time field can be edited', async () => {
+    const user = userEvent.setup();
+    const taskWithTime: Task = { ...mockTask, consumedMinutes: 30 };
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    render(
+      <TaskRow
+        task={taskWithTime}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+      />
+    );
+
+    const consumedTime = screen.getByText('30m');
+    await user.click(consumedTime);
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveValue('30m');
+
+    await user.clear(input);
+    await user.keyboard('1hr 30m');
+    await user.keyboard('{Enter}');
+
+    expect(onUpdate).toHaveBeenCalledWith({ ...taskWithTime, consumedMinutes: 90 });
+  });
 });
