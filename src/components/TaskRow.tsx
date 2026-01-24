@@ -9,7 +9,7 @@ interface TaskRowProps {
 }
 
 function formatTime(minutes?: number): string {
-  if (!minutes) return '--';
+  if (!minutes) return '';
 
   const hours = Math.floor(minutes / 60);
   const mins = minutes % 60;
