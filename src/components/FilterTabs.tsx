@@ -27,7 +27,7 @@ export function FilterTabs({ filter, onFilterChange, counts }: FilterTabsProps) 
           aria-selected={filter === tab.key}
           aria-label={`${tab.label} tasks (${tab.count})`}
           className={`
-            pb-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded border-b-2
+            pb-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded-sm border-b-2
             ${
               filter === tab.key
                 ? 'font-medium text-navy-900 dark:text-white border-purple-600'

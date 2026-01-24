@@ -40,14 +40,14 @@ export function TaskRow({ task, onToggle, onUpdate: _onUpdate, onDelete }: TaskR
       {/* Check button */}
       <button
         onClick={() => onToggle(task)}
-        className={`p-2 min-w-[44px] min-h-[44px] rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-2 ${
+        className={`w-5 h-5 rounded border-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-3 ${
           task.completed
-            ? 'bg-purple-100 dark:bg-purple-900 hover:bg-purple-200 dark:hover:bg-purple-800'
-            : 'hover:bg-gray-200 dark:hover:bg-gray-600'
+            ? 'bg-purple-600 border-purple-600 dark:bg-purple-500 dark:border-purple-500'
+            : 'border-gray-300 dark:border-gray-500 hover:border-purple-400 dark:hover:border-purple-400'
         }`}
         aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
       >
-        <Check className={`w-4 h-4 ${task.completed ? 'text-purple-600 dark:text-purple-400' : 'text-gray-600 dark:text-gray-300'}`} />
+        {task.completed && <Check className="w-3 h-3 text-white" />}
       </button>
 
       {/* Task info */}
