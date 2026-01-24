@@ -419,7 +419,7 @@
         "npm run typecheck passes",
         "Verify in browser: click dark mode toggle, verify background changes to dark, click again, verify returns to light"
       ],
-      "passes": false
+      "passes": true
     }
   ]
 }
