@@ -16,7 +16,7 @@ export function ProgressBar({ consumed, estimated }: ProgressBarProps) {
     : 'bg-gradient-to-r from-purple-500 to-blue-500'
 
   return (
-    <div className="bg-gray-200 rounded-full h-1.5 w-full overflow-hidden">
+    <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 w-full overflow-hidden" role="progressbar" aria-valuenow={consumed} aria-valuemin={0} aria-valuemax={estimated} aria-label={`${consumed} of ${estimated} minutes consumed`}>
       <div
         className={`${fillClass} h-full transition-all duration-300`}
         style={{ width: `${percentage}%` }}

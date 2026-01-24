@@ -10,19 +10,19 @@ export function EmptyState({ filter }: EmptyStateProps) {
     switch (filter) {
       case 'current':
         return {
-          icon: <Inbox className="w-12 h-12 text-gray-300" />,
+          icon: <Inbox className="w-12 h-12 text-gray-300 dark:text-gray-600" />,
           message: 'No tasks yet',
           subtitle: 'Add a task above to get started',
         };
       case 'overdue':
         return {
-          icon: <Clock className="w-12 h-12 text-gray-300" />,
+          icon: <Clock className="w-12 h-12 text-gray-300 dark:text-gray-600" />,
           message: 'No overdue tasks',
           subtitle: 'All caught up!',
         };
       case 'completed':
         return {
-          icon: <CheckCircle className="w-12 h-12 text-gray-300" />,
+          icon: <CheckCircle className="w-12 h-12 text-gray-300 dark:text-gray-600" />,
           message: 'No completed tasks',
           subtitle: 'Complete a task to see it here',
         };
@@ -32,12 +32,12 @@ export function EmptyState({ filter }: EmptyStateProps) {
   const content = getContent();
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="mb-4">{content.icon}</div>
-      <h3 className="text-lg font-medium text-gray-500 mb-1">
+    <div className="flex flex-col items-center justify-center py-12 text-center" role="status" aria-live="polite">
+      <div className="mb-4" aria-hidden="true">{content.icon}</div>
+      <h3 className="text-lg font-medium text-gray-500 dark:text-gray-400 mb-1">
         {content.message}
       </h3>
-      <p className="text-sm text-gray-400">{content.subtitle}</p>
+      <p className="text-sm text-gray-400 dark:text-gray-500">{content.subtitle}</p>
     </div>
   );
 }

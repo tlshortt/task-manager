@@ -65,7 +65,7 @@ export function MainLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
-      <div className="max-w-4xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <AppHeader isDark={isDark} onToggleDarkMode={toggle} />
 
         <FilterTabs
@@ -79,31 +79,33 @@ export function MainLayout() {
         </div>
 
         {isLoading ? (
-          <div className="text-center text-gray-500 py-12">Loading tasks...</div>
+          <div className="text-center text-gray-500 dark:text-gray-400 py-12" role="status" aria-live="polite">Loading tasks...</div>
         ) : sortedGroups.length === 0 ? (
           <EmptyState filter={filter} />
         ) : (
-          sortedGroups.map(([dateKey, dateTasks]) => {
-            const date = dateKey === 'today'
-              ? new Date()
-              : dateKey === 'tomorrow'
-              ? new Date(Date.now() + 86400000)
-              : new Date(dateKey);
+          <main>
+            {sortedGroups.map(([dateKey, dateTasks]) => {
+              const date = dateKey === 'today'
+                ? new Date()
+                : dateKey === 'tomorrow'
+                ? new Date(Date.now() + 86400000)
+                : new Date(dateKey);
 
-            const label = formatDateLabel(date);
+              const label = formatDateLabel(date);
 
-            return (
-              <TaskDateGroup
-                key={dateKey}
-                label={label}
-                count={dateTasks.length}
-                tasks={dateTasks}
-                onToggle={handleToggle}
-                onUpdate={handleUpdate}
-                onDelete={handleDelete}
-              />
-            );
-          })
+              return (
+                <TaskDateGroup
+                  key={dateKey}
+                  label={label}
+                  count={dateTasks.length}
+                  tasks={dateTasks}
+                  onToggle={handleToggle}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                />
+              );
+            })}
+          </main>
         )}
       </div>
     </div>
