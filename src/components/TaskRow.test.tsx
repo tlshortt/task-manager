@@ -96,7 +96,7 @@ describe('TaskRow', () => {
     expect(title.className).toContain('text-gray-400');
 
     const checkButton = screen.getByRole('button', { name: 'Mark Test Task incomplete' });
-    expect(checkButton.className).toContain('bg-purple-100');
+    expect(checkButton.className).toContain('bg-purple-600');
   });
 
   it('displays estimated and consumed time', () => {
