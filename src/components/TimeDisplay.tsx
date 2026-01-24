@@ -16,8 +16,8 @@ export function TimeDisplay({ minutes, variant = 'default' }: TimeDisplayProps) 
   };
 
   const variantStyles = {
-    default: 'text-gray-600',
-    consumed: 'text-purple-600 font-medium'
+    default: 'text-gray-600 dark:text-gray-400',
+    consumed: 'text-purple-600 dark:text-purple-400 font-medium'
   };
 
   return (

@@ -71,7 +71,7 @@ describe('TaskRow', () => {
       />
     );
 
-    const deleteButton = screen.getByRole('button', { name: 'Delete task' });
+    const deleteButton = screen.getByRole('button', { name: 'Delete Test Task' });
     await user.click(deleteButton);
 
     expect(onDelete).toHaveBeenCalledWith(mockTask);

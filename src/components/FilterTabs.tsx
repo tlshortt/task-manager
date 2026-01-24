@@ -18,22 +18,25 @@ export function FilterTabs({ filter, onFilterChange, counts }: FilterTabsProps) 
   ];
 
   return (
-    <div className="flex gap-8 mb-6">
+    <div className="flex gap-8 mb-6" role="tablist" aria-label="Task filters">
       {tabs.map((tab) => (
         <button
           key={tab.key}
           onClick={() => onFilterChange(tab.key)}
+          role="tab"
+          aria-selected={filter === tab.key}
+          aria-label={`${tab.label} tasks (${tab.count})`}
           className={`
-            pb-2 transition-colors
+            pb-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded
             ${
               filter === tab.key
-                ? 'font-medium text-navy-900 border-b-2 border-purple-600'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'font-medium text-navy-900 dark:text-white border-b-2 border-purple-600'
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
             }
           `}
         >
           {tab.label}
-          <span className="bg-gray-100 rounded-full px-2 text-xs ml-2">
+          <span className="bg-gray-100 dark:bg-gray-700 dark:text-gray-300 rounded-full px-2 text-xs ml-2">
             {tab.count}
           </span>
         </button>
