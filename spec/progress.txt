@@ -496,3 +496,13 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: userEvent.keyboard() more reliable than userEvent.type() for preventing unwanted blur events
 - npm run typecheck passes
 - npm run test passes (102/102 tests)
+## 2026-01-24 09:05 - US-002
+- Verified inline title editing implementation already complete from previous iteration
+- All acceptance criteria met: click to edit, Enter saves, Escape cancels, blur cancels, empty title rejected
+- Title field shows hover state (purple text) to indicate editability
+- Input auto-focuses when edit mode starts via useEffect
+- Files verified: src/components/TaskRow.tsx
+- Pattern: Title field already fully functional with all keyboard shortcuts working
+- npm run typecheck passes
+- Browser verified: title editing works correctly
+
