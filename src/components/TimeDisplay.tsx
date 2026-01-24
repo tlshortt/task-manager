@@ -5,7 +5,7 @@ interface TimeDisplayProps {
 
 export function TimeDisplay({ minutes, variant = 'default' }: TimeDisplayProps) {
   const formatTime = (mins: number | undefined): string => {
-    if (!mins || mins === 0) return '--';
+    if (!mins || mins === 0) return '';
 
     const hours = Math.floor(mins / 60);
     const remainingMins = mins % 60;
