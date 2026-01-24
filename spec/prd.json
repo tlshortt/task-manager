@@ -408,7 +408,7 @@
         "npm run typecheck passes",
         "Verify in browser: add task without due date, verify it appears under 'NO DUE DATE' group"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-028",

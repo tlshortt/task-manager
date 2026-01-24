@@ -412,3 +412,12 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - npm run test passes (77/77 tests)
 
+## 2026-01-23 22:19 - US-027
+- Updated MainLayout to render no-date group last with label 'NO DUE DATE'
+- Modified sorting logic to place 'no-date' key at end after chronological groups
+- Added conditional label formatting for no-date group
+- Files changed: src/components/MainLayout.tsx, spec/prd.json
+- Pattern: no-date group uses 'NO DUE DATE' label, sorted last in task groups
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+

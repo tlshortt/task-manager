@@ -24,12 +24,14 @@ export function MainLayout() {
   // Group filtered tasks by date
   const groupedTasks = groupTasksByDate(filteredTasks);
 
-  // Sort groups: today, tomorrow, then chronologically
+  // Sort groups: today, tomorrow, then chronologically, no-date last
   const sortedGroups = Array.from(groupedTasks.entries()).sort(([keyA], [keyB]) => {
     if (keyA === 'today') return -1;
     if (keyB === 'today') return 1;
     if (keyA === 'tomorrow') return -1;
     if (keyB === 'tomorrow') return 1;
+    if (keyA === 'no-date') return 1;
+    if (keyB === 'no-date') return -1;
     return keyA.localeCompare(keyB);
   });
 
@@ -85,13 +87,17 @@ export function MainLayout() {
         ) : (
           <main>
             {sortedGroups.map(([dateKey, dateTasks]) => {
-              const date = dateKey === 'today'
-                ? new Date()
-                : dateKey === 'tomorrow'
-                ? new Date(Date.now() + 86400000)
-                : new Date(dateKey);
-
-              const label = formatDateLabel(date);
+              let label: string;
+              if (dateKey === 'no-date') {
+                label = 'NO DUE DATE';
+              } else {
+                const date = dateKey === 'today'
+                  ? new Date()
+                  : dateKey === 'tomorrow'
+                  ? new Date(Date.now() + 86400000)
+                  : new Date(dateKey);
+                label = formatDateLabel(date);
+              }
 
               return (
                 <TaskDateGroup
