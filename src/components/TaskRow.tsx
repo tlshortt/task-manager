@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react';
 import type { Task } from '@/types';
 import { Check, Trash2 } from 'lucide-react';
 
@@ -7,6 +8,8 @@ interface TaskRowProps {
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
 }
+
+type EditingField = 'title' | 'estimated' | 'consumed' | null;
 
 function formatTime(minutes?: number): string {
   if (!minutes) return '';
@@ -34,7 +37,19 @@ function getPriorityColor(priority: Task['priority']): string {
   }
 }
 
-export function TaskRow({ task, onToggle, onUpdate: _onUpdate, onDelete }: TaskRowProps) {
+export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
+  const [editingField, setEditingField] = useState<EditingField>(null);
+  const [editValue, setEditValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Suppress unused variable warnings - these will be used in subsequent stories
+  void editingField;
+  void setEditingField;
+  void editValue;
+  void setEditValue;
+  void inputRef;
+  void onUpdate;
+
   return (
     <div className="group flex items-center py-4 px-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
       {/* Check button */}

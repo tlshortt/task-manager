@@ -429,3 +429,15 @@ Each iteration should APPEND to this file, never overwrite.
 - npm run typecheck passes
 - Dev server verified working at localhost:5173
 
+## 2026-01-23 - US-001
+- Added editing state management to TaskRow component
+- Added useState for editingField: 'title' | 'estimated' | 'consumed' | null
+- Added useState for editValue: string
+- Added useRef<HTMLInputElement> for input focus management
+- Removed underscore prefix from onUpdate prop to wire it for use
+- Added void statements to suppress unused variable warnings until US-002 implementation
+- Files changed: src/components/TaskRow.tsx, spec/prd.json
+- Pattern: Used EditingField type alias for type safety on editing state
+- Pattern: void statements suppress TypeScript unused warnings for variables that will be used in next iteration
+- npm run typecheck passes
+
