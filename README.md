@@ -1,4 +1,4 @@
-# Ralph Starter Kit
+# Task Manager
 
 A complete starter template for using the **Ralph Loop** - an autonomous AI coding technique that runs AI agents in a loop until all tasks are complete.
 
