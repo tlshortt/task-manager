@@ -15,7 +15,7 @@
         "Wire the previously unused onUpdate prop (remove underscore prefix)",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-002",
