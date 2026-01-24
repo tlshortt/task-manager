@@ -385,6 +385,41 @@
         "Visual verification: start dev server, agent-browser open http://localhost:5173, resize 375px, snapshot -i, verify mobile layout, resize 768px, verify tablet layout, resize 1280px, verify desktop layout, test Tab key navigation, verify focus rings, test Enter/Escape keys, close browser"
       ],
       "passes": true
+    },
+    {
+      "id": "US-026",
+      "title": "Fix groupTasksByDate for Tasks Without Due Date",
+      "description": "As a user, I want tasks without due dates to render in a 'No Due Date' group.",
+      "acceptanceCriteria": [
+        "Update groupTasksByDate in src/utils/dateUtils.ts to group tasks without dueDate under key 'no-date' instead of skipping them",
+        "Add test in src/utils/dateUtils.test.ts for tasks without dueDate grouped under 'no-date'",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-027",
+      "title": "Update MainLayout to Render No-Date Group",
+      "description": "As a user, I want the 'No Due Date' group rendered last with appropriate label.",
+      "acceptanceCriteria": [
+        "Update MainLayout sorting logic to place 'no-date' group last",
+        "Use label 'NO DUE DATE' for the group header",
+        "npm run typecheck passes",
+        "Verify in browser: add task without due date, verify it appears under 'NO DUE DATE' group"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-028",
+      "title": "Fix Dark Mode Toggle",
+      "description": "As a user, I want the dark mode toggle button to work.",
+      "acceptanceCriteria": [
+        "Add darkMode: 'class' to tailwind.config.js at top level",
+        "npm run typecheck passes",
+        "Verify in browser: click dark mode toggle, verify background changes to dark, click again, verify returns to light"
+      ],
+      "passes": false
     }
   ]
 }
