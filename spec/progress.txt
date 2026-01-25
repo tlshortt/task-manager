@@ -60,3 +60,10 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/components/index.ts
 - typecheck and test both pass (121 passed, 4 skipped)
 - Clean deletion with no breaking changes
+
+## 2026-01-25 11:28 - US-003
+- Removed formatTime and parseTime functions from dateUtils.ts
+- Removed formatTime and parseTime tests from dateUtils.test.ts (16 test cases removed)
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts
+- typecheck and test both pass (101 passed, 4 skipped)
+- Test count reduced from 121 to 101 after removing time utility tests

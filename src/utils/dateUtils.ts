@@ -65,26 +65,6 @@ export function isOverdue(task: Task): boolean {
 }
 
 /**
- * Formats minutes as compact time string: 1hr 30m, 45m, 2hr, or --
- */
-export function formatTime(minutes?: number): string {
-  if (!minutes || minutes === 0) {
-    return '--';
-  }
-
-  const hours = Math.floor(minutes / 60);
-  const mins = minutes % 60;
-
-  if (hours === 0) {
-    return `${mins}m`;
-  }
-  if (mins === 0) {
-    return `${hours}hr`;
-  }
-  return `${hours}hr ${mins}m`;
-}
-
-/**
  * Sorts grouped task entries: today, tomorrow, chronological dates, no-date last
  */
 export function sortDateGroups<T>(groups: Map<string, T>): [string, T][] {
@@ -97,57 +77,4 @@ export function sortDateGroups<T>(groups: Map<string, T>): [string, T][] {
     if (keyB === 'no-date') return -1;
     return keyA.localeCompare(keyB);
   });
-}
-
-/**
- * Parses time string to minutes
- * Formats: '90m', '1hr', '1hr 30m', '1.5hr', '45'
- * Returns undefined for invalid input
- */
-export function parseTime(input: string): number | undefined {
-  if (!input || typeof input !== 'string') {
-    return undefined;
-  }
-
-  const trimmed = input.trim().toLowerCase();
-
-  // Plain number
-  if (/^\d+$/.test(trimmed)) {
-    const num = parseInt(trimmed, 10);
-    return isNaN(num) ? undefined : num;
-  }
-
-  // Decimal hours: 1.5hr
-  const decimalHrMatch = trimmed.match(/^(\d+(?:\.\d+)?)\s*hr?$/);
-  if (decimalHrMatch && decimalHrMatch[1]) {
-    const hours = parseFloat(decimalHrMatch[1]);
-    return isNaN(hours) ? undefined : Math.round(hours * 60);
-  }
-
-  // Minutes only: 90m
-  const minutesMatch = trimmed.match(/^(\d+)\s*m$/);
-  if (minutesMatch && minutesMatch[1]) {
-    const mins = parseInt(minutesMatch[1], 10);
-    return isNaN(mins) ? undefined : mins;
-  }
-
-  // Hours and minutes: 1hr 30m
-  const hourMinMatch = trimmed.match(/^(\d+)\s*hr?\s+(\d+)\s*m$/);
-  if (hourMinMatch && hourMinMatch[1] && hourMinMatch[2]) {
-    const hours = parseInt(hourMinMatch[1], 10);
-    const mins = parseInt(hourMinMatch[2], 10);
-    if (isNaN(hours) || isNaN(mins)) {
-      return undefined;
-    }
-    return hours * 60 + mins;
-  }
-
-  // Hours only: 1hr
-  const hoursMatch = trimmed.match(/^(\d+)\s*hr?$/);
-  if (hoursMatch && hoursMatch[1]) {
-    const hours = parseInt(hoursMatch[1], 10);
-    return isNaN(hours) ? undefined : hours * 60;
-  }
-
-  return undefined;
 }
