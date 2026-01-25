@@ -16,7 +16,7 @@ describe('TaskInput', () => {
     await user.type(input, 'New task');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('New task', undefined);
+    expect(onAddTask).toHaveBeenCalledWith('New task', undefined, 'medium');
     expect(onAddTask).toHaveBeenCalledTimes(1);
   });
 
@@ -114,6 +114,80 @@ describe('TaskInput', () => {
     await user.type(input, '  Task with spaces  ');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined);
+    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined, 'medium');
+  });
+
+  describe('priority picker', () => {
+    it('renders three priority options', () => {
+      render(<TaskInput onAddTask={vi.fn()} />);
+
+      const priorityGroup = screen.getByRole('radiogroup', { name: 'Task priority' });
+      expect(priorityGroup).toBeInTheDocument();
+
+      expect(screen.getByRole('radio', { name: 'low priority' })).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: 'medium priority' })).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: 'high priority' })).toBeInTheDocument();
+    });
+
+    it('defaults to medium priority selected', () => {
+      render(<TaskInput onAddTask={vi.fn()} />);
+
+      const mediumButton = screen.getByRole('radio', { name: 'medium priority' });
+      expect(mediumButton).toHaveAttribute('aria-checked', 'true');
+    });
+
+    it('submits with high priority when selected', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const highPriority = screen.getByRole('radio', { name: 'high priority' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.click(highPriority);
+      await user.type(input, 'High priority task');
+      await user.click(plusButton);
+
+      expect(onAddTask).toHaveBeenCalledWith('High priority task', undefined, 'high');
+    });
+
+    it('submits with low priority when selected', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const lowPriority = screen.getByRole('radio', { name: 'low priority' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.click(lowPriority);
+      await user.type(input, 'Low priority task');
+      await user.click(plusButton);
+
+      expect(onAddTask).toHaveBeenCalledWith('Low priority task', undefined, 'low');
+    });
+
+    it('resets priority to medium after submit', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const highPriority = screen.getByRole('radio', { name: 'high priority' });
+      const mediumPriority = screen.getByRole('radio', { name: 'medium priority' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.click(highPriority);
+      await user.type(input, 'Task');
+      await user.click(plusButton);
+
+      // After submit, medium should be selected again
+      expect(mediumPriority).toHaveAttribute('aria-checked', 'true');
+      expect(highPriority).toHaveAttribute('aria-checked', 'false');
+    });
   });
 });

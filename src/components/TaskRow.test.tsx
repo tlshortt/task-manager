@@ -323,4 +323,65 @@ describe('TaskRow', () => {
 
     expect(onUpdate).toHaveBeenCalledWith({ ...taskWithTime, consumedMinutes: 90 });
   });
+
+  describe('priority cycling', () => {
+    it('cycles from low to medium when priority dot is clicked', async () => {
+      const user = userEvent.setup();
+      const lowTask: Task = { ...mockTask, priority: 'low' };
+      const onUpdate = vi.fn();
+
+      render(
+        <TaskRow
+          task={lowTask}
+          onToggle={vi.fn()}
+          onUpdate={onUpdate}
+          onDelete={vi.fn()}
+        />
+      );
+
+      const priorityButton = screen.getByRole('button', { name: 'low priority, click to change' });
+      await user.click(priorityButton);
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...lowTask, priority: 'medium' });
+    });
+
+    it('cycles from medium to high when priority dot is clicked', async () => {
+      const user = userEvent.setup();
+      const onUpdate = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={vi.fn()}
+          onUpdate={onUpdate}
+          onDelete={vi.fn()}
+        />
+      );
+
+      const priorityButton = screen.getByRole('button', { name: 'medium priority, click to change' });
+      await user.click(priorityButton);
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, priority: 'high' });
+    });
+
+    it('cycles from high to low when priority dot is clicked', async () => {
+      const user = userEvent.setup();
+      const highTask: Task = { ...mockTask, priority: 'high' };
+      const onUpdate = vi.fn();
+
+      render(
+        <TaskRow
+          task={highTask}
+          onToggle={vi.fn()}
+          onUpdate={onUpdate}
+          onDelete={vi.fn()}
+        />
+      );
+
+      const priorityButton = screen.getByRole('button', { name: 'high priority, click to change' });
+      await user.click(priorityButton);
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...highTask, priority: 'low' });
+    });
+  });
 });

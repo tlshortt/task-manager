@@ -90,11 +90,15 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
 
       {/* Task info */}
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        {/* Priority dot */}
-        <span
-          className={`w-2 h-2 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`}
-          aria-label={`${task.priority} priority`}
-          role="img"
+        {/* Priority dot - clickable to cycle */}
+        <button
+          onClick={() => {
+            const order: Task['priority'][] = ['low', 'medium', 'high'];
+            const nextIndex = (order.indexOf(task.priority) + 1) % 3;
+            onUpdate({ ...task, priority: order[nextIndex] as Task['priority'] });
+          }}
+          className={`w-3 h-3 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)} hover:scale-125 transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
+          aria-label={`${task.priority} priority, click to change`}
         />
 
         {/* Title */}

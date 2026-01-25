@@ -8,7 +8,7 @@ import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { filterTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel } from '@/utils/dateUtils';
-import type { FilterType, Task } from '@/types';
+import type { FilterType, Priority, Task } from '@/types';
 
 export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
@@ -35,12 +35,12 @@ export function MainLayout() {
     return keyA.localeCompare(keyB);
   });
 
-  const handleAddTask = async (title: string, dueDate?: Date) => {
+  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium') => {
     await addTask({
       title,
       description: undefined,
       completed: false,
-      priority: 'medium',
+      priority,
       dueDate,
       estimatedMinutes: undefined,
       consumedMinutes: undefined,
