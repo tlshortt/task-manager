@@ -153,7 +153,7 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
                   onChange={(e) => setEditValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onBlur={cancelEditing}
-                  className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 dark:text-white dark:bg-gray-700"
                   aria-label="Edit task title"
                 />
               ) : (
@@ -188,7 +188,7 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
                 onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={handleTextareaKeyDown}
                 onBlur={saveEdit}
-                className="text-xs px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                className="text-xs px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none text-gray-900 dark:text-white dark:bg-gray-700"
                 rows={2}
                 aria-label="Edit task description"
               />
