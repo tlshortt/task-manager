@@ -13,3 +13,6 @@ export { AppHeader } from './AppHeader';
 export { MainLayout } from './MainLayout';
 export { TaskSkeleton } from './TaskSkeleton';
 export { EmptyState } from './EmptyState';
+export { TagBadge, TAG_COLORS } from './TagBadge';
+export { SubtaskList } from './SubtaskList';
+export { KeyboardShortcutsModal } from './KeyboardShortcutsModal';

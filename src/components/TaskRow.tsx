@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Task } from '@/types';
-import { Check, Trash2 } from 'lucide-react';
+import type { Task, Subtask } from '@/types';
+import { Check, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
 import { parseTime, formatTime as formatTimeUtil } from '@/utils/dateUtils';
+import { TagBadge } from './TagBadge';
+import { SubtaskList } from './SubtaskList';
 
 interface TaskRowProps {
   task: Task;
@@ -26,7 +28,11 @@ function getPriorityColor(priority: Task['priority']): string {
 export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   const [editingField, setEditingField] = useState<EditingField>(null);
   const [editValue, setEditValue] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const hasSubtasks = task.subtasks && task.subtasks.length > 0;
+  const hasTags = task.tags && task.tags.length > 0;
 
   // Auto-focus input when entering edit mode
   useEffect(() => {
@@ -73,57 +79,96 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
     }
   };
 
+  const handleSubtasksUpdate = (subtasks: Subtask[]) => {
+    onUpdate({ ...task, subtasks });
+  };
+
+  const handleRemoveTag = (tagId: string) => {
+    const updatedTags = (task.tags || []).filter((t) => t.id !== tagId);
+    onUpdate({ ...task, tags: updatedTags });
+  };
+
   return (
-    <div className="group flex items-center py-4 px-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
-      {/* Check button */}
-      <button
-        onClick={() => onToggle(task)}
-        className={`w-5 h-5 rounded border-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-3 ${
-          task.completed
-            ? 'bg-purple-600 border-purple-600 dark:bg-purple-500 dark:border-purple-500'
-            : 'border-gray-300 dark:border-gray-500 hover:border-purple-400 dark:hover:border-purple-400'
-        }`}
-        aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
-      >
-        {task.completed && <Check className="w-3 h-3 text-white" />}
-      </button>
-
-      {/* Task info */}
-      <div className="flex items-center gap-3 flex-1 min-w-0">
-        {/* Priority dot - clickable to cycle */}
+    <div className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+      <div className="group flex items-center py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
+        {/* Expand button for subtasks */}
         <button
-          onClick={() => {
-            const order: Task['priority'][] = ['low', 'medium', 'high'];
-            const nextIndex = (order.indexOf(task.priority) + 1) % 3;
-            onUpdate({ ...task, priority: order[nextIndex] as Task['priority'] });
-          }}
-          className={`w-3 h-3 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)} hover:scale-125 transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
-          aria-label={`${task.priority} priority, click to change`}
-        />
+          onClick={() => setIsExpanded(!isExpanded)}
+          className={`w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1 transition-opacity ${
+            hasSubtasks ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          aria-label={isExpanded ? 'Collapse subtasks' : 'Expand subtasks'}
+        >
+          {isExpanded ? (
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          ) : (
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
 
-        {/* Title */}
-        {editingField === 'title' ? (
-          <input
-            ref={inputRef}
-            type="text"
-            value={editValue}
-            onChange={(e) => setEditValue(e.target.value)}
-            onKeyDown={handleKeyDown}
-            onBlur={cancelEditing}
-            className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-            aria-label="Edit task title"
+        {/* Check button */}
+        <button
+          onClick={() => onToggle(task)}
+          className={`w-5 h-5 rounded border-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-3 ${
+            task.completed
+              ? 'bg-purple-600 border-purple-600 dark:bg-purple-500 dark:border-purple-500'
+              : 'border-gray-300 dark:border-gray-500 hover:border-purple-400 dark:hover:border-purple-400'
+          }`}
+          aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
+        >
+          {task.completed && <Check className="w-3 h-3 text-white" />}
+        </button>
+
+        {/* Task info */}
+        <div className="flex items-center gap-3 flex-1 min-w-0">
+          {/* Priority dot - clickable to cycle */}
+          <button
+            onClick={() => {
+              const order: Task['priority'][] = ['low', 'medium', 'high'];
+              const nextIndex = (order.indexOf(task.priority) + 1) % 3;
+              onUpdate({ ...task, priority: order[nextIndex] as Task['priority'] });
+            }}
+            className={`w-3 h-3 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)} hover:scale-125 transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
+            aria-label={`${task.priority} priority, click to change`}
           />
-        ) : (
-          <span
-            onClick={() => startEditing('title', task.title)}
-            className={`text-sm truncate cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
-              task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
-            }`}
-          >
-            {task.title}
-          </span>
-        )}
-      </div>
+
+          {/* Title and Tags */}
+          <div className="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
+            {editingField === 'title' ? (
+              <input
+                ref={inputRef}
+                type="text"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={cancelEditing}
+                className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                aria-label="Edit task title"
+              />
+            ) : (
+              <span
+                onClick={() => startEditing('title', task.title)}
+                className={`text-sm cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
+                  task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
+                }`}
+              >
+                {task.title}
+              </span>
+            )}
+            {/* Tags */}
+            {hasTags && (
+              <div className="flex items-center gap-1 flex-wrap">
+                {task.tags!.map((tag) => (
+                  <TagBadge
+                    key={tag.id}
+                    tag={tag}
+                    onRemove={() => handleRemoveTag(tag.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
       {/* Estimated time */}
       {editingField === 'estimated' ? (
@@ -169,16 +214,28 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
         </div>
       )}
 
-      {/* Action icons */}
-      <div className="w-16 sm:w-24 flex items-center justify-center gap-1 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
-        <button
-          onClick={() => onDelete(task)}
-          className="p-2 min-w-[44px] min-h-[44px] hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center"
-          aria-label={`Delete ${task.title}`}
-        >
-          <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-        </button>
+        {/* Action icons */}
+        <div className="w-16 sm:w-24 flex items-center justify-center gap-1 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
+          <button
+            onClick={() => onDelete(task)}
+            className="p-2 min-w-[44px] min-h-[44px] hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center"
+            aria-label={`Delete ${task.title}`}
+          >
+            <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </button>
+        </div>
       </div>
+
+      {/* Subtasks section */}
+      {(isExpanded || !hasSubtasks) && (
+        <div className={`px-4 pb-2 ${hasSubtasks ? 'block' : 'hidden group-hover:block'}`}>
+          <SubtaskList
+            subtasks={task.subtasks || []}
+            onUpdate={handleSubtasksUpdate}
+            disabled={task.completed}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,19 +1,30 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { AppHeader } from './AppHeader';
 import { FilterTabs } from './FilterTabs';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
 import { EmptyState } from './EmptyState';
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task } from '@/types';
+import type { FilterType, Priority, Task, Tag } from '@/types';
 
 export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
   const { tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete } = useTasks();
   const [filter, setFilter] = useState<FilterType>('current');
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const taskInputRef = useRef<{ focus: () => void }>(null);
+
+  useKeyboardShortcuts({
+    onNewTask: () => taskInputRef.current?.focus(),
+    onToggleHelp: () => setShowShortcuts((s) => !s),
+    onToggleDarkMode: toggle,
+    onEscape: () => setShowShortcuts(false),
+  });
 
   // Get filtered tasks
   const filteredTasks = tasks ? filterTasks(tasks, filter) : [];
@@ -25,7 +36,7 @@ export function MainLayout() {
   const groupedTasks = groupTasksByDate(filteredTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
 
-  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium') => {
+  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[]) => {
     await addTask({
       title,
       description: undefined,
@@ -34,6 +45,8 @@ export function MainLayout() {
       dueDate,
       estimatedMinutes: undefined,
       consumedMinutes: undefined,
+      subtasks: undefined,
+      tags,
     });
   };
 
@@ -67,7 +80,7 @@ export function MainLayout() {
         />
 
         <div className="mb-6">
-          <TaskInput onAddTask={handleAddTask} />
+          <TaskInput ref={taskInputRef} onAddTask={handleAddTask} />
         </div>
 
         {isLoading ? (
@@ -104,6 +117,11 @@ export function MainLayout() {
           </main>
         )}
       </div>
+
+      <KeyboardShortcutsModal
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+      />
     </div>
   );
 }
