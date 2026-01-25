@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import X from 'lucide-react/dist/esm/icons/x';
 import type { Tag } from '@/types';
 
 interface TagBadgeProps {

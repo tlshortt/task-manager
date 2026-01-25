@@ -1,5 +1,7 @@
 import type { FilterType } from '@/types';
-import { CheckCircle, Clock, Inbox } from 'lucide-react';
+import CheckCircle from 'lucide-react/dist/esm/icons/check-circle';
+import Clock from 'lucide-react/dist/esm/icons/clock';
+import Inbox from 'lucide-react/dist/esm/icons/inbox';
 
 interface EmptyStateProps {
   filter: FilterType;

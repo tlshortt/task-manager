@@ -1,9 +1,13 @@
-import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
-import { Plus, Calendar, Tag as TagIcon, FileText } from 'lucide-react';
+import { useRef, useImperativeHandle, forwardRef } from 'react';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import Calendar from 'lucide-react/dist/esm/icons/calendar';
+import TagIcon from 'lucide-react/dist/esm/icons/tag';
+import FileText from 'lucide-react/dist/esm/icons/file-text';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import type { Priority, Tag } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
+import { useTaskForm } from '@/hooks/useTaskForm';
 
 interface TaskInputProps {
   onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string) => void;
@@ -14,78 +18,45 @@ export interface TaskInputHandle {
 }
 
 export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function TaskInput({ onAddTask }, ref) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTagPicker, setShowTagPicker] = useState(false);
-  const [showDescription, setShowDescription] = useState(false);
-  const [priority, setPriority] = useState<Priority>('medium');
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [newTagName, setNewTagName] = useState('');
+  const {
+    formState: {
+      title,
+      description,
+      dueDate,
+      showDatePicker,
+      showTagPicker,
+      showDescription,
+      priority,
+      tags,
+      newTagName,
+    },
+    setters: {
+      setTitle,
+      setDescription,
+      setShowDatePicker,
+      setShowTagPicker,
+      setShowDescription,
+      setPriority,
+      setNewTagName,
+    },
+    actions: {
+      handleSubmit,
+      addTag,
+      removeTag,
+      handleDateChange,
+      handleEscape,
+    }
+  } = useTaskForm({ onAddTask });
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   useImperativeHandle(ref, () => ({
     focus: () => inputRef.current?.focus(),
   }));
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (title.trim()) {
-      onAddTask(
-        title.trim(),
-        dueDate,
-        priority,
-        tags.length > 0 ? tags : undefined,
-        description.trim() || undefined
-      );
-      setTitle('');
-      setDescription('');
-      setDueDate(undefined);
-      setShowDatePicker(false);
-      setShowTagPicker(false);
-      setShowDescription(false);
-      setPriority('medium');
-      setTags([]);
-      setNewTagName('');
-    }
-  };
-
-  const addTag = (color: string) => {
-    if (!newTagName.trim()) return;
-    const tag: Tag = {
-      id: crypto.randomUUID(),
-      name: newTagName.trim(),
-      color,
-    };
-    setTags([...tags, tag]);
-    setNewTagName('');
-  };
-
-  const removeTag = (tagId: string) => {
-    setTags(tags.filter((t) => t.id !== tagId));
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSubmit(e);
-    }
-  };
-
-  const handleDateChange = (date: Date | null) => {
-    setDueDate(date ?? undefined);
-  };
-
-  const handleEscape = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      setShowDatePicker(false);
-      setShowTagPicker(false);
-      setShowDescription(false);
-      setTitle('');
-      setDescription('');
-      setDueDate(undefined);
-      setTags([]);
-      setNewTagName('');
     }
   };
 

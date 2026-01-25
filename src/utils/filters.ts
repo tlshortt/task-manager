@@ -32,11 +32,19 @@ export function getFilterCounts(tasks: Task[]): {
   overdue: number;
   completed: number;
 } {
-  return {
-    current: filterTasks(tasks, 'current').length,
-    overdue: filterTasks(tasks, 'overdue').length,
-    completed: filterTasks(tasks, 'completed').length,
-  };
+  return tasks.reduce(
+    (acc, task) => {
+      if (task.completed) {
+        acc.completed++;
+      } else if (isOverdue(task)) {
+        acc.overdue++;
+      } else {
+        acc.current++;
+      }
+      return acc;
+    },
+    { current: 0, overdue: 0, completed: 0 }
+  );
 }
 
 /**

@@ -5,6 +5,32 @@
   "created": "2026-01-25",
   "userStories": [
     {
+      "id": "US-REF-01",
+      "title": "Refactor TaskInput State",
+      "description": "As a developer, I want to extract form state logic from TaskInput to a custom hook to improve maintainability.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useTaskForm.ts",
+        "Move state (title, description, tags, priority, etc.) and handlers to useTaskForm",
+        "Update TaskInput.tsx to use the new hook",
+        "npm run typecheck passes",
+        "Verify adding tasks works"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-REF-02",
+      "title": "Extract EditableText Component",
+      "description": "As a developer, I want to extract inline editing logic to a reusable component to simplify TaskRow.",
+      "acceptanceCriteria": [
+        "Create src/components/EditableText.tsx",
+        "Move editing state and input/textarea rendering logic from TaskRow to EditableText",
+        "Update TaskRow.tsx to use EditableText for title and description",
+        "npm run typecheck passes",
+        "Verify inline editing works"
+      ],
+      "passes": true
+    },
+    {
       "id": "US-001",
       "title": "Fix Lucide React Barrel Imports",
       "description": "As a developer, I want to fix barrel imports in 9 components to reduce bundle size.",
@@ -20,7 +46,7 @@
         "Update imports in src/components/KeyboardShortcutsModal.tsx to use direct paths",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-002",
@@ -33,7 +59,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-004",
@@ -45,7 +71,7 @@
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",
@@ -59,7 +85,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-006",
@@ -70,7 +96,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-007",
@@ -82,7 +108,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-008",
@@ -92,7 +118,7 @@
         "Update src/utils/dateUtils.ts to use .toSorted()",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-009",
@@ -103,7 +129,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": true
     }
   ]
 }

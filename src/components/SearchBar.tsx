@@ -1,4 +1,5 @@
-import { Search, X } from 'lucide-react';
+import Search from 'lucide-react/dist/esm/icons/search';
+import X from 'lucide-react/dist/esm/icons/x';
 import { forwardRef } from 'react';
 
 interface SearchBarProps {

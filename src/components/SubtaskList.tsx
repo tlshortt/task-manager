@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Check, Plus, X } from 'lucide-react';
+import Check from 'lucide-react/dist/esm/icons/check';
+import Plus from 'lucide-react/dist/esm/icons/plus';
+import X from 'lucide-react/dist/esm/icons/x';
 import type { Subtask } from '@/types';
 
 interface SubtaskListProps {

@@ -1,11 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy, Suspense, useCallback } from 'react';
 import { AppHeader } from './AppHeader';
 import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
-import { EmptyState } from './EmptyState';
-import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -13,6 +11,9 @@ import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
 import type { FilterType, Priority, Task, Tag } from '@/types';
+
+const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
+const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
 
 export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
@@ -44,7 +45,7 @@ export function MainLayout() {
   const groupedTasks = groupTasksByDate(filteredTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
 
-  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string) => {
+  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string) => {
     await addTask({
       title,
       description,
@@ -54,25 +55,25 @@ export function MainLayout() {
       subtasks: undefined,
       tags,
     });
-  };
+  }, [addTask]);
 
-  const handleToggle = async (task: Task) => {
+  const handleToggle = useCallback(async (task: Task) => {
     if (task.id) {
       await toggleComplete(task.id);
     }
-  };
+  }, [toggleComplete]);
 
-  const handleUpdate = async (task: Task) => {
+  const handleUpdate = useCallback(async (task: Task) => {
     if (task.id) {
       await updateTask(task.id, task);
     }
-  };
+  }, [updateTask]);
 
-  const handleDelete = async (task: Task) => {
+  const handleDelete = useCallback(async (task: Task) => {
     if (task.id) {
       await deleteTask(task.id);
     }
-  };
+  }, [deleteTask]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-200">
@@ -98,7 +99,9 @@ export function MainLayout() {
         {isLoading ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-12" role="status" aria-live="polite">Loading tasks...</div>
         ) : sortedGroups.length === 0 ? (
-          <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
+          <Suspense fallback={null}>
+            <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
+          </Suspense>
         ) : (
           <main>
             {sortedGroups.map(([dateKey, dateTasks]) => {
@@ -130,10 +133,14 @@ export function MainLayout() {
         )}
       </div>
 
-      <KeyboardShortcutsModal
-        isOpen={showShortcuts}
-        onClose={() => setShowShortcuts(false)}
-      />
+      {showShortcuts && (
+        <Suspense fallback={null}>
+          <KeyboardShortcutsModal
+            isOpen={showShortcuts}
+            onClose={() => setShowShortcuts(false)}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

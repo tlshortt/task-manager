@@ -8,7 +8,13 @@ interface KeyboardShortcutHandlers {
   onSearch?: () => void;
 }
 
-export function useKeyboardShortcuts(handlers: KeyboardShortcutHandlers) {
+export function useKeyboardShortcuts({
+  onNewTask,
+  onToggleHelp,
+  onToggleDarkMode,
+  onEscape,
+  onSearch,
+}: KeyboardShortcutHandlers) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       // Ignore if user is typing in an input/textarea
@@ -20,7 +26,7 @@ export function useKeyboardShortcuts(handlers: KeyboardShortcutHandlers) {
 
       // Allow Escape even when typing
       if (e.key === 'Escape') {
-        handlers.onEscape?.();
+        onEscape?.();
         return;
       }
 
@@ -33,23 +39,23 @@ export function useKeyboardShortcuts(handlers: KeyboardShortcutHandlers) {
       switch (e.key.toLowerCase()) {
         case 'n':
           e.preventDefault();
-          handlers.onNewTask?.();
+          onNewTask?.();
           break;
         case '?':
           e.preventDefault();
-          handlers.onToggleHelp?.();
+          onToggleHelp?.();
           break;
         case 'd':
           e.preventDefault();
-          handlers.onToggleDarkMode?.();
+          onToggleDarkMode?.();
           break;
         case '/':
           e.preventDefault();
-          handlers.onSearch?.();
+          onSearch?.();
           break;
       }
     },
-    [handlers]
+    [onNewTask, onToggleHelp, onToggleDarkMode, onEscape, onSearch]
   );
 
   useEffect(() => {

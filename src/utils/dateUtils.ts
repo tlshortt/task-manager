@@ -68,7 +68,7 @@ export function isOverdue(task: Task): boolean {
  * Sorts grouped task entries: today, tomorrow, chronological dates, no-date last
  */
 export function sortDateGroups<T>(groups: Map<string, T>): [string, T][] {
-  return Array.from(groups.entries()).sort(([keyA], [keyB]) => {
+  return Array.from(groups.entries()).toSorted(([keyA], [keyB]) => {
     if (keyA === 'today') return -1;
     if (keyB === 'today') return 1;
     if (keyA === 'tomorrow') return -1;

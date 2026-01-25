@@ -1,9 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import type { Task, Subtask } from '@/types';
-import { Check, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
+import Check from 'lucide-react/dist/esm/icons/check';
+import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
+import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
 import { format } from 'date-fns';
 import { TagBadge } from './TagBadge';
 import { SubtaskList } from './SubtaskList';
+import { EditableText } from './EditableText';
 
 interface TaskRowProps {
   task: Task;
@@ -12,7 +16,7 @@ interface TaskRowProps {
   onDelete: (task: Task) => void;
 }
 
-type EditingField = 'title' | 'description' | null;
+const PRIORITIES: Task['priority'][] = ['low', 'medium', 'high'];
 
 function getPriorityColor(priority: Task['priority']): string {
   switch (priority) {
@@ -30,63 +34,10 @@ function formatCreatedDate(date: Date): string {
 }
 
 export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
-  const [editingField, setEditingField] = useState<EditingField>(null);
-  const [editValue, setEditValue] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
   const hasTags = task.tags && task.tags.length > 0;
-
-  // Auto-focus input when entering edit mode
-  useEffect(() => {
-    if (editingField === 'title' && inputRef.current) {
-      inputRef.current.focus();
-    } else if (editingField === 'description' && textareaRef.current) {
-      textareaRef.current.focus();
-    }
-  }, [editingField]);
-
-  const startEditing = (field: EditingField, currentValue: string) => {
-    setEditingField(field);
-    setEditValue(currentValue);
-  };
-
-  const cancelEditing = () => {
-    setEditingField(null);
-    setEditValue('');
-  };
-
-  const saveEdit = () => {
-    if (editingField === 'title') {
-      const trimmedValue = editValue.trim();
-      if (trimmedValue) {
-        onUpdate({ ...task, title: trimmedValue });
-      }
-    } else if (editingField === 'description') {
-      const trimmedValue = editValue.trim();
-      onUpdate({ ...task, description: trimmedValue || undefined });
-    }
-    cancelEditing();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      saveEdit();
-    } else if (e.key === 'Escape') {
-      cancelEditing();
-    }
-  };
-
-  const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      saveEdit();
-    } else if (e.key === 'Escape') {
-      cancelEditing();
-    }
-  };
 
   const handleSubtasksUpdate = (subtasks: Subtask[]) => {
     onUpdate({ ...task, subtasks });
@@ -98,7 +49,10 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   };
 
   return (
-    <div className="border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+    <div 
+      className="border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+      style={{ contentVisibility: 'auto' }}
+    >
       <div className="group flex items-center py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
         {/* Expand button for subtasks */}
         <button
@@ -133,9 +87,8 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
           {/* Priority dot - clickable to cycle */}
           <button
             onClick={() => {
-              const order: Task['priority'][] = ['low', 'medium', 'high'];
-              const nextIndex = (order.indexOf(task.priority) + 1) % 3;
-              onUpdate({ ...task, priority: order[nextIndex] as Task['priority'] });
+              const nextIndex = (PRIORITIES.indexOf(task.priority) + 1) % 3;
+              onUpdate({ ...task, priority: PRIORITIES[nextIndex] as Task['priority'] });
             }}
             className={`w-3 h-3 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)} hover:scale-125 transition-transform duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`}
             aria-label={`${task.priority} priority, click to change`}
@@ -145,27 +98,17 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
           <div className="flex flex-col gap-1 flex-1 min-w-0">
             {/* Title */}
             <div className="flex items-center gap-2 flex-wrap">
-              {editingField === 'title' ? (
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={editValue}
-                  onChange={(e) => setEditValue(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  onBlur={cancelEditing}
-                  className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 dark:text-white dark:bg-gray-700"
-                  aria-label="Edit task title"
-                />
-              ) : (
-                <span
-                  onClick={() => startEditing('title', task.title)}
-                  className={`text-sm cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
-                    task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
-                  }`}
-                >
-                  {task.title}
-                </span>
-              )}
+              <EditableText
+                value={task.title}
+                onSave={(value) => {
+                  if (value) onUpdate({ ...task, title: value });
+                }}
+                className={`text-sm cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
+                  task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
+                }`}
+                inputClassName="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 dark:text-white dark:bg-gray-700"
+                ariaLabel="Edit task title"
+              />
               {/* Tags */}
               {hasTags && (
                 <div className="flex items-center gap-1 flex-wrap">
@@ -181,25 +124,15 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
             </div>
 
             {/* Description */}
-            {editingField === 'description' ? (
-              <textarea
-                ref={textareaRef}
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={handleTextareaKeyDown}
-                onBlur={saveEdit}
-                className="text-xs px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none text-gray-900 dark:text-white dark:bg-gray-700"
-                rows={2}
-                aria-label="Edit task description"
-              />
-            ) : (
-              <div
-                onClick={() => startEditing('description', task.description || '')}
-                className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-purple-600 dark:hover:text-purple-400"
-              >
-                {task.description || 'Add a note...'}
-              </div>
-            )}
+            <EditableText
+              value={task.description || ''}
+              onSave={(value) => onUpdate({ ...task, description: value || undefined })}
+              multiline
+              placeholder="Add a note..."
+              className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-purple-600 dark:hover:text-purple-400"
+              inputClassName="text-xs px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none text-gray-900 dark:text-white dark:bg-gray-700"
+              ariaLabel="Edit task description"
+            />
           </div>
         </div>
 

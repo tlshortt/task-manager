@@ -197,7 +197,7 @@ describe('TaskRow', () => {
     expect(screen.getByText('Test Task')).toBeInTheDocument();
   });
 
-  it('blur cancels edit', async () => {
+  it('blur saves edit', async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();
     const onUpdate = vi.fn();
@@ -217,10 +217,10 @@ describe('TaskRow', () => {
 
     const input = screen.getByRole('textbox');
     await user.clear(input);
-    await user.keyboard('Should Not Save');
+    await user.keyboard('Saved via Blur');
     await user.keyboard('{Tab}');
 
-    expect(onUpdate).not.toHaveBeenCalled();
+    expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, title: 'Saved via Blur' });
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
   });
 

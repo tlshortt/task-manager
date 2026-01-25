@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { Task } from '@/types';
 import { TaskRow } from './TaskRow';
-import { ChevronDown } from 'lucide-react';
+import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
 
 interface TaskDateGroupProps {
   label: string;
