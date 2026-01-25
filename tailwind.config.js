@@ -19,11 +19,13 @@ export default {
     },
   },
   plugins: [],
-  // Safelist for dynamic priority colors (Ralph will use these)
+  // Safelist for dynamic colors (priority + tags)
   safelist: [
     'bg-red-100', 'bg-red-500', 'text-red-700', 'border-red-300',
     'bg-yellow-100', 'bg-yellow-500', 'text-yellow-700', 'border-yellow-300',
     'bg-gray-100', 'bg-gray-500', 'text-gray-700', 'border-gray-300',
     'ring-red-500', 'ring-yellow-500', 'ring-gray-500',
+    // Tag colors
+    'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-amber-500', 'bg-pink-500', 'bg-cyan-500',
   ],
 }
