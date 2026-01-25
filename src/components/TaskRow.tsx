@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Task, Subtask } from '@/types';
 import { Check, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
-import { parseTime, formatTime as formatTimeUtil } from '@/utils/dateUtils';
+import { format } from 'date-fns';
 import { TagBadge } from './TagBadge';
 import { SubtaskList } from './SubtaskList';
 
@@ -12,7 +12,7 @@ interface TaskRowProps {
   onDelete: (task: Task) => void;
 }
 
-type EditingField = 'title' | 'estimated' | 'consumed' | null;
+type EditingField = 'title' | null;
 
 function getPriorityColor(priority: Task['priority']): string {
   switch (priority) {
@@ -23,6 +23,10 @@ function getPriorityColor(priority: Task['priority']): string {
     case 'low':
       return 'bg-gray-400';
   }
+}
+
+function formatCreatedDate(date: Date): string {
+  return format(date, 'MMM d, h:mm a');
 }
 
 export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
@@ -56,16 +60,6 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
       const trimmedValue = editValue.trim();
       if (trimmedValue) {
         onUpdate({ ...task, title: trimmedValue });
-      }
-    } else if (editingField === 'estimated') {
-      const parsedMinutes = parseTime(editValue);
-      if (parsedMinutes !== undefined) {
-        onUpdate({ ...task, estimatedMinutes: parsedMinutes });
-      }
-    } else if (editingField === 'consumed') {
-      const parsedMinutes = parseTime(editValue);
-      if (parsedMinutes !== undefined) {
-        onUpdate({ ...task, consumedMinutes: parsedMinutes });
       }
     }
     cancelEditing();
@@ -170,49 +164,13 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
           </div>
         </div>
 
-      {/* Estimated time */}
-      {editingField === 'estimated' ? (
-        <input
-          ref={inputRef}
-          type="text"
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={cancelEditing}
-          className="w-20 sm:w-28 text-xs sm:text-sm px-2 py-1 border border-purple-500 rounded text-center focus:outline-none focus:ring-2 focus:ring-purple-500"
-          aria-label="Edit estimated time"
-        />
-      ) : (
-        <div
-          onClick={() => startEditing('estimated', formatTimeUtil(task.estimatedMinutes))}
-          className="w-20 sm:w-28 text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center tabular-nums flex-shrink-0 cursor-pointer hover:text-purple-600 dark:hover:text-purple-400"
-          aria-label={`Estimated ${formatTimeUtil(task.estimatedMinutes)}`}
-        >
-          {formatTimeUtil(task.estimatedMinutes)}
-        </div>
-      )}
-
-      {/* Consumed time */}
-      {editingField === 'consumed' ? (
-        <input
-          ref={inputRef}
-          type="text"
-          value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={cancelEditing}
-          className="w-20 sm:w-28 text-xs sm:text-sm px-2 py-1 border border-purple-500 rounded text-center focus:outline-none focus:ring-2 focus:ring-purple-500"
-          aria-label="Edit consumed time"
-        />
-      ) : (
-        <div
-          onClick={() => startEditing('consumed', formatTimeUtil(task.consumedMinutes))}
-          className="w-20 sm:w-28 text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center tabular-nums flex-shrink-0 cursor-pointer hover:text-purple-600 dark:hover:text-purple-400"
-          aria-label={`Consumed ${formatTimeUtil(task.consumedMinutes)}`}
-        >
-          {formatTimeUtil(task.consumedMinutes)}
-        </div>
-      )}
+      {/* Created date */}
+      <div
+        className="w-32 sm:w-40 text-xs sm:text-sm text-gray-600 dark:text-gray-400 text-center flex-shrink-0 whitespace-nowrap"
+        aria-label={`Created ${formatCreatedDate(task.createdAt)}`}
+      >
+        {formatCreatedDate(task.createdAt)}
+      </div>
 
         {/* Action icons */}
         <div className="w-16 sm:w-24 flex items-center justify-center gap-1 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
