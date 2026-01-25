@@ -15,7 +15,7 @@
         "npm run typecheck passes",
         "Verify adding tasks works"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-REF-02",
@@ -28,7 +28,7 @@
         "npm run typecheck passes",
         "Verify inline editing works"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-001",
@@ -46,7 +46,7 @@
         "Update imports in src/components/KeyboardShortcutsModal.tsx to use direct paths",
         "npm run typecheck passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-002",
@@ -59,7 +59,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-004",
@@ -71,7 +71,7 @@
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-005",
@@ -85,7 +85,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-006",
@@ -96,7 +96,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-007",
@@ -108,7 +108,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-008",
@@ -118,7 +118,7 @@
         "Update src/utils/dateUtils.ts to use .toSorted()",
         "npm run typecheck passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-009",
@@ -129,7 +129,7 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     }
   ]
 }
