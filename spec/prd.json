@@ -50,7 +50,7 @@
         "Remove estimatedMinutes and consumedMinutes from task creation payload in src/components/MainLayout.tsx",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",

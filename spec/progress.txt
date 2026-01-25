@@ -67,3 +67,10 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts
 - typecheck and test both pass (101 passed, 4 skipped)
 - Test count reduced from 121 to 101 after removing time utility tests
+
+## 2026-01-25 11:29 - US-004
+- Verified MainLayout no longer sets time fields during task creation
+- Time fields were already removed in US-001, this task verified completion
+- No files changed (work already done)
+- typecheck and test both pass (101 passed, 4 skipped)
+- Learning: US-004 was effectively completed during US-001, just needed verification and PRD update
