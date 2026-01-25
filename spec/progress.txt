@@ -45,3 +45,10 @@ Each iteration should APPEND to this file, never overwrite.
   - Any issues encountered
   - Patterns or learnings discovered
 -->
+## 2026-01-25 10:56 - US-001
+- Removed estimatedMinutes and consumedMinutes from Task interface
+- Removed time field references from MainLayout.tsx task creation
+- Skipped 4 time-related tests in TaskRow.test.tsx (will be deleted in US-005)
+- Files changed: src/types/index.ts, src/components/MainLayout.tsx, src/components/TaskRow.test.tsx
+- typecheck and test both pass
+- Gotcha: US-001 acceptance criteria required typecheck to pass, necessitating fixes in MainLayout and test skips

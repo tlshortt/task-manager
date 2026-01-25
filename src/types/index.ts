@@ -25,8 +25,6 @@ export interface Task {
   completed: boolean;
   priority: Priority;
   dueDate?: Date;
-  estimatedMinutes?: number;
-  consumedMinutes?: number;
   subtasks?: Subtask[];
   tags?: Tag[];
   createdAt: Date;

@@ -51,8 +51,6 @@ export function MainLayout() {
       completed: false,
       priority,
       dueDate,
-      estimatedMinutes: undefined,
-      consumedMinutes: undefined,
       subtasks: undefined,
       tags,
     });

@@ -12,7 +12,7 @@
         "Remove estimatedMinutes and consumedMinutes from Task interface in src/types/index.ts",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-002",
