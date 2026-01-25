@@ -52,3 +52,11 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/types/index.ts, src/components/MainLayout.tsx, src/components/TaskRow.test.tsx
 - typecheck and test both pass
 - Gotcha: US-001 acceptance criteria required typecheck to pass, necessitating fixes in MainLayout and test skips
+
+## 2026-01-25 11:26 - US-002
+- Deleted 5 unused time-related component files
+- Removed exports from src/components/index.ts
+- Files deleted: ProgressBar.tsx, TimeDisplay.tsx, TimeDisplay.test.tsx, TaskSkeleton.tsx, TaskTableHeader.tsx
+- Files changed: src/components/index.ts
+- typecheck and test both pass (121 passed, 4 skipped)
+- Clean deletion with no breaking changes
