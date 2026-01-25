@@ -38,3 +38,38 @@ export function getFilterCounts(tasks: Task[]): {
     completed: filterTasks(tasks, 'completed').length,
   };
 }
+
+/**
+ * Searches tasks by title and description
+ * Case-insensitive, matches partial strings
+ */
+export function searchTasks(tasks: Task[], query: string): Task[] {
+  if (!query.trim()) {
+    return tasks;
+  }
+
+  const normalizedQuery = query.toLowerCase().trim();
+
+  return tasks.filter(task => {
+    // Search in title
+    const titleMatch = task.title.toLowerCase().includes(normalizedQuery);
+
+    // Search in description
+    const descriptionMatch = task.description?.toLowerCase().includes(normalizedQuery) ?? false;
+
+    return titleMatch || descriptionMatch;
+  });
+}
+
+/**
+ * Combines status filtering and search
+ * First filters by status, then applies search
+ */
+export function filterAndSearchTasks(
+  tasks: Task[],
+  filter: FilterType,
+  searchQuery: string
+): Task[] {
+  const filtered = filterTasks(tasks, filter);
+  return searchTasks(filtered, searchQuery);
+}

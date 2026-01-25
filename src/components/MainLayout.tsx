@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { AppHeader } from './AppHeader';
 import { FilterTabs } from './FilterTabs';
+import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
 import { EmptyState } from './EmptyState';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
-import { filterTasks, getFilterCounts } from '@/utils/filters';
+import { useDebounce } from '@/hooks/useDebounce';
+import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
 import type { FilterType, Priority, Task } from '@/types';
 
@@ -14,9 +16,14 @@ export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
   const { tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete } = useTasks();
   const [filter, setFilter] = useState<FilterType>('current');
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Debounce search query for performance
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   // Get filtered tasks
-  const filteredTasks = tasks ? filterTasks(tasks, filter) : [];
+  const filteredTasks = tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [];
 
   // Get filter counts
   const counts = tasks ? getFilterCounts(tasks) : { current: 0, overdue: 0, completed: 0 };
@@ -60,6 +67,12 @@ export function MainLayout() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <AppHeader isDark={isDark} onToggleDarkMode={toggle} />
 
+        <SearchBar
+          ref={searchInputRef}
+          value={searchQuery}
+          onChange={setSearchQuery}
+        />
+
         <FilterTabs
           filter={filter}
           onFilterChange={setFilter}
@@ -73,7 +86,7 @@ export function MainLayout() {
         {isLoading ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-12" role="status" aria-live="polite">Loading tasks...</div>
         ) : sortedGroups.length === 0 ? (
-          <EmptyState filter={filter} />
+          <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
         ) : (
           <main>
             {sortedGroups.map(([dateKey, dateTasks]) => {

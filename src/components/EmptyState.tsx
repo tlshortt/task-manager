@@ -3,9 +3,24 @@ import { CheckCircle, Clock, Inbox } from 'lucide-react';
 
 interface EmptyStateProps {
   filter: FilterType;
+  searchQuery?: string;
 }
 
-export function EmptyState({ filter }: EmptyStateProps) {
+export function EmptyState({ filter, searchQuery }: EmptyStateProps) {
+  // Show search-specific empty state if searching
+  if (searchQuery && searchQuery.trim()) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500 dark:text-gray-400 text-lg">
+          No tasks found matching "{searchQuery}"
+        </p>
+        <p className="text-gray-400 dark:text-gray-500 text-sm mt-2">
+          Try a different search term
+        </p>
+      </div>
+    );
+  }
+
   const getContent = () => {
     switch (filter) {
       case 'current':

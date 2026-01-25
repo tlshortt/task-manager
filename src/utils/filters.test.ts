@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { filterTasks, getFilterCounts } from './filters';
+import { filterTasks, getFilterCounts, searchTasks, filterAndSearchTasks } from './filters';
 import type { Task } from '@/types';
 
 describe('filterTasks', () => {
@@ -278,5 +278,80 @@ describe('getFilterCounts', () => {
     expect(counts.current).toBe(0);
     expect(counts.overdue).toBe(0);
     expect(counts.completed).toBe(2);
+  });
+});
+
+describe('searchTasks', () => {
+  const tasks: Task[] = [
+    {
+      id: 1,
+      title: 'Fix login bug',
+      completed: false,
+      priority: 'high',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 2,
+      title: 'Update documentation',
+      description: 'Correct typos in README',
+      completed: false,
+      priority: 'low',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: 3,
+      title: 'Refactor API',
+      completed: false,
+      priority: 'medium',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+  ];
+
+  it('returns all tasks when query is empty', () => {
+    expect(searchTasks(tasks, '')).toEqual(tasks);
+    expect(searchTasks(tasks, '   ')).toEqual(tasks);
+  });
+
+  it('filters tasks by title (case-insensitive)', () => {
+    const results = searchTasks(tasks, 'fix');
+    expect(results).toHaveLength(1);
+    expect(results[0]?.id).toBe(1);
+  });
+
+  it('filters tasks by description', () => {
+    const results = searchTasks(tasks, 'typos');
+    expect(results).toHaveLength(1);
+    expect(results[0]?.id).toBe(2);
+  });
+
+  it('matches partial strings', () => {
+    const results = searchTasks(tasks, 'doc');
+    expect(results).toHaveLength(1);
+    expect(results[0]?.id).toBe(2);
+  });
+
+  it('returns empty array when no matches', () => {
+    expect(searchTasks(tasks, 'nonexistent')).toEqual([]);
+  });
+
+  it('trims whitespace from query', () => {
+    const results = searchTasks(tasks, '  fix  ');
+    expect(results).toHaveLength(1);
+  });
+});
+
+describe('filterAndSearchTasks', () => {
+  it('applies both status filter and search', () => {
+    const tasks: Task[] = [
+      { id: 1, title: 'Fix bug', completed: false, priority: 'high', createdAt: new Date(), updatedAt: new Date() },
+      { id: 2, title: 'Fix typo', completed: true, priority: 'low', createdAt: new Date(), updatedAt: new Date() },
+    ];
+
+    const results = filterAndSearchTasks(tasks, 'completed', 'fix');
+    expect(results).toHaveLength(1);
+    expect(results[0]?.id).toBe(2);
   });
 });
