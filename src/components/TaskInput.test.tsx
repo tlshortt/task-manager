@@ -191,4 +191,114 @@ describe('TaskInput', () => {
       expect(highPriority).toHaveAttribute('aria-checked', 'false');
     });
   });
+
+  describe('description input', () => {
+    it('hides description textarea by default', () => {
+      render(<TaskInput onAddTask={vi.fn()} />);
+
+      expect(screen.queryByLabelText('Task description')).not.toBeInTheDocument();
+    });
+
+    it('shows description textarea when Note button is clicked', async () => {
+      const user = userEvent.setup();
+      render(<TaskInput onAddTask={vi.fn()} />);
+
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      await user.click(noteButton);
+
+      const descriptionTextarea = screen.getByLabelText('Task description');
+      expect(descriptionTextarea).toBeInTheDocument();
+      expect(noteButton).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    it('hides description textarea when Note button is clicked twice', async () => {
+      const user = userEvent.setup();
+      render(<TaskInput onAddTask={vi.fn()} />);
+
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      await user.click(noteButton);
+      await user.click(noteButton);
+
+      expect(screen.queryByLabelText('Task description')).not.toBeInTheDocument();
+      expect(noteButton).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    it('submits with description when provided', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.type(input, 'Task with description');
+      await user.click(noteButton);
+
+      const descriptionTextarea = screen.getByLabelText('Task description');
+      await user.type(descriptionTextarea, 'This is a note');
+      await user.click(plusButton);
+
+      expect(onAddTask).toHaveBeenCalledWith('Task with description', undefined, 'medium', undefined, 'This is a note');
+    });
+
+    it('submits with undefined description when textarea is empty', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.type(input, 'Task without description');
+      await user.click(noteButton);
+      await user.click(plusButton);
+
+      expect(onAddTask).toHaveBeenCalledWith('Task without description', undefined, 'medium', undefined, undefined);
+    });
+
+    it('trims whitespace from description', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.type(input, 'Task');
+      await user.click(noteButton);
+
+      const descriptionTextarea = screen.getByLabelText('Task description');
+      await user.type(descriptionTextarea, '  Note with spaces  ');
+      await user.click(plusButton);
+
+      expect(onAddTask).toHaveBeenCalledWith('Task', undefined, 'medium', undefined, 'Note with spaces');
+    });
+
+    it('clears description after submit', async () => {
+      const user = userEvent.setup();
+      const onAddTask = vi.fn();
+
+      render(<TaskInput onAddTask={onAddTask} />);
+
+      const input = screen.getByLabelText('New task title');
+      const noteButton = screen.getByRole('button', { name: 'Add note' });
+      const plusButton = screen.getByRole('button', { name: 'Add task' });
+
+      await user.type(input, 'Task');
+      await user.click(noteButton);
+
+      const descriptionTextarea = screen.getByLabelText('Task description');
+      await user.type(descriptionTextarea, 'Description');
+      await user.click(plusButton);
+
+      expect(screen.queryByLabelText('Task description')).not.toBeInTheDocument();
+      expect(noteButton).toHaveAttribute('aria-expanded', 'false');
+    });
+  });
 });

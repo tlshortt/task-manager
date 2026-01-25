@@ -110,3 +110,10 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/components/TaskRow.tsx
 - typecheck and test both pass (101 passed)
 - Pattern: Followed existing inline edit pattern for title, adapted for textarea with Enter/Shift+Enter handling
+## 2026-01-25 11:58 - US-009
+- Added 7 tests for TaskInput description functionality
+- Added 10 tests for TaskRow description display and editing
+- Tests cover: toggle visibility, submit with/without description, trim whitespace, clear on submit, placeholder display, inline editing, Enter/Shift+Enter/Escape/blur behavior
+- Files changed: src/components/TaskInput.test.tsx, src/components/TaskRow.test.tsx
+- typecheck and test both pass (117 passed)
+- Pattern: Followed existing test patterns for inline editing, textarea handling differs from input (Enter vs Shift+Enter)

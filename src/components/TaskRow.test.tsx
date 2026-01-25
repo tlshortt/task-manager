@@ -284,4 +284,221 @@ describe('TaskRow', () => {
       expect(onUpdate).toHaveBeenCalledWith({ ...highTask, priority: 'low' });
     });
   });
+
+  describe('description display and editing', () => {
+    it('displays placeholder when task has no description', () => {
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      expect(screen.getByText('Add a note...')).toBeInTheDocument();
+    });
+
+    it('displays description text when task has description', () => {
+      const taskWithDescription: Task = { ...mockTask, description: 'My task note' };
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={taskWithDescription}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      expect(screen.getByText('My task note')).toBeInTheDocument();
+    });
+
+    it('clicking description enters edit mode', async () => {
+      const user = userEvent.setup();
+      const taskWithDescription: Task = { ...mockTask, description: 'Existing note' };
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={taskWithDescription}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const descriptionText = screen.getByText('Existing note');
+      await user.click(descriptionText);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      expect(textarea).toBeInTheDocument();
+      expect(textarea).toHaveValue('Existing note');
+      expect(textarea).toHaveFocus();
+    });
+
+    it('clicking placeholder enters edit mode with empty value', async () => {
+      const user = userEvent.setup();
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const placeholder = screen.getByText('Add a note...');
+      await user.click(placeholder);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      expect(textarea).toBeInTheDocument();
+      expect(textarea).toHaveValue('');
+      expect(textarea).toHaveFocus();
+    });
+
+    it('Enter key saves description and exits edit mode', async () => {
+      const user = userEvent.setup();
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const placeholder = screen.getByText('Add a note...');
+      await user.click(placeholder);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      await user.type(textarea, 'New description');
+      await user.keyboard('{Enter}');
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, description: 'New description' });
+      expect(screen.queryByLabelText('Edit task description')).not.toBeInTheDocument();
+    });
+
+    it('Shift+Enter does not save, allows newline', async () => {
+      const user = userEvent.setup();
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const placeholder = screen.getByText('Add a note...');
+      await user.click(placeholder);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      await user.type(textarea, 'Line 1{Shift>}{Enter}{/Shift}Line 2');
+
+      expect(onUpdate).not.toHaveBeenCalled();
+      expect(textarea).toHaveValue('Line 1\nLine 2');
+    });
+
+    it('blur saves description', async () => {
+      const user = userEvent.setup();
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={mockTask}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const placeholder = screen.getByText('Add a note...');
+      await user.click(placeholder);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      await user.type(textarea, 'Description via blur');
+      await user.keyboard('{Tab}');
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, description: 'Description via blur' });
+    });
+
+    it('Escape key cancels description edit', async () => {
+      const user = userEvent.setup();
+      const taskWithDescription: Task = { ...mockTask, description: 'Original note' };
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={taskWithDescription}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const descriptionText = screen.getByText('Original note');
+      await user.click(descriptionText);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      await user.clear(textarea);
+      await user.type(textarea, 'Should not save');
+      await user.keyboard('{Escape}');
+
+      expect(onUpdate).not.toHaveBeenCalled();
+      expect(screen.queryByLabelText('Edit task description')).not.toBeInTheDocument();
+      expect(screen.getByText('Original note')).toBeInTheDocument();
+    });
+
+    it('saves empty description as undefined when cleared', async () => {
+      const user = userEvent.setup();
+      const taskWithDescription: Task = { ...mockTask, description: 'Will be removed' };
+      const onToggle = vi.fn();
+      const onUpdate = vi.fn();
+      const onDelete = vi.fn();
+
+      render(
+        <TaskRow
+          task={taskWithDescription}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      );
+
+      const descriptionText = screen.getByText('Will be removed');
+      await user.click(descriptionText);
+
+      const textarea = screen.getByLabelText('Edit task description');
+      await user.clear(textarea);
+      await user.keyboard('{Enter}');
+
+      expect(onUpdate).toHaveBeenCalledWith({ ...mockTask, description: undefined });
+    });
+  });
 });
