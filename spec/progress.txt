@@ -47,3 +47,11 @@ Each iteration should APPEND to this file, never overwrite.
   - Any issues encountered
   - Patterns or learnings discovered
 -->
+
+## 2026-01-25 15:14 - US-REF-01
+- Verified useTaskForm hook already exists and is properly integrated
+- Files: src/hooks/useTaskForm.ts, src/components/TaskInput.tsx
+- Hook extracts: title, description, dueDate, showDatePicker, showTagPicker, showDescription, priority, tags, newTagName states
+- Also extracts: handleSubmit, addTag, removeTag, handleDateChange, handleEscape actions
+- Typecheck passes, all 117 tests pass
+- Pattern: Hook returns { formState, setters, actions } object for clean destructuring

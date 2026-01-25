@@ -15,7 +15,7 @@
         "npm run typecheck passes",
         "Verify adding tasks works"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-REF-02",
