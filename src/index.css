@@ -7,6 +7,102 @@ body {
   @apply bg-gray-50 text-gray-900 antialiased;
 }
 
+/* React DatePicker custom styles */
+.react-datepicker {
+  @apply font-sans border-0 rounded-xl shadow-lg overflow-hidden;
+}
+
+.react-datepicker__header {
+  @apply bg-purple-50 dark:bg-gray-700 border-b border-purple-100 dark:border-gray-600 rounded-t-xl pt-3 pb-2;
+}
+
+.react-datepicker__current-month {
+  @apply text-sm font-medium text-gray-900 dark:text-white mb-2;
+}
+
+.react-datepicker__day-names {
+  @apply flex justify-around;
+}
+
+.react-datepicker__day-name {
+  @apply text-xs font-medium text-gray-500 dark:text-gray-400 w-8 leading-8;
+}
+
+.react-datepicker__month {
+  @apply m-2;
+}
+
+.react-datepicker__week {
+  @apply flex justify-around;
+}
+
+.react-datepicker__day {
+  @apply text-sm w-8 h-8 leading-8 rounded-lg text-gray-700 dark:text-gray-200 transition-colors duration-150;
+}
+
+.react-datepicker__day:hover {
+  @apply bg-purple-100 text-purple-900;
+}
+
+.dark .react-datepicker__day:hover {
+  @apply bg-purple-100 text-gray-700;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  @apply bg-purple-600 text-white hover:bg-purple-700 dark:hover:bg-purple-500 font-medium;
+}
+
+.react-datepicker__day--today {
+  @apply font-bold text-purple-600 dark:text-purple-400;
+}
+
+.react-datepicker__day--today.react-datepicker__day--selected {
+  @apply text-white;
+}
+
+.react-datepicker__day--outside-month {
+  @apply text-gray-300 dark:text-gray-600;
+}
+
+.react-datepicker__day--disabled {
+  @apply text-gray-300 dark:text-gray-600 cursor-not-allowed hover:bg-transparent;
+}
+
+.react-datepicker__navigation {
+  @apply top-3;
+}
+
+.react-datepicker__navigation-icon::before {
+  @apply border-gray-500 dark:border-gray-400;
+}
+
+.react-datepicker__navigation:hover *::before {
+  @apply border-purple-600 dark:border-purple-400;
+}
+
+.react-datepicker__triangle {
+  @apply hidden;
+}
+
+/* Dark mode support */
+.dark .react-datepicker {
+  @apply bg-gray-800 text-white;
+}
+
+.dark .react-datepicker__header {
+  @apply bg-gray-700;
+}
+
+.dark .react-datepicker__day:hover {
+  @apply bg-purple-900/40;
+}
+
+/* Calendar popup positioning */
+.react-datepicker-popper {
+  @apply z-50;
+}
+
 /* Custom component classes can go here */
 @layer components {
   .btn {

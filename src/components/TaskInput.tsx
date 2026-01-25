@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Plus, Calendar } from 'lucide-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import type { Priority } from '@/types';
 
 interface TaskInputProps {
@@ -29,13 +31,8 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
     }
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const dateValue = e.target.value;
-    if (dateValue) {
-      setDueDate(new Date(dateValue));
-    } else {
-      setDueDate(undefined);
-    }
+  const handleDateChange = (date: Date | null) => {
+    setDueDate(date ?? undefined);
   };
 
   const handleEscape = (e: React.KeyboardEvent) => {
@@ -102,13 +99,15 @@ export function TaskInput({ onAddTask }: TaskInputProps) {
 
       {showDatePicker && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-          <input
-            type="date"
-            value={dueDate ? dueDate.toISOString().split('T')[0] : ''}
+          <DatePicker
+            selected={dueDate}
             onChange={handleDateChange}
             onKeyDown={handleEscape}
+            dateFormat="MMM d, yyyy"
+            placeholderText="Select date"
+            calendarClassName="custom-calendar"
             aria-label="Task deadline"
-            className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-1.5 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:ring-offset-2 min-h-[44px]"
+            className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none min-h-[44px]"
           />
         </div>
       )}

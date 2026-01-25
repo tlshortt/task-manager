@@ -73,8 +73,9 @@ describe('TaskInput', () => {
     await user.type(input, 'Task with deadline');
     await user.click(dateButton);
 
+    // react-datepicker uses formatted date input (MMM d, yyyy format)
     const dateInput = screen.getByLabelText('Task deadline');
-    await user.type(dateInput, '2026-12-31');
+    await user.type(dateInput, 'Dec 31, 2026');
 
     await user.click(plusButton);
 
