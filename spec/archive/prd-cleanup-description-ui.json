@@ -1,0 +1,118 @@
+{
+  "projectName": "Cleanup and Description UI",
+  "branchName": "feature/cleanup-description-ui",
+  "description": "Remove unused time tracking code and add task description input/display.",
+  "created": "2026-01-25",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Remove time fields from Task type",
+      "description": "As a developer, I want to remove unused time fields from the Task type so the model matches the current UI.",
+      "acceptanceCriteria": [
+        "Remove estimatedMinutes and consumedMinutes from Task interface in src/types/index.ts",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "title": "Delete unused time components and exports",
+      "description": "As a developer, I want to delete unused time components and exports to reduce dead code.",
+      "acceptanceCriteria": [
+        "Delete src/components/ProgressBar.tsx",
+        "Delete src/components/TimeDisplay.tsx",
+        "Delete src/components/TimeDisplay.test.tsx",
+        "Delete src/components/TaskSkeleton.tsx",
+        "Delete src/components/TaskTableHeader.tsx",
+        "Remove ProgressBar, TimeDisplay, TaskSkeleton, TaskTableHeader exports from src/components/index.ts",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-003",
+      "title": "Remove time utilities and tests",
+      "description": "As a developer, I want to remove time helper utilities and their tests that are no longer used.",
+      "acceptanceCriteria": [
+        "Remove formatTime and parseTime from src/utils/dateUtils.ts",
+        "Remove formatTime/parseTime tests from src/utils/dateUtils.test.ts",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-004",
+      "title": "Remove time fields from MainLayout task creation",
+      "description": "As a developer, I want MainLayout to stop setting time fields when creating tasks.",
+      "acceptanceCriteria": [
+        "Remove estimatedMinutes and consumedMinutes from task creation payload in src/components/MainLayout.tsx",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-005",
+      "title": "Update TaskRow tests for cleanup",
+      "description": "As a developer, I want TaskRow tests updated so they no longer expect time fields or displays.",
+      "acceptanceCriteria": [
+        "Remove estimatedMinutes and consumedMinutes from TaskRow test fixtures",
+        "Remove time-display assertions from src/components/TaskRow.test.tsx",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-006",
+      "title": "Add collapsed description input in TaskInput",
+      "description": "As a user, I want a description input so I can add notes when needed without clutter.",
+      "acceptanceCriteria": [
+        "Add description state and textarea in src/components/TaskInput.tsx",
+        "Textarea hidden by default; revealed via 'Add note' toggle",
+        "onAddTask includes description when provided; prop type updated",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-007",
+      "title": "Wire description into MainLayout addTask",
+      "description": "As a developer, I want MainLayout to pass description values into addTask.",
+      "acceptanceCriteria": [
+        "Update MainLayout handleAddTask to accept description param",
+        "Pass description to addTask call in src/components/MainLayout.tsx",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-008",
+      "title": "Display and edit description inline in TaskRow",
+      "description": "As a user, I want to view and edit a task description inline so notes are easy to update.",
+      "acceptanceCriteria": [
+        "Show description text under title in src/components/TaskRow.tsx",
+        "Empty description shows placeholder 'Add a note...'",
+        "Clicking description enters inline textarea edit mode",
+        "Save on Enter or blur; updates via onUpdate",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-009",
+      "title": "Add tests for description UI",
+      "description": "As a developer, I want tests that cover description input and editing behavior.",
+      "acceptanceCriteria": [
+        "TaskInput tests cover description input and submit payload",
+        "TaskRow tests cover description display and edit behavior",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    }
+  ]
+}

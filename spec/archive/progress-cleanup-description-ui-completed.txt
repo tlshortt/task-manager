@@ -1,0 +1,119 @@
+# Ralph Progress Log
+
+This file tracks progress, learnings, and patterns discovered across Ralph iterations.
+Each iteration should APPEND to this file, never overwrite.
+
+---
+
+## Codebase Patterns
+
+<!-- 
+  Add patterns discovered about this codebase here.
+  Future iterations read this section FIRST.
+-->
+
+- **Component Style:** React functional components with TypeScript
+- **Styling:** Tailwind CSS utility classes
+- **State Management:** React useState/useContext (no external state library)
+- **File Naming:** PascalCase for components, camelCase for utilities
+- **Exports:** Use barrel files (index.ts) for clean imports
+
+---
+
+## Gotchas & Warnings
+
+<!--
+  Add things that caused issues or took extra time.
+  Helps future iterations avoid the same mistakes.
+-->
+
+- Remember to run `npm run typecheck` before committing
+- Tailwind dynamic classes need to be in safelist or use full class names
+- This project uses path aliases: `@/` maps to `src/`
+
+---
+
+## Progress Entries
+
+<!--
+  Each iteration appends a new entry below.
+  Format:
+
+  ## YYYY-MM-DD HH:MM - [Task ID]
+  - What was implemented
+  - Files changed
+  - Any issues encountered
+  - Patterns or learnings discovered
+-->
+## 2026-01-25 10:56 - US-001
+- Removed estimatedMinutes and consumedMinutes from Task interface
+- Removed time field references from MainLayout.tsx task creation
+- Skipped 4 time-related tests in TaskRow.test.tsx (will be deleted in US-005)
+- Files changed: src/types/index.ts, src/components/MainLayout.tsx, src/components/TaskRow.test.tsx
+- typecheck and test both pass
+- Gotcha: US-001 acceptance criteria required typecheck to pass, necessitating fixes in MainLayout and test skips
+
+## 2026-01-25 11:26 - US-002
+- Deleted 5 unused time-related component files
+- Removed exports from src/components/index.ts
+- Files deleted: ProgressBar.tsx, TimeDisplay.tsx, TimeDisplay.test.tsx, TaskSkeleton.tsx, TaskTableHeader.tsx
+- Files changed: src/components/index.ts
+- typecheck and test both pass (121 passed, 4 skipped)
+- Clean deletion with no breaking changes
+
+## 2026-01-25 11:28 - US-003
+- Removed formatTime and parseTime functions from dateUtils.ts
+- Removed formatTime and parseTime tests from dateUtils.test.ts (16 test cases removed)
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts
+- typecheck and test both pass (101 passed, 4 skipped)
+- Test count reduced from 121 to 101 after removing time utility tests
+
+## 2026-01-25 11:29 - US-004
+- Verified MainLayout no longer sets time fields during task creation
+- Time fields were already removed in US-001, this task verified completion
+- No files changed (work already done)
+- typecheck and test both pass (101 passed, 4 skipped)
+- Learning: US-004 was effectively completed during US-001, just needed verification and PRD update
+
+## 2026-01-25 11:34 - US-005
+- Deleted 4 skipped time-related tests from TaskRow.test.tsx
+- Tests removed: time display, missing time values, estimated time edit, consumed time edit
+- Files changed: src/components/TaskRow.test.tsx
+- typecheck and test both pass (101 passed, 0 skipped)
+- Test count remains at 101 after cleanup (removed skipped tests)
+## 2026-01-25 11:37 - US-006
+- Added description input to TaskInput with collapsible UI
+- Added FileText icon and "Note" toggle button
+- Textarea hidden by default, revealed on toggle click
+- Updated onAddTask signature to accept description parameter
+- Description passed as 5th parameter, undefined if empty
+- Updated 4 TaskInput test assertions for new signature
+- Files changed: src/components/TaskInput.tsx, src/components/TaskInput.test.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Followed existing collapsible UI pattern (date/tag pickers)
+## 2026-01-25 11:45 - US-007
+- Updated MainLayout handleAddTask signature to accept description parameter
+- Description now passed from TaskInput to addTask via MainLayout
+- Changed handleAddTask from 4 to 5 parameters (added description?: string)
+- Description passed to addTask call instead of hardcoded undefined
+- Files changed: src/components/MainLayout.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Simple parameter addition - TaskInput already sending description, just needed to wire through MainLayout
+## 2026-01-25 11:47 - US-008
+- Added description display and inline editing to TaskRow
+- Description shows under title with placeholder 'Add a note...'
+- Clicking description enters textarea edit mode
+- Save on Enter (without Shift) or blur; Escape cancels
+- Updated EditingField type to include 'description'
+- Added textareaRef and handleTextareaKeyDown for textarea-specific handling
+- Changed task info layout from flex-row to flex-col to stack title and description
+- Files changed: src/components/TaskRow.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Followed existing inline edit pattern for title, adapted for textarea with Enter/Shift+Enter handling
+## 2026-01-25 11:58 - US-009
+- Added 7 tests for TaskInput description functionality
+- Added 10 tests for TaskRow description display and editing
+- Tests cover: toggle visibility, submit with/without description, trim whitespace, clear on submit, placeholder display, inline editing, Enter/Shift+Enter/Escape/blur behavior
+- Files changed: src/components/TaskInput.test.tsx, src/components/TaskRow.test.tsx
+- typecheck and test both pass (117 passed)
+- Pattern: Followed existing test patterns for inline editing, textarea handling differs from input (Enter vs Shift+Enter)
