@@ -91,3 +91,11 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/components/TaskInput.tsx, src/components/TaskInput.test.tsx
 - typecheck and test both pass (101 passed)
 - Pattern: Followed existing collapsible UI pattern (date/tag pickers)
+## 2026-01-25 11:45 - US-007
+- Updated MainLayout handleAddTask signature to accept description parameter
+- Description now passed from TaskInput to addTask via MainLayout
+- Changed handleAddTask from 4 to 5 parameters (added description?: string)
+- Description passed to addTask call instead of hardcoded undefined
+- Files changed: src/components/MainLayout.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Simple parameter addition - TaskInput already sending description, just needed to wire through MainLayout

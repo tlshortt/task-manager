@@ -44,10 +44,10 @@ export function MainLayout() {
   const groupedTasks = groupTasksByDate(filteredTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
 
-  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[]) => {
+  const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string) => {
     await addTask({
       title,
-      description: undefined,
+      description,
       completed: false,
       priority,
       dueDate,

@@ -86,7 +86,7 @@
         "Pass description to addTask call in src/components/MainLayout.tsx",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-008",
