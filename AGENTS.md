@@ -1,204 +1,121 @@
-In all interactions and commit messages, be extremely concise and sacrifice grammar for the sake of concision.
+Be extremely concise in interactions and commit messages. Sacrifice grammar for brevity.
 
 # AGENTS.md - Codebase Conventions
 
-This file documents patterns and conventions for AI coding agents (and human developers) working in this codebase.
+## Stack
 
-## Project Overview
+- Vite + React 18 + TypeScript (strict)
+- Tailwind CSS (dark mode via class)
+- Dexie (IndexedDB) + dexie-react-hooks
+- Vitest + React Testing Library
+- lucide-react, date-fns, react-hot-toast
 
-A simple task management application built with:
-
-- **Vite** - Build tool and dev server
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Tailwind CSS** - Utility-first styling
-- **Vitest** - Testing framework
-
-## Directory Structure
+## Structure
 
 ```
 src/
-├── components/     # React components
-│   ├── index.ts    # Barrel exports
-│   └── *.tsx       # Component files
-├── types/          # TypeScript type definitions
-│   └── index.ts    # All types exported here
-├── utils/          # Utility functions
-│   └── *.ts        # Pure functions, helpers
-├── test/           # Test setup
-│   └── setup.ts    # Vitest configuration
-├── App.tsx         # Root component
-├── main.tsx        # Entry point
-└── index.css       # Global styles + Tailwind
+├── components/     # React components + tests
+├── hooks/          # Custom hooks + tests
+├── db/             # Dexie setup
+├── types/          # All types in index.ts
+├── utils/          # Pure functions + tests
+├── test/setup.ts   # Vitest config, mocks
+├── App.tsx, main.tsx, index.css
 
-scripts/ralph/      # Ralph loop scripts
-├── ralph.sh        # Main loop script
-├── ralph-once.sh   # Single iteration script
-└── ralph-status.sh # Status checker
-
-spec/               # Ralph specification files
-├── prd.json        # Product requirements
-├── progress.txt    # Progress tracking
-└── PROMPT.md       # AI agent instructions
-
-skills/             # AI agent skills (reusable prompts)
-├── prd/            # PRD Generator skill
-│   └── SKILL.md    # Conversational PRD creation
-└── ralph/          # Ralph PRD Converter skill
-    └── SKILL.md    # Convert PRD markdown to prd.json
-
-tasks/              # Generated PRD documents
-└── prd-*.md        # PRDs created by the prd skill
+scripts/ralph/      # ralph.sh, ralph-once.sh, ralph-status.sh, validate-prd.sh
+spec/               # prd.json, progress.txt, PROMPT.md
+skills/             # prd/, ralph/, agent-browser/
+tasks/              # prd-*.md files
 ```
 
-## Code Conventions
+## TypeScript
 
-### TypeScript
+- Strict mode: `noUncheckedIndexedAccess`, no unused vars
+- Implicit types unless ambiguous
+- No `any` - use `unknown` and narrow
+- `interface` for objects, `type` for unions
+- Path alias: `@/` → `src/`
+- Type imports: `import type { T }`
 
-- **Favor implicit types when possible:** Only explicity type function parameters and return values when it is ambiguous
-- **No `any`:** Use `unknown` if type is truly unknown, then narrow
-- **Interfaces over types:** Prefer `interface` for object shapes
-- **Path aliases:** Use `@/` to import from `src/`
+## Components
 
-```typescript
-// ✅ Good
-import type { Task } from "@/types";
-
-function getTask(id: string): Task | undefined {
-  // ...
-}
-
-// ❌ Bad
-function getTask(id): any {
-  // ...
-}
-```
-
-### React Components
-
-- **Functional components only:** No class components
-- **Props interface:** Define props with explicit interface
-- **Destructure props:** In function signature
-- **Export named:** Use named exports, not default (except App.tsx)
+- Functional only, named exports (except App.tsx)
+- Props interface before component, destructure in signature
+- Icons from `lucide-react`
 
 ```typescript
-// ✅ Good
 interface ButtonProps {
   label: string
   onClick: () => void
-  disabled?: boolean
 }
 
-export function Button({ label, onClick, disabled = false }: ButtonProps) {
-  return (
-    <button onClick={onClick} disabled={disabled}>
-      {label}
-    </button>
-  )
+export function Button({ label, onClick }: ButtonProps) {
+  return <button onClick={onClick}>{label}</button>
 }
 ```
 
-### Styling with Tailwind
+## Tailwind
 
-- **Utility classes:** Prefer Tailwind utilities over custom CSS
-- **Component classes:** Use `@layer components` in `index.css` for reusable patterns
-- **Dynamic classes:** Use template literals, ensure classes are in safelist
-- **Consistent spacing:** Use Tailwind's spacing scale (4, 8, 12, 16...)
+- Dark mode: `dark:` classes
+- Focus: `focus:ring-2 focus:ring-purple-500 focus:ring-offset-2`
+- Group hover: parent `group` + child `group-hover:opacity-100`
+- Custom shadow: `shadow-card`
+- Dynamic classes must be in `safelist`
 
-```typescript
-// ✅ Good - explicit classes
-<div className="bg-red-100 text-red-700">High priority</div>
+## Hooks
 
-// ❌ Bad - dynamic class construction (won't be in CSS bundle)
-<div className={`bg-${color}-100`}>...</div>
-```
-
-### File Naming
-
-- **Components:** `PascalCase.tsx` (e.g., `TaskCard.tsx`)
-- **Utilities:** `camelCase.ts` (e.g., `priority.ts`)
-- **Tests:** `*.test.ts` or `*.test.tsx`
-- **Types:** Defined in `types/index.ts`
-
-### Testing
-
-- **Test files:** Co-locate with source or in `__tests__/`
-- **Naming:** `describe` → component/function name, `it` → behavior
-- **React Testing Library:** For component tests
+- Return objects: `{ data, isLoading, action }`
+- `useLiveQuery` for reactive DB queries
+- Loading: `data === undefined`
+- Toast with undo for destructive actions
 
 ```typescript
-// src/utils/priority.test.ts
-import { describe, it, expect } from "vitest";
-import { getPriorityLabel } from "./priority";
-
-describe("getPriorityLabel", () => {
-  it('returns "High" for high priority', () => {
-    expect(getPriorityLabel("high")).toBe("High");
-  });
-});
+export function useTasks(): UseTasksReturn {
+  const tasks = useLiveQuery(() => db.tasks.toArray());
+  return { tasks: tasks ?? [], isLoading: tasks === undefined, addTask };
+}
 ```
 
-## Common Tasks
+## Database
 
-### Adding a new component
+- Factory: `createTodoDatabase()` → typed Dexie instance
+- Auto-increment: `++id`, indexed: `completed`, `priority`, `dueDate`
+- Always update `updatedAt` on mutations
 
-1. Create `src/components/ComponentName.tsx`
-2. Define props interface
-3. Export from `src/components/index.ts`
-4. Import using `@/components`
+## Utils
 
-### Adding a new type
+- Pure functions, JSDoc comments
+- `date-fns` for dates
+- Store `Date` objects, format for display
 
-1. Add to `src/types/index.ts`
-2. Export from the same file
-3. Import using `import type { TypeName } from '@/types'`
+## Testing
 
-### Running quality checks
+- Vitest globals: `describe`, `it`, `expect` (no imports)
+- Co-located: `*.test.tsx` next to source
+- `userEvent.setup()` for interactions
+- `fake-indexeddb` auto-imported in setup
+- Clear DB in `beforeEach`
 
-```bash
-npm run typecheck  # TypeScript errors
-npm run lint       # ESLint issues
-npm run test       # Run tests
-```
+## File Naming
 
-## Using Skills
+- Components: `PascalCase.tsx`
+- Hooks: `useCamelCase.tsx`
+- Utils: `camelCase.ts`
+- Tests: `*.test.ts(x)`
 
-This codebase includes AI agent skills for streamlined workflows.
-
-### Creating a PRD (Product Requirements Document)
-
-Instead of manually writing `prd.json`, use the PRD skill:
+## Skills
 
 ```
-Load the prd skill and create a PRD for [your feature description]
+Load prd skill, create PRD for [feature]     → tasks/prd-*.md
+Load ralph skill, convert tasks/prd-*.md     → spec/prd.json
 ```
 
-The skill will:
-1. Ask 3-5 clarifying questions (respond like "1A, 2C, 3B")
-2. Generate a structured PRD
-3. Save to `tasks/prd-[feature-name].md`
+## Gotchas
 
-### Converting PRD to Ralph format
+1. Dynamic Tailwind classes → add to `safelist`
+2. Path alias `@/` only works in `src/`
+3. Vitest globals - no imports needed
+4. PRD stories must fit single Ralph iteration
+5. Dark mode uses class strategy via `useDarkMode`
 
-After creating a PRD, convert it to the JSON format Ralph uses:
-
-```
-Load the ralph skill and convert tasks/prd-[feature-name].md to prd.json
-```
-
-This creates `spec/prd.json` with properly sized user stories.
-
-### Full workflow
-
-1. Create PRD: `Load prd skill, create PRD for task filtering`
-2. Convert to JSON: `Load ralph skill, convert tasks/prd-task-filtering.md`
-3. Run Ralph: `./scripts/ralph/ralph.sh`
-
-## Known Gotchas
-
-1. **Tailwind dynamic classes:** Must be in `safelist` in `tailwind.config.js`
-2. **Path aliases:** `@/` only works in `src/`, not in config files
-3. **Vitest globals:** `describe`, `it`, `expect` are global (no import needed)
-4. **PRD story size:** Each user story must be completable in one Ralph iteration
-
-_This file is automatically read by AI coding agents. Update it when you discover new patterns or gotchas._
+_Update when discovering new patterns._
