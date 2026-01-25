@@ -7,7 +7,7 @@ import { EmptyState } from './EmptyState';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { filterTasks, getFilterCounts } from '@/utils/filters';
-import { groupTasksByDate, formatDateLabel } from '@/utils/dateUtils';
+import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
 import type { FilterType, Priority, Task } from '@/types';
 
 export function MainLayout() {
@@ -21,19 +21,9 @@ export function MainLayout() {
   // Get filter counts
   const counts = tasks ? getFilterCounts(tasks) : { current: 0, overdue: 0, completed: 0 };
 
-  // Group filtered tasks by date
+  // Group and sort tasks by date
   const groupedTasks = groupTasksByDate(filteredTasks);
-
-  // Sort groups: today, tomorrow, then chronologically, no-date last
-  const sortedGroups = Array.from(groupedTasks.entries()).sort(([keyA], [keyB]) => {
-    if (keyA === 'today') return -1;
-    if (keyB === 'today') return 1;
-    if (keyA === 'tomorrow') return -1;
-    if (keyB === 'tomorrow') return 1;
-    if (keyA === 'no-date') return 1;
-    if (keyB === 'no-date') return -1;
-    return keyA.localeCompare(keyB);
-  });
+  const sortedGroups = sortDateGroups(groupedTasks);
 
   const handleAddTask = async (title: string, dueDate?: Date, priority: Priority = 'medium') => {
     await addTask({

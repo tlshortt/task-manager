@@ -4,8 +4,8 @@ interface ProgressBarProps {
 }
 
 export function ProgressBar({ consumed, estimated }: ProgressBarProps) {
-  // Calculate percentage, capped at 100%
-  const percentage = Math.min((consumed / estimated) * 100, 100)
+  // Calculate percentage, capped at 100% (guard against divide by zero)
+  const percentage = estimated > 0 ? Math.min((consumed / estimated) * 100, 100) : 0
 
   // Determine if over budget
   const isOverBudget = consumed > estimated

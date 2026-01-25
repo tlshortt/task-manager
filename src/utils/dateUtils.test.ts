@@ -4,7 +4,8 @@ import {
   formatDateLabel,
   isOverdue,
   formatTime,
-  parseTime
+  parseTime,
+  sortDateGroups
 } from './dateUtils';
 import type { Task } from '@/types';
 
@@ -325,5 +326,64 @@ describe('parseTime', () => {
 
   it('parses 1h 30m to 90', () => {
     expect(parseTime('1h 30m')).toBe(90);
+  });
+});
+
+describe('sortDateGroups', () => {
+  it('sorts today first', () => {
+    const groups = new Map([
+      ['2026-02-15', ['task1']],
+      ['today', ['task2']],
+    ]);
+    const sorted = sortDateGroups(groups);
+    expect(sorted[0]?.[0]).toBe('today');
+  });
+
+  it('sorts tomorrow after today', () => {
+    const groups = new Map([
+      ['tomorrow', ['task1']],
+      ['today', ['task2']],
+    ]);
+    const sorted = sortDateGroups(groups);
+    expect(sorted[0]?.[0]).toBe('today');
+    expect(sorted[1]?.[0]).toBe('tomorrow');
+  });
+
+  it('sorts no-date last', () => {
+    const groups = new Map([
+      ['no-date', ['task1']],
+      ['today', ['task2']],
+      ['2026-02-15', ['task3']],
+    ]);
+    const sorted = sortDateGroups(groups);
+    expect(sorted[sorted.length - 1]?.[0]).toBe('no-date');
+  });
+
+  it('sorts ISO dates chronologically', () => {
+    const groups = new Map([
+      ['2026-02-20', ['task1']],
+      ['2026-02-15', ['task2']],
+      ['2026-02-18', ['task3']],
+    ]);
+    const sorted = sortDateGroups(groups);
+    expect(sorted.map(([key]) => key)).toEqual(['2026-02-15', '2026-02-18', '2026-02-20']);
+  });
+
+  it('handles full sorting order correctly', () => {
+    const groups = new Map([
+      ['no-date', ['task1']],
+      ['2026-02-20', ['task2']],
+      ['tomorrow', ['task3']],
+      ['today', ['task4']],
+      ['2026-02-15', ['task5']],
+    ]);
+    const sorted = sortDateGroups(groups);
+    expect(sorted.map(([key]) => key)).toEqual([
+      'today',
+      'tomorrow',
+      '2026-02-15',
+      '2026-02-20',
+      'no-date',
+    ]);
   });
 });

@@ -85,6 +85,21 @@ export function formatTime(minutes?: number): string {
 }
 
 /**
+ * Sorts grouped task entries: today, tomorrow, chronological dates, no-date last
+ */
+export function sortDateGroups<T>(groups: Map<string, T>): [string, T][] {
+  return Array.from(groups.entries()).sort(([keyA], [keyB]) => {
+    if (keyA === 'today') return -1;
+    if (keyB === 'today') return 1;
+    if (keyA === 'tomorrow') return -1;
+    if (keyB === 'tomorrow') return 1;
+    if (keyA === 'no-date') return 1;
+    if (keyB === 'no-date') return -1;
+    return keyA.localeCompare(keyB);
+  });
+}
+
+/**
  * Parses time string to minutes
  * Formats: '90m', '1hr', '1hr 30m', '1.5hr', '45'
  * Returns undefined for invalid input
