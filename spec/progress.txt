@@ -81,3 +81,13 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/components/TaskRow.test.tsx
 - typecheck and test both pass (101 passed, 0 skipped)
 - Test count remains at 101 after cleanup (removed skipped tests)
+## 2026-01-25 11:37 - US-006
+- Added description input to TaskInput with collapsible UI
+- Added FileText icon and "Note" toggle button
+- Textarea hidden by default, revealed on toggle click
+- Updated onAddTask signature to accept description parameter
+- Description passed as 5th parameter, undefined if empty
+- Updated 4 TaskInput test assertions for new signature
+- Files changed: src/components/TaskInput.tsx, src/components/TaskInput.test.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Followed existing collapsible UI pattern (date/tag pickers)

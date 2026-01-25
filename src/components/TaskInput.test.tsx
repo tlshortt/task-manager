@@ -16,7 +16,7 @@ describe('TaskInput', () => {
     await user.type(input, 'New task');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('New task', undefined, 'medium', undefined);
+    expect(onAddTask).toHaveBeenCalledWith('New task', undefined, 'medium', undefined, undefined);
     expect(onAddTask).toHaveBeenCalledTimes(1);
   });
 
@@ -115,7 +115,7 @@ describe('TaskInput', () => {
     await user.type(input, '  Task with spaces  ');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined, 'medium', undefined);
+    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined, 'medium', undefined, undefined);
   });
 
   describe('priority picker', () => {
@@ -151,7 +151,7 @@ describe('TaskInput', () => {
       await user.type(input, 'High priority task');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('High priority task', undefined, 'high', undefined);
+      expect(onAddTask).toHaveBeenCalledWith('High priority task', undefined, 'high', undefined, undefined);
     });
 
     it('submits with low priority when selected', async () => {
@@ -168,7 +168,7 @@ describe('TaskInput', () => {
       await user.type(input, 'Low priority task');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Low priority task', undefined, 'low', undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Low priority task', undefined, 'low', undefined, undefined);
     });
 
     it('resets priority to medium after submit', async () => {

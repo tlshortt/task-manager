@@ -1,12 +1,12 @@
 import { useState, useRef, useImperativeHandle, forwardRef } from 'react';
-import { Plus, Calendar, Tag as TagIcon } from 'lucide-react';
+import { Plus, Calendar, Tag as TagIcon, FileText } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import type { Priority, Tag } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
 
 interface TaskInputProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[]) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string) => void;
 }
 
 export interface TaskInputHandle {
@@ -15,9 +15,11 @@ export interface TaskInputHandle {
 
 export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function TaskInput({ onAddTask }, ref) {
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTagPicker, setShowTagPicker] = useState(false);
+  const [showDescription, setShowDescription] = useState(false);
   const [priority, setPriority] = useState<Priority>('medium');
   const [tags, setTags] = useState<Tag[]>([]);
   const [newTagName, setNewTagName] = useState('');
@@ -30,11 +32,19 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title.trim()) {
-      onAddTask(title.trim(), dueDate, priority, tags.length > 0 ? tags : undefined);
+      onAddTask(
+        title.trim(),
+        dueDate,
+        priority,
+        tags.length > 0 ? tags : undefined,
+        description.trim() || undefined
+      );
       setTitle('');
+      setDescription('');
       setDueDate(undefined);
       setShowDatePicker(false);
       setShowTagPicker(false);
+      setShowDescription(false);
       setPriority('medium');
       setTags([]);
       setNewTagName('');
@@ -70,7 +80,9 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
     if (e.key === 'Escape') {
       setShowDatePicker(false);
       setShowTagPicker(false);
+      setShowDescription(false);
       setTitle('');
+      setDescription('');
       setDueDate(undefined);
       setTags([]);
       setNewTagName('');
@@ -125,6 +137,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           onClick={() => {
             setShowTagPicker(!showTagPicker);
             setShowDatePicker(false);
+            setShowDescription(false);
           }}
           aria-label={showTagPicker ? 'Hide tag picker' : 'Add tags'}
           aria-expanded={showTagPicker}
@@ -139,6 +152,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           onClick={() => {
             setShowDatePicker(!showDatePicker);
             setShowTagPicker(false);
+            setShowDescription(false);
           }}
           aria-label={showDatePicker ? 'Hide deadline picker' : 'Show deadline picker'}
           aria-expanded={showDatePicker}
@@ -146,6 +160,21 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
         >
           <Calendar className="w-4 h-4" />
           <span className="hidden sm:inline">Deadline</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setShowDescription(!showDescription);
+            setShowDatePicker(false);
+            setShowTagPicker(false);
+          }}
+          aria-label={showDescription ? 'Hide note' : 'Add note'}
+          aria-expanded={showDescription}
+          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+        >
+          <FileText className="w-4 h-4" />
+          <span className="hidden sm:inline">Note</span>
         </button>
       </form>
 
@@ -204,6 +233,20 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             </div>
           </div>
           <p className="text-xs text-gray-400 mt-2">Type a name and click a color to add a tag</p>
+        </div>
+      )}
+
+      {showDescription && (
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            onKeyDown={handleEscape}
+            placeholder="Add a note..."
+            aria-label="Task description"
+            rows={3}
+            className="w-full text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none resize-none"
+          />
         </div>
       )}
     </div>
