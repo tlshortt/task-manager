@@ -99,3 +99,14 @@ Each iteration should APPEND to this file, never overwrite.
 - Files changed: src/components/MainLayout.tsx
 - typecheck and test both pass (101 passed)
 - Pattern: Simple parameter addition - TaskInput already sending description, just needed to wire through MainLayout
+## 2026-01-25 11:47 - US-008
+- Added description display and inline editing to TaskRow
+- Description shows under title with placeholder 'Add a note...'
+- Clicking description enters textarea edit mode
+- Save on Enter (without Shift) or blur; Escape cancels
+- Updated EditingField type to include 'description'
+- Added textareaRef and handleTextareaKeyDown for textarea-specific handling
+- Changed task info layout from flex-row to flex-col to stack title and description
+- Files changed: src/components/TaskRow.tsx
+- typecheck and test both pass (101 passed)
+- Pattern: Followed existing inline edit pattern for title, adapted for textarea with Enter/Shift+Enter handling

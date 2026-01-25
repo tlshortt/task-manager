@@ -12,7 +12,7 @@ interface TaskRowProps {
   onDelete: (task: Task) => void;
 }
 
-type EditingField = 'title' | null;
+type EditingField = 'title' | 'description' | null;
 
 function getPriorityColor(priority: Task['priority']): string {
   switch (priority) {
@@ -34,14 +34,17 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   const [editValue, setEditValue] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
   const hasTags = task.tags && task.tags.length > 0;
 
   // Auto-focus input when entering edit mode
   useEffect(() => {
-    if (editingField && inputRef.current) {
+    if (editingField === 'title' && inputRef.current) {
       inputRef.current.focus();
+    } else if (editingField === 'description' && textareaRef.current) {
+      textareaRef.current.focus();
     }
   }, [editingField]);
 
@@ -61,12 +64,24 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
       if (trimmedValue) {
         onUpdate({ ...task, title: trimmedValue });
       }
+    } else if (editingField === 'description') {
+      const trimmedValue = editValue.trim();
+      onUpdate({ ...task, description: trimmedValue || undefined });
     }
     cancelEditing();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      saveEdit();
+    } else if (e.key === 'Escape') {
+      cancelEditing();
+    }
+  };
+
+  const handleTextareaKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       saveEdit();
     } else if (e.key === 'Escape') {
       cancelEditing();
@@ -126,39 +141,63 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
             aria-label={`${task.priority} priority, click to change`}
           />
 
-          {/* Title and Tags */}
-          <div className="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
-            {editingField === 'title' ? (
-              <input
-                ref={inputRef}
-                type="text"
+          {/* Title, Description and Tags */}
+          <div className="flex flex-col gap-1 flex-1 min-w-0">
+            {/* Title */}
+            <div className="flex items-center gap-2 flex-wrap">
+              {editingField === 'title' ? (
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onBlur={cancelEditing}
+                  className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  aria-label="Edit task title"
+                />
+              ) : (
+                <span
+                  onClick={() => startEditing('title', task.title)}
+                  className={`text-sm cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
+                    task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
+                  }`}
+                >
+                  {task.title}
+                </span>
+              )}
+              {/* Tags */}
+              {hasTags && (
+                <div className="flex items-center gap-1 flex-wrap">
+                  {task.tags!.map((tag) => (
+                    <TagBadge
+                      key={tag.id}
+                      tag={tag}
+                      onRemove={() => handleRemoveTag(tag.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            {editingField === 'description' ? (
+              <textarea
+                ref={textareaRef}
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                onBlur={cancelEditing}
-                className="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500"
-                aria-label="Edit task title"
+                onKeyDown={handleTextareaKeyDown}
+                onBlur={saveEdit}
+                className="text-xs px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                rows={2}
+                aria-label="Edit task description"
               />
             ) : (
-              <span
-                onClick={() => startEditing('title', task.title)}
-                className={`text-sm cursor-pointer hover:text-purple-600 dark:hover:text-purple-400 ${
-                  task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-gray-100'
-                }`}
+              <div
+                onClick={() => startEditing('description', task.description || '')}
+                className="text-xs text-gray-500 dark:text-gray-400 cursor-pointer hover:text-purple-600 dark:hover:text-purple-400"
               >
-                {task.title}
-              </span>
-            )}
-            {/* Tags */}
-            {hasTags && (
-              <div className="flex items-center gap-1 flex-wrap">
-                {task.tags!.map((tag) => (
-                  <TagBadge
-                    key={tag.id}
-                    tag={tag}
-                    onRemove={() => handleRemoveTag(tag.id)}
-                  />
-                ))}
+                {task.description || 'Add a note...'}
               </div>
             )}
           </div>
