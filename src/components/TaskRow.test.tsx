@@ -99,46 +99,6 @@ describe('TaskRow', () => {
     expect(checkButton.className).toContain('bg-purple-600');
   });
 
-  it.skip('displays estimated and consumed time', () => {
-    const taskWithTime: Task = {
-      ...mockTask,
-    };
-    const onToggle = vi.fn();
-    const onUpdate = vi.fn();
-    const onDelete = vi.fn();
-
-    render(
-      <TaskRow
-        task={taskWithTime}
-        onToggle={onToggle}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    );
-
-    expect(screen.getByText('1hr 30m')).toBeInTheDocument();
-    expect(screen.getByText('45m')).toBeInTheDocument();
-  });
-
-  it.skip('displays -- for missing time values', () => {
-    const onToggle = vi.fn();
-    const onUpdate = vi.fn();
-    const onDelete = vi.fn();
-
-    const { container } = render(
-      <TaskRow
-        task={mockTask}
-        onToggle={onToggle}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    );
-
-    const timeDisplays = container.querySelectorAll('.tabular-nums');
-    expect(timeDisplays[0]).toHaveTextContent('--');
-    expect(timeDisplays[1]).toHaveTextContent('--');
-  });
-
   it('shows correct priority color', () => {
     const highPriorityTask: Task = { ...mockTask, priority: 'high' };
     const onToggle = vi.fn();
@@ -262,64 +222,6 @@ describe('TaskRow', () => {
 
     expect(onUpdate).not.toHaveBeenCalled();
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
-  });
-
-  it.skip('estimated time field can be edited', async () => {
-    const user = userEvent.setup();
-    const taskWithTime: Task = { ...mockTask };
-    const onToggle = vi.fn();
-    const onUpdate = vi.fn();
-    const onDelete = vi.fn();
-
-    render(
-      <TaskRow
-        task={taskWithTime}
-        onToggle={onToggle}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    );
-
-    const estimatedTime = screen.getByText('1hr');
-    await user.click(estimatedTime);
-
-    const input = screen.getByRole('textbox');
-    expect(input).toHaveValue('1hr');
-
-    await user.clear(input);
-    await user.keyboard('90m');
-    await user.keyboard('{Enter}');
-
-    expect(onUpdate).toHaveBeenCalledWith({ ...taskWithTime, estimatedMinutes: 90 });
-  });
-
-  it.skip('consumed time field can be edited', async () => {
-    const user = userEvent.setup();
-    const taskWithTime: Task = { ...mockTask };
-    const onToggle = vi.fn();
-    const onUpdate = vi.fn();
-    const onDelete = vi.fn();
-
-    render(
-      <TaskRow
-        task={taskWithTime}
-        onToggle={onToggle}
-        onUpdate={onUpdate}
-        onDelete={onDelete}
-      />
-    );
-
-    const consumedTime = screen.getByText('30m');
-    await user.click(consumedTime);
-
-    const input = screen.getByRole('textbox');
-    expect(input).toHaveValue('30m');
-
-    await user.clear(input);
-    await user.keyboard('1hr 30m');
-    await user.keyboard('{Enter}');
-
-    expect(onUpdate).toHaveBeenCalledWith({ ...taskWithTime, consumedMinutes: 90 });
   });
 
   describe('priority cycling', () => {

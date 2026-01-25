@@ -74,3 +74,10 @@ Each iteration should APPEND to this file, never overwrite.
 - No files changed (work already done)
 - typecheck and test both pass (101 passed, 4 skipped)
 - Learning: US-004 was effectively completed during US-001, just needed verification and PRD update
+
+## 2026-01-25 11:34 - US-005
+- Deleted 4 skipped time-related tests from TaskRow.test.tsx
+- Tests removed: time display, missing time values, estimated time edit, consumed time edit
+- Files changed: src/components/TaskRow.test.tsx
+- typecheck and test both pass (101 passed, 0 skipped)
+- Test count remains at 101 after cleanup (removed skipped tests)
