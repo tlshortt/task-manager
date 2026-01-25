@@ -1,0 +1,529 @@
+# Ralph Progress Log
+
+This file tracks progress, learnings, and patterns discovered across Ralph iterations.
+Each iteration should APPEND to this file, never overwrite.
+
+---
+
+## Codebase Patterns
+
+<!-- 
+  Add patterns discovered about this codebase here.
+  Future iterations read this section FIRST.
+-->
+
+- **Component Style:** React functional components with TypeScript
+- **Styling:** Tailwind CSS utility classes
+- **State Management:** React useState/useContext (no external state library)
+- **File Naming:** PascalCase for components, camelCase for utilities
+- **Exports:** Use barrel files (index.ts) for clean imports
+
+---
+
+## Gotchas & Warnings
+
+<!--
+  Add things that caused issues or took extra time.
+  Helps future iterations avoid the same mistakes.
+-->
+
+- Remember to run `npm run typecheck` before committing
+- Tailwind dynamic classes need to be in safelist or use full class names
+- This project uses path aliases: `@/` maps to `src/`
+
+---
+
+## Progress Entries
+
+<!--
+  Each iteration appends a new entry below.
+  Format:
+
+  ## YYYY-MM-DD HH:MM - [Task ID]
+  - What was implemented
+  - Files changed
+  - Any issues encountered
+  - Patterns or learnings discovered
+-->
+
+## 2026-01-23 - US-001
+- Installed dependencies: dexie, date-fns, react-hot-toast
+- Files changed: package.json, package-lock.json
+- All packages added successfully to dependencies
+- npm run typecheck passes
+
+## 2026-01-23 16:15 - US-002
+- Defined TypeScript types in src/types/index.ts
+- Added Priority type: 'low' | 'medium' | 'high'
+- Added FilterType type: 'current' | 'overdue' | 'completed'
+- Added Task interface with all required fields (id, title, description, completed, priority, dueDate, estimatedMinutes, consumedMinutes, createdAt, updatedAt)
+- Files changed: src/types/index.ts, spec/prd.json
+- npm run typecheck passes
+- Pattern: All types exported from single index.ts file for clean imports
+
+## 2026-01-23 16:16 - US-003
+- Created Dexie database in src/db/index.ts
+- Database name: todoApp
+- Table: tasks with auto-increment id
+- Indexes: completed, priority, dueDate, createdAt
+- Created comprehensive tests in src/db/index.test.ts
+- Files changed: src/db/index.ts, src/db/index.test.ts, src/test/setup.ts, package.json
+- Added fake-indexeddb for testing IndexedDB in Node environment
+- Pattern: Boolean fields cannot be directly queried in IndexedDB, use filter() instead
+- npm run typecheck passes
+- npm run test passes (8/8 tests)
+
+## 2026-01-23 16:19 - US-004
+- Created useTasks hook in src/hooks/useTasks.tsx
+- Returns tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete
+- Uses useLiveQuery from dexie-react-hooks for reactive task updates
+- addTask creates tasks with auto timestamps and default priority of medium
+- deleteTask and toggleComplete show toast notifications with Undo button (5s duration)
+- Undo functionality restores deleted tasks or reverts completion state
+- Files changed: src/hooks/useTasks.tsx, src/hooks/useTasks.test.tsx, package.json
+- Added dexie-react-hooks dependency
+- Pattern: Hooks with JSX (toast render functions) must use .tsx extension
+- Pattern: Toast undo buttons use inline styles with purple accent color (#a78bfa)
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
+## 2026-01-23 - US-005
+- Configured Tailwind custom theme in tailwind.config.js
+- Added custom colors: navy-800 (#1e293b), navy-900 (#0f172a), purple-accent (#8b5cf6), blue-accent (#3b82f6)
+- Added custom shadow: shadow-card (0 2px 8px rgba(0,0,0,0.08))
+- Files changed: tailwind.config.js
+- Pattern: Custom colors and shadows extend Tailwind's default theme
+- npm run typecheck passes
+
+## 2026-01-23 16:31 - US-006
+- Created TaskTableHeader component in src/components/TaskTableHeader.tsx
+- Four columns: Task (flex-1), Estimated (w-28), Consumed (w-28), Status (w-24)
+- Sticky header with bg-gray-50/80 backdrop-blur effect
+- text-xs uppercase text-gray-500 font-medium tracking-wide styling
+- Rounded-t-xl border-b border-gray-100
+- Exported from src/components/index.ts
+- Updated App.tsx to display component for visual verification
+- Files changed: src/components/TaskTableHeader.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Component follows functional React pattern with Tailwind utilities
+- npm run typecheck passes (all tests pass)
+
+## 2026-01-23 16:42 - US-007
+- Created TaskRow component in src/components/TaskRow.tsx
+- Installed lucide-react for icons (play, check, trash)
+- Props: task, onToggle, onUpdate, onDelete
+- Layout: checkbox, priority dot, title, estimated time, consumed time, action icons
+- Checkbox: rounded-md border-2, checked state shows purple bg with checkmark
+- Priority dots: high=red, medium=amber, low=gray
+- Time format helper: 1hr 30m (compact format)
+- Action icons appear on hover with opacity transition
+- Completed tasks: line-through, text-gray-400
+- Hover state: bg-gray-50 transition-colors
+- Files changed: src/components/TaskRow.tsx, src/components/index.ts, src/App.tsx, package.json
+- Pattern: Used lucide-react for consistent icon system
+- Pattern: Helper function formatTime() provides compact time display
+- Pattern: getPriorityColor() maps priority to Tailwind color classes
+- npm run typecheck passes
+
+## 2026-01-23 16:43 - US-008
+- Created TaskDateGroup component in src/components/TaskDateGroup.tsx
+- Props: label, count, tasks, onToggle, onUpdate, onDelete
+- Header format: "TODAY (4)" in text-xs font-semibold text-gray-500 uppercase tracking-wider
+- Collapsible with chevron icon, smooth rotate transition
+- Card wrapper: bg-white rounded-xl shadow-card overflow-hidden
+- Renders TaskRow for each task inside card
+- mb-6 spacing between groups
+- Exported from src/components/index.ts
+- Updated App.tsx for visual verification
+- Updated App.test.tsx to match new component
+- Files changed: src/components/TaskDateGroup.tsx, src/components/index.ts, src/App.tsx, src/App.test.tsx
+- Pattern: useState for collapse state, ChevronDown icon from lucide-react
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
+## 2026-01-23 16:44 - US-009
+- Created TaskInput component in src/components/TaskInput.tsx
+- Props: onAddTask with title and optional dueDate
+- Layout: Plus icon + input field + Set deadline button
+- Input: border-0 focus:ring-0, placeholder text-gray-400
+- Deadline button: text-sm text-gray-500 hover:text-purple-600, calendar icon
+- Date picker appears on deadline click with native date input
+- Enter key submits and clears input
+- Card styling: bg-white rounded-xl shadow-card p-4
+- Exported from src/components/index.ts
+- Updated App.tsx for visual verification
+- Files changed: src/components/TaskInput.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Used lucide-react Plus and Calendar icons
+- Pattern: State management with useState for title, dueDate, and showDatePicker
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
+## 2026-01-23 17:14 - US-010
+- Created FilterTabs component in src/components/FilterTabs.tsx
+- Props: filter (FilterType), onFilterChange callback, counts object
+- Three tabs: Current, Overdue, Completed with count badges
+- Active tab: font-medium text-navy-900 border-b-2 border-purple-600
+- Inactive tabs: text-gray-500 hover:text-gray-700
+- Horizontal flex layout with gap-8
+- Count badges: bg-gray-100 rounded-full px-2 text-xs ml-2
+- Exported from src/components/index.ts
+- Updated App.tsx with useState for filter state and FilterTabs demo
+- Files changed: src/components/FilterTabs.tsx, src/components/index.ts, src/App.tsx
+- Pattern: Tab component uses button elements with dynamic className based on active state
+- npm run typecheck passes
+- npm run test passes (13/13 tests)
+
+## 2026-01-23 17:42 - US-011
+- Created PriorityBadge component in src/components/PriorityBadge.tsx
+- Props: priority (Priority type)
+- Colored dots: high=bg-red-500, medium=bg-amber-500, low=bg-gray-400
+- w-2 h-2 rounded-full inline-block mr-2 styling
+- Exported from src/components/index.ts
+- Created tests in src/components/PriorityBadge.test.tsx
+- Tests verify correct color rendering for all priority levels
+- Updated App.tsx with visual test section showing all 3 priorities
+- Files changed: src/components/PriorityBadge.tsx, src/components/PriorityBadge.test.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used Record type for color mapping
+- npm run typecheck passes
+- npm run test passes (16/16 tests)
+
+## 2026-01-23 17:43 - US-012
+- Created TimeDisplay component in src/components/TimeDisplay.tsx
+- Props: minutes (number | undefined), variant ('default' | 'consumed')
+- Formats time as compact display: 1hr 30m, 45m, 2hr, -- for zero/undefined
+- Default variant: text-gray-600, consumed variant: text-purple-600 font-medium
+- text-sm tabular-nums for consistent spacing
+- Created comprehensive tests in src/components/TimeDisplay.test.tsx
+- Tests verify formatting for 90min, 45min, 120min, 0, undefined
+- Tests verify variant styles apply correctly
+- Updated App.tsx with TimeDisplay test section showing all formats
+- Exported from src/components/index.ts
+- Files changed: src/components/TimeDisplay.tsx, src/components/TimeDisplay.test.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: formatTime helper function encapsulated within component
+- Pattern: variant styles use Record type for type-safe mapping
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
+## 2026-01-23 17:45 - US-013
+- Created ProgressBar component in src/components/ProgressBar.tsx
+- Props: consumed (number), estimated (number)
+- Percentage bar with bg-gray-200 rounded-full h-1.5 base
+- Fill uses gradient bg-gradient-to-r from-purple-500 to-blue-500 for normal state
+- Over-budget state (consumed > estimated) shows bg-red-500
+- Width calculated as (consumed/estimated)*100, capped at 100%
+- Added smooth transition-all duration-300 for animated width changes
+- Exported from src/components/index.ts
+- Updated App.tsx with comprehensive visual test showing 4 progress states (33%, 50%, 89%, over-budget)
+- Files changed: src/components/ProgressBar.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used Math.min() to cap percentage at 100%
+- Pattern: Conditional className for gradient vs red fill based on budget status
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
+## 2026-01-23 - US-014
+- Created date utility functions in src/utils/dateUtils.ts
+- Implemented groupTasksByDate(): groups tasks by 'today', 'tomorrow', or ISO date string
+- Implemented formatDateLabel(): formats dates as TODAY, TOMORROW, or MON 29 JAN
+- Implemented isOverdue(): checks if task has past due date and not completed
+- Implemented formatTime(): formats minutes as compact time (1hr 30m, 45m, 2hr, --)
+- Uses date-fns for all date operations (format, isToday, isTomorrow, startOfDay, isBefore)
+- Files changed: src/utils/dateUtils.ts, spec/prd.json
+- Pattern: All utility functions are pure functions with explicit types
+- npm run typecheck passes
+
+## 2026-01-23 - US-015
+- Created filter utility functions in src/utils/filters.ts
+- Implemented filterTasks(): filters tasks by current, overdue, or completed status
+- Implemented getFilterCounts(): returns count object for all filter types
+- Current filter: tasks not completed and not overdue
+- Overdue filter: tasks past due date and not completed
+- Completed filter: completed tasks
+- Uses isOverdue() from dateUtils for consistent overdue logic
+- Files changed: src/utils/filters.ts, spec/prd.json
+- Pattern: Utility functions follow pure function pattern with explicit types
+- npm run typecheck passes
+
+## 2026-01-23 17:48 - US-016
+- Added Toaster from react-hot-toast to App.tsx
+- Position: bottom-center
+- Toast style: bg-navy-900 (#0f172a), white text, rounded-xl, shadow-lg
+- Duration: 5000ms
+- Undo button already implemented in useTasks hook with purple-400 color (#a78bfa)
+- Files changed: src/App.tsx, spec/prd.json
+- Pattern: Toaster configured globally in App.tsx with toastOptions
+- Pattern: Toast notifications already working from US-004 with undo functionality
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
+## 2026-01-23 17:49 - US-017
+- Created AppHeader component in src/components/AppHeader.tsx
+- Props: isDark (boolean), onToggleDarkMode (function)
+- Left side: 'Tasks' title in text-2xl font-bold text-navy-900
+- Right side: Today's date formatted with date-fns, dark mode toggle button
+- Toggle button: Moon/Sun icons from lucide-react, hover:bg-gray-100
+- py-6 mb-2 spacing
+- Exported from src/components/index.ts
+- Updated App.tsx with isDark state and AppHeader component
+- Files changed: src/components/AppHeader.tsx, src/components/index.ts, src/App.tsx, spec/prd.json
+- Pattern: Used date-fns format() for readable date display (EEEE, MMMM d, yyyy)
+- Pattern: Icon toggle button with aria-label for accessibility
+- npm run typecheck passes
+- npm run test passes (23/23 tests)
+
+## 2026-01-23 17:51 - US-018
+- Created useDarkMode hook in src/hooks/useDarkMode.ts
+- Returns { isDark, toggle }
+- Reads from localStorage 'darkMode' on mount
+- Falls back to window.matchMedia('prefers-color-scheme: dark') if no localStorage value
+- Toggles 'dark' class on document.documentElement
+- Persists dark mode preference to localStorage
+- Created comprehensive tests in src/hooks/useDarkMode.test.ts
+- Added matchMedia mock to src/test/setup.ts for test environment
+- Files changed: src/hooks/useDarkMode.ts, src/hooks/useDarkMode.test.ts, src/test/setup.ts, spec/prd.json
+- Pattern: Test environment needs matchMedia mock for dark mode functionality
+- Pattern: Hook uses useEffect to sync dark class and localStorage with state
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
+## 2026-01-23 17:53 - US-019
+- Created MainLayout component in src/components/MainLayout.tsx
+- Integrates useDarkMode and useTasks hooks
+- Manages filter state and groups tasks by date
+- Layout: centered max-w-4xl mx-auto px-6
+- Dark mode support: bg-gray-50 dark:bg-slate-900 with smooth transitions
+- Contains AppHeader, FilterTabs, TaskInput, and TaskDateGroup components
+- Handles task CRUD operations via useTasks hooks (add, toggle, update, delete)
+- Groups and sorts tasks: today first, tomorrow second, then chronologically
+- Shows loading state and empty state when no tasks
+- Exported from src/components/index.ts
+- Updated App.tsx to use MainLayout instead of manual layout
+- Updated App.test.tsx to test MainLayout rendering
+- Files changed: src/components/MainLayout.tsx, src/components/index.ts, src/App.tsx, src/App.test.tsx, spec/prd.json
+- Pattern: MainLayout acts as smart component managing all app state and data flow
+- Pattern: Dark mode transitions use transition-colors duration-200 for smooth visual changes
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
+## 2026-01-23 17:55 - US-020
+- Verified App integration with MainLayout - already complete
+- App.tsx renders MainLayout component with Toaster for notifications
+- MainLayout integrates useTasks and useDarkMode hooks
+- Filter state managed in MainLayout, passed to FilterTabs
+- All task CRUD operations (add, toggle, update, delete) working via handlers
+- Dark mode toggle in AppHeader component
+- All acceptance criteria met
+- Files verified: src/App.tsx, src/components/MainLayout.tsx
+- Pattern: MainLayout acts as main orchestrator, App.tsx minimal wrapper with global Toaster
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
+## 2026-01-23 18:10 - US-021
+- Created TaskSkeleton component in src/components/TaskSkeleton.tsx
+- Props: count (default 3)
+- Matches TaskRow dimensions with animate-pulse animation
+- bg-gray-200 dark:bg-gray-700 rounded skeleton elements
+- Card wrapper matches TaskDateGroup style with dark mode support
+- Exported from src/components/index.ts
+- Files changed: src/components/TaskSkeleton.tsx, src/components/index.ts, spec/prd.json
+- Pattern: Used Array.from() to generate multiple skeleton rows
+- Pattern: Dark mode variants (dark:bg-gray-700, dark:border-gray-700) included
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
+## 2026-01-23 18:11 - US-022
+- Created EmptyState component in src/components/EmptyState.tsx
+- Props: filter (FilterType) for context-aware messaging
+- Three states: current (No tasks yet), overdue (No overdue tasks), completed (No completed tasks)
+- Icons from lucide-react: Inbox, Clock, CheckCircle
+- Styling: centered, text-gray-500, py-12 with icon, message, subtitle
+- Integrated into MainLayout replacing generic empty message
+- Exported from src/components/index.ts
+- Files changed: src/components/EmptyState.tsx, src/components/index.ts, src/components/MainLayout.tsx, spec/prd.json
+- Pattern: Switch statement maps filter type to appropriate icon and messaging
+- npm run typecheck passes
+- npm run test passes (29/29 tests)
+
+## 2026-01-23 18:22 - US-023
+- Created comprehensive utility tests for dateUtils and filters
+- Created src/utils/dateUtils.test.ts with 21 tests covering:
+  - groupTasksByDate: today, tomorrow, ISO dates, no due dates, multiple tasks
+  - formatDateLabel: TODAY, TOMORROW, formatted dates
+  - isOverdue: completed tasks, no due date, past/today/future dates
+  - formatTime: various formats (90m, 45m, 120m, 0, undefined, edge cases)
+- Created src/utils/filters.test.ts with 14 tests covering:
+  - filterTasks: current, overdue, completed filters with edge cases
+  - getFilterCounts: correct counts for all filter types, empty lists, single filter types
+- Fixed TypeScript strict null checks with non-null assertions where appropriate
+- Files changed: src/utils/dateUtils.test.ts, src/utils/filters.test.ts, spec/prd.json
+- Pattern: Used type assertions (as string) and non-null assertions (!) for test expectations
+- Pattern: Changed from .find().toBeUndefined() to .some().toBe(false) to avoid null check issues
+- npm run typecheck passes
+- npm run test passes (64/64 tests)
+
+## 2026-01-23 18:24 - US-024
+- Created comprehensive component tests for TaskRow and FilterTabs
+- Created src/components/TaskRow.test.tsx with 7 tests covering:
+  - Rendering task title and information
+  - Checkbox toggle handler
+  - Delete handler
+  - Completed styling (line-through, purple checkbox)
+  - Time display formatting (1hr 30m, 45m, --)
+  - Priority color rendering
+- Created src/components/FilterTabs.test.tsx with 6 tests covering:
+  - Tab rendering with labels
+  - Count badge display
+  - Click handler
+  - Active tab styling (text-navy-900, border-purple-600)
+  - Inactive tab styling
+  - Filter switching behavior
+- Fixed issue with multiple buttons having same aria-label by using specific CSS selectors
+- Fixed unused variable warning in TypeScript
+- Files changed: src/components/TaskRow.test.tsx, src/components/FilterTabs.test.tsx, spec/prd.json
+- Pattern: When multiple elements share aria-labels, use container.querySelector with specific CSS classes
+- Pattern: Testing library tests follow describe/it pattern with vi.fn() for mocks
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+
+## 2026-01-23 19:33 - US-025
+- Implemented comprehensive accessibility and polish improvements
+- Added aria-labels to all interactive elements (buttons, inputs, checkboxes, tabs)
+- Implemented keyboard navigation: Enter, Tab, Escape
+- Added focus states with ring-2 ring-purple-500 ring-offset-2 across all components
+- Ensured min-h-[44px] and min-w-[44px] touch targets for mobile accessibility
+- Added dark mode variants to all components (dark: prefixes)
+- Added transition-colors duration-150 to all hover states
+- Made layout responsive with sm: breakpoints for mobile, tablet, desktop
+- Added semantic HTML: role attributes (checkbox, tab, tablist, region, status, progressbar)
+- Added aria-live, aria-expanded, aria-checked, aria-selected for screen readers
+- Mobile optimizations: truncate text, responsive font sizes (text-xs sm:text-sm), hide some buttons on mobile
+- Updated TaskRow test to match new aria-label format
+- Files changed: AppHeader.tsx, FilterTabs.tsx, TaskInput.tsx, TaskRow.tsx, TaskDateGroup.tsx, EmptyState.tsx, ProgressBar.tsx, TimeDisplay.tsx, MainLayout.tsx, TaskRow.test.tsx, spec/prd.json
+- Pattern: All interactive elements now have clear aria-labels with context
+- Pattern: Keyboard navigation uses Escape to clear/close, Enter to submit
+- Pattern: Focus rings follow consistent pattern across all focusable elements
+- Pattern: Mobile-first responsive design with sm: breakpoint for larger screens
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+## 2026-01-23 22:19 - US-026
+- Fixed groupTasksByDate to include tasks without due dates
+- Tasks without dueDate now grouped under 'no-date' key instead of being skipped
+- Updated test from "skips tasks without due dates" to "groups tasks without due dates under no-date key"
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts, spec/prd.json
+- Pattern: no-date group will be rendered last in MainLayout (US-027)
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+
+## 2026-01-23 22:19 - US-027
+- Updated MainLayout to render no-date group last with label 'NO DUE DATE'
+- Modified sorting logic to place 'no-date' key at end after chronological groups
+- Added conditional label formatting for no-date group
+- Files changed: src/components/MainLayout.tsx, spec/prd.json
+- Pattern: no-date group uses 'NO DUE DATE' label, sorted last in task groups
+- npm run typecheck passes
+- npm run test passes (77/77 tests)
+
+## 2026-01-23 - US-028
+- Fixed dark mode toggle by adding darkMode: 'class' to tailwind.config.js
+- This enables Tailwind to use class-based dark mode (toggling 'dark' class on document root)
+- Files changed: tailwind.config.js, spec/prd.json
+- Pattern: Tailwind requires explicit darkMode config for class-based dark mode
+- npm run typecheck passes
+- Dev server verified working at localhost:5173
+
+## 2026-01-23 - US-001
+- Added editing state management to TaskRow component
+- Added useState for editingField: 'title' | 'estimated' | 'consumed' | null
+- Added useState for editValue: string
+- Added useRef<HTMLInputElement> for input focus management
+- Removed underscore prefix from onUpdate prop to wire it for use
+- Added void statements to suppress unused variable warnings until US-002 implementation
+- Files changed: src/components/TaskRow.tsx, spec/prd.json
+- Pattern: Used EditingField type alias for type safety on editing state
+- Pattern: void statements suppress TypeScript unused warnings for variables that will be used in next iteration
+- npm run typecheck passes
+
+## 2026-01-23 23:50 - US-002
+- Implemented inline title editing for TaskRow component
+- Added startEditing, cancelEditing, saveEdit functions
+- Clicking title enters edit mode with pre-filled input
+- useEffect auto-focuses input when editing starts
+- Enter key saves changes via onUpdate, empty titles rejected
+- Escape key and blur cancel editing
+- Hover shows purple text hint that field is editable
+- Files changed: src/components/TaskRow.tsx, spec/prd.json
+- Pattern: useEffect with editingField dependency for auto-focus timing
+- Pattern: trim() and check for empty string before saving title
+- npm run typecheck passes
+- Browser verification: title editing works correctly with all keyboard shortcuts
+
+## 2026-01-23 23:55 - US-003
+- Created parseTime utility function in src/utils/dateUtils.ts
+- Parses various time formats: '90m', '1hr', '1hr 30m', '1.5hr', plain numbers
+- Returns undefined for invalid input
+- Handles whitespace and case-insensitive input
+- Added comprehensive tests in src/utils/dateUtils.test.ts (12 test cases)
+- Files changed: src/utils/dateUtils.ts, src/utils/dateUtils.test.ts, spec/prd.json
+- Pattern: Regex match groups can be undefined, check with && match[1] before using
+- Pattern: Use Math.round() for decimal hour calculations to get integer minutes
+- npm run typecheck passes
+- npm run test passes for dateUtils (33/33 tests)
+## 2026-01-24 00:04 - US-004
+- Implemented inline editing for estimated and consumed time fields in TaskRow
+- Added parseTime import from dateUtils for parsing user input
+- Modified saveEdit to handle 'estimated' and 'consumed' fields
+- Time fields now render as clickable divs with hover state
+- Clicking time field enters edit mode with input pre-filled with current value
+- Input matches column width (w-20 sm:w-28) and centered text
+- Enter saves parsed time via onUpdate, Escape/blur cancel
+- Fixed TimeDisplay component to use formatTime from dateUtils (returns "--" for 0/undefined)
+- Removed duplicate formatTime function from TaskRow, now imports from dateUtils
+- Files changed: src/components/TaskRow.tsx, src/components/TimeDisplay.tsx
+- Pattern: Consolidated formatTime usage to single source in dateUtils for consistency
+- npm run typecheck passes
+- npm run test passes (96/96 tests)
+- Browser verified: time fields editable with keyboard shortcuts working
+
+## 2026-01-24 09:00 - US-005
+- Added comprehensive tests for TaskRow inline editing functionality
+- Created 6 new test cases in src/components/TaskRow.test.tsx
+- Test: clicking title enters edit mode with auto-focused input
+- Test: Enter key saves changes and exits edit mode
+- Test: Escape key cancels edit without saving
+- Test: blur (Tab key) cancels edit without saving
+- Test: estimated time field can be edited with parseTime
+- Test: consumed time field can be edited with parseTime
+- Fixed test interaction pattern: use user.clear() + user.keyboard() for inputs to avoid blur issues
+- Files changed: src/components/TaskRow.test.tsx, spec/prd.json
+- Pattern: userEvent.keyboard() more reliable than userEvent.type() for preventing unwanted blur events
+- npm run typecheck passes
+- npm run test passes (102/102 tests)
+## 2026-01-24 09:05 - US-002
+- Verified inline title editing implementation already complete from previous iteration
+- All acceptance criteria met: click to edit, Enter saves, Escape cancels, blur cancels, empty title rejected
+- Title field shows hover state (purple text) to indicate editability
+- Input auto-focuses when edit mode starts via useEffect
+- Files verified: src/components/TaskRow.tsx
+- Pattern: Title field already fully functional with all keyboard shortcuts working
+- npm run typecheck passes
+- Browser verified: title editing works correctly
+
+
+## 2026-01-24 09:19 - US-005 (Fixed)
+- Added 6 comprehensive tests for TaskRow inline editing functionality
+- Test: clicking title enters edit mode with auto-focused input
+- Test: Enter key saves changes and exits edit mode
+- Test: Escape key cancels edit without saving
+- Test: blur (Tab key) cancels edit without saving
+- Test: estimated time field can be edited with parseTime
+- Test: consumed time field can be edited with parseTime
+- Fixed test expectations: time inputs pre-filled with formatted strings (1hr, 30m) not raw minutes
+- Files changed: src/components/TaskRow.test.tsx, spec/prd.json
+- Pattern: Input fields for time editing use formatted time strings as initial values
+- npm run typecheck passes
+- npm run test passes (102/102 tests - 13 TaskRow tests total)
+
+## 2026-01-24 09:20 - PRD Update
+- Marked US-003 and US-004 as complete in prd.json
+- US-003 (parseTime utility) was implemented on 2026-01-23 23:55 with all acceptance criteria met
+- US-004 (time field editing) was implemented on 2026-01-24 00:04 with all acceptance criteria met
+- All user stories now marked as passes: true
+- Files changed: spec/prd.json

@@ -1,87 +1,118 @@
 {
-  "projectName": "Inline Task Editing",
-  "branchName": "feature/todo-list-app",
-  "description": "Add inline editing to TaskRow - click to edit title/times, Enter to save, Escape to cancel",
-  "created": "2026-01-23",
+  "projectName": "Cleanup and Description UI",
+  "branchName": "feature/cleanup-description-ui",
+  "description": "Remove unused time tracking code and add task description input/display.",
+  "created": "2026-01-25",
   "userStories": [
     {
       "id": "US-001",
-      "title": "Add editing state and refs to TaskRow",
-      "description": "As a developer, I need state management for tracking which field is being edited and the temporary edit value.",
+      "title": "Remove time fields from Task type",
+      "description": "As a developer, I want to remove unused time fields from the Task type so the model matches the current UI.",
       "acceptanceCriteria": [
-        "Add useState for editingField: 'title' | 'estimated' | 'consumed' | null",
-        "Add useState for editValue: string",
-        "Add useRef<HTMLInputElement> for managing input focus",
-        "Wire the previously unused onUpdate prop (remove underscore prefix)",
+        "Remove estimatedMinutes and consumedMinutes from Task interface in src/types/index.ts",
         "npm run typecheck passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-002",
-      "title": "Make title field editable inline",
-      "description": "As a user, I want to click on a task title to edit it inline so I can quickly rename tasks.",
+      "title": "Delete unused time components and exports",
+      "description": "As a developer, I want to delete unused time components and exports to reduce dead code.",
       "acceptanceCriteria": [
-        "Clicking task title enters edit mode with input field",
-        "Input is pre-filled with current title and auto-focused",
-        "Press Enter saves the new title via onUpdate",
-        "Press Escape cancels edit and reverts to display mode",
-        "Blur (click outside) cancels edit",
-        "Empty title is not allowed (reverts on Enter if empty)",
+        "Delete src/components/ProgressBar.tsx",
+        "Delete src/components/TimeDisplay.tsx",
+        "Delete src/components/TimeDisplay.test.tsx",
+        "Delete src/components/TaskSkeleton.tsx",
+        "Delete src/components/TaskTableHeader.tsx",
+        "Remove ProgressBar, TimeDisplay, TaskSkeleton, TaskTableHeader exports from src/components/index.ts",
         "npm run typecheck passes",
-        "Verify in browser"
+        "npm run test passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-003",
-      "title": "Add parseTime utility for time input parsing",
-      "description": "As a developer, I need a utility to parse user-entered time strings back to minutes.",
+      "title": "Remove time utilities and tests",
+      "description": "As a developer, I want to remove time helper utilities and their tests that are no longer used.",
       "acceptanceCriteria": [
-        "Create parseTime function in src/utils/dateUtils.ts",
-        "Parses '90m' to 90",
-        "Parses '1hr' to 60",
-        "Parses '1hr 30m' to 90",
-        "Parses '1.5hr' to 90",
-        "Parses plain numbers like '45' to 45",
-        "Returns undefined for invalid input",
-        "Add unit tests for parseTime",
+        "Remove formatTime and parseTime from src/utils/dateUtils.ts",
+        "Remove formatTime/parseTime tests from src/utils/dateUtils.test.ts",
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-004",
-      "title": "Make estimated and consumed time fields editable",
-      "description": "As a user, I want to click on time fields to edit them so I can track time estimates and consumption.",
+      "title": "Remove time fields from MainLayout task creation",
+      "description": "As a developer, I want MainLayout to stop setting time fields when creating tasks.",
       "acceptanceCriteria": [
-        "Clicking estimated time column enters edit mode",
-        "Clicking consumed time column enters edit mode",
-        "Input uses parseTime to convert user input to minutes",
-        "Enter saves the parsed value via onUpdate",
-        "Escape cancels edit",
-        "Blur cancels edit",
-        "Input width matches column width (w-20 sm:w-28)",
-        "npm run typecheck passes",
-        "Verify in browser"
+        "Remove estimatedMinutes and consumedMinutes from task creation payload in src/components/MainLayout.tsx",
+        "npm run typecheck passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
       "id": "US-005",
-      "title": "Add tests for TaskRow inline editing",
-      "description": "As a developer, I want tests to verify inline editing behavior works correctly.",
+      "title": "Update TaskRow tests for cleanup",
+      "description": "As a developer, I want TaskRow tests updated so they no longer expect time fields or displays.",
       "acceptanceCriteria": [
-        "Test: clicking title enters edit mode",
-        "Test: Enter key saves and exits edit mode",
-        "Test: Escape key cancels edit",
-        "Test: blur cancels edit",
-        "Test: time fields can be edited",
+        "Remove estimatedMinutes and consumedMinutes from TaskRow test fixtures",
+        "Remove time-display assertions from src/components/TaskRow.test.tsx",
         "npm run typecheck passes",
         "npm run test passes"
       ],
-      "passes": true
+      "passes": false
+    },
+    {
+      "id": "US-006",
+      "title": "Add collapsed description input in TaskInput",
+      "description": "As a user, I want a description input so I can add notes when needed without clutter.",
+      "acceptanceCriteria": [
+        "Add description state and textarea in src/components/TaskInput.tsx",
+        "Textarea hidden by default; revealed via 'Add note' toggle",
+        "onAddTask includes description when provided; prop type updated",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-007",
+      "title": "Wire description into MainLayout addTask",
+      "description": "As a developer, I want MainLayout to pass description values into addTask.",
+      "acceptanceCriteria": [
+        "Update MainLayout handleAddTask to accept description param",
+        "Pass description to addTask call in src/components/MainLayout.tsx",
+        "npm run typecheck passes"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-008",
+      "title": "Display and edit description inline in TaskRow",
+      "description": "As a user, I want to view and edit a task description inline so notes are easy to update.",
+      "acceptanceCriteria": [
+        "Show description text under title in src/components/TaskRow.tsx",
+        "Empty description shows placeholder 'Add a note...'",
+        "Clicking description enters inline textarea edit mode",
+        "Save on Enter or blur; updates via onUpdate",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-009",
+      "title": "Add tests for description UI",
+      "description": "As a developer, I want tests that cover description input and editing behavior.",
+      "acceptanceCriteria": [
+        "TaskInput tests cover description input and submit payload",
+        "TaskRow tests cover description display and edit behavior",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": false
     }
   ]
 }
