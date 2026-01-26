@@ -108,12 +108,13 @@ export function MainLayout() {
               let label: string;
               if (dateKey === 'no-date') {
                 label = 'NO DUE DATE';
+              } else if (dateKey === 'today') {
+                label = 'TODAY';
+              } else if (dateKey === 'tomorrow') {
+                label = 'TOMORROW';
               } else {
-                const date = dateKey === 'today'
-                  ? new Date()
-                  : dateKey === 'tomorrow'
-                  ? new Date(Date.now() + 86400000)
-                  : new Date(dateKey);
+                // Parse date string as local time (append T00:00:00 to avoid UTC parsing)
+                const date = new Date(dateKey + 'T00:00:00');
                 label = formatDateLabel(date);
               }
 

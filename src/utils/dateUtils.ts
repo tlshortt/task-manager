@@ -17,24 +17,44 @@ import type { Task } from '@/types';
 export function groupTasksByDate(tasks: Task[]): Map<string, Task[]> {
   const groups = new Map<string, Task[]>();
 
+  // Pre-compute today and tomorrow keys for consistent comparison
+  const today = startOfDay(new Date());
+  const tomorrow = startOfDay(new Date(Date.now() + 86400000));
+  const todayKey = format(today, 'yyyy-MM-dd');
+  const tomorrowKey = format(tomorrow, 'yyyy-MM-dd');
+
+  console.log('[groupTasksByDate] todayKey:', todayKey, 'tomorrowKey:', tomorrowKey);
+
   for (const task of tasks) {
     let key: string;
 
     if (!task.dueDate) {
       key = 'no-date';
-    } else if (isToday(task.dueDate)) {
-      key = 'today';
-    } else if (isTomorrow(task.dueDate)) {
-      key = 'tomorrow';
     } else {
-      // Format as ISO date string for consistent sorting
-      key = format(task.dueDate, 'yyyy-MM-dd');
+      // Normalize to start of day and format for consistent grouping
+      // (handles string dates from IndexedDB and timezone edge cases)
+      const normalizedDate = startOfDay(new Date(task.dueDate));
+      const dateKey = format(normalizedDate, 'yyyy-MM-dd');
+
+      console.log('[groupTasksByDate] task:', task.title, 'dueDate:', task.dueDate, 'dateKey:', dateKey);
+
+      if (dateKey === todayKey) {
+        key = 'today';
+      } else if (dateKey === tomorrowKey) {
+        key = 'tomorrow';
+      } else {
+        key = dateKey;
+      }
     }
+
+    console.log('[groupTasksByDate] task:', task.title, 'assigned key:', key);
 
     const existing = groups.get(key) || [];
     existing.push(task);
     groups.set(key, existing);
   }
+
+  console.log('[groupTasksByDate] final groups:', Array.from(groups.entries()).map(([k, v]) => `${k}: ${v.length} tasks`));
 
   return groups;
 }
