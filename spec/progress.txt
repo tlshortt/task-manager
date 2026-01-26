@@ -137,3 +137,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Exported all calendar components from main index.ts barrel file
 - View toggle now fully functional: List shows task groups, Calendar shows monthly grid
 
+## 2026-01-25 - US-CAL-11
+- Created DayTasksModal component for displaying all tasks on a selected date
+- Files changed: src/components/calendar/DayTasksModal.tsx, src/components/calendar/index.ts
+- Props: isOpen, date, tasks, onClose, onToggle, onUpdate, onDelete
+- Uses existing TaskRow component for task display
+- Escape key closes modal via useEffect keydown listener
+- Backdrop click also closes modal
+- Follows KeyboardShortcutsModal pattern for styling consistency
+- Displays formatted date header (e.g., "Saturday, January 25, 2026")
+- Empty state message when no tasks for the day
+- Ready to be wired into CalendarView with day click handler (US-CAL-12)
+
