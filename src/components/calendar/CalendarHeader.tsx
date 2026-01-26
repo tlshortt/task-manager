@@ -19,8 +19,8 @@ export function CalendarHeader({
   const isCurrentMonth = isSameMonth(currentMonth, today);
 
   return (
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-xl font-semibold text-navy-900 dark:text-white">
+    <div className="flex items-center justify-between mb-3 sm:mb-4">
+      <h2 className="text-base sm:text-xl font-semibold text-navy-900 dark:text-white">
         {format(currentMonth, 'MMMM yyyy')}
       </h2>
       <div className="flex items-center gap-2">
@@ -28,8 +28,9 @@ export function CalendarHeader({
           onClick={onToday}
           disabled={isCurrentMonth}
           className={`
-            px-3 py-1.5 text-sm rounded-md transition-colors duration-150
+            min-h-[44px] min-w-[44px] px-3 py-2 text-sm rounded-md transition-colors duration-150
             focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+            active:bg-purple-100 dark:active:bg-purple-900/30
             ${
               isCurrentMonth
                 ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed'
@@ -43,14 +44,14 @@ export function CalendarHeader({
           <button
             onClick={onPrevMonth}
             aria-label="Previous month"
-            className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="min-h-[44px] min-w-[44px] p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:bg-gray-200 dark:active:bg-gray-700 flex items-center justify-center"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={onNextMonth}
             aria-label="Next month"
-            className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+            className="min-h-[44px] min-w-[44px] p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 active:bg-gray-200 dark:active:bg-gray-700 flex items-center justify-center"
           >
             <ChevronRight className="w-5 h-5" />
           </button>

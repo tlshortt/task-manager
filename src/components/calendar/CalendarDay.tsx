@@ -32,8 +32,9 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
     <button
       onClick={onClick}
       className={`
-        min-h-[60px] sm:min-h-[100px] p-1 sm:p-2 text-left transition-colors duration-150 flex flex-col
+        min-h-[50px] sm:min-h-[100px] p-1 sm:p-2 text-left transition-colors duration-150 flex flex-col
         focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500
+        active:bg-gray-100 dark:active:bg-gray-800
         ${day.isCurrentMonth
           ? 'bg-white dark:bg-gray-900'
           : 'bg-gray-50 dark:bg-gray-800/50'
@@ -43,10 +44,10 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
       `}
     >
       {/* Header: date number and task count */}
-      <div className="flex items-start justify-between mb-1">
+      <div className="flex items-start justify-between">
         <span
           className={`
-            inline-flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 text-xs sm:text-sm rounded-full
+            inline-flex items-center justify-center w-5 h-5 sm:w-7 sm:h-7 text-[10px] sm:text-sm rounded-full
             ${day.isToday
               ? 'bg-purple-600 text-white font-semibold ring-2 ring-purple-300 dark:ring-purple-500'
               : day.isCurrentMonth
@@ -58,7 +59,7 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
           {format(day.date, 'd')}
         </span>
         {taskCount > 0 && (
-          <span className="bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[10px] sm:text-xs font-medium px-1 sm:px-1.5 py-0.5 rounded-full">
+          <span className="bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-[9px] sm:text-xs font-medium px-1 sm:px-1.5 py-0.5 rounded-full">
             {taskCount}
           </span>
         )}
@@ -66,7 +67,7 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
 
       {/* Priority dots - hidden on mobile */}
       {taskCount > 0 && (
-        <div className="hidden sm:flex gap-1 mb-1">
+        <div className="hidden sm:flex gap-1 mb-1 mt-1">
           {day.tasks.slice(0, 5).map((task) => (
             <span
               key={task.id}
@@ -81,7 +82,7 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
       )}
 
       {/* Task previews - hidden on mobile */}
-      <div className="hidden sm:block flex-1 overflow-hidden space-y-0.5">
+      <div className="hidden sm:block flex-1 overflow-hidden space-y-0.5 mt-1">
         {visibleTasks.map((task) => (
           <CalendarTaskItem key={task.id} task={task} />
         ))}
