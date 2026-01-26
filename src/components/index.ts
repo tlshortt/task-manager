@@ -12,3 +12,4 @@ export { EmptyState } from './EmptyState';
 export { TagBadge, TAG_COLORS } from './TagBadge';
 export { SubtaskList } from './SubtaskList';
 export { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
+export { ViewModeToggle } from './ViewModeToggle';

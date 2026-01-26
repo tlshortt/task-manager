@@ -54,3 +54,11 @@ Each iteration should APPEND to this file, never overwrite.
 - No issues encountered
 - Simple foundational type for calendar feature toggle
 
+## 2026-01-25 - US-CAL-02
+- Created ViewModeToggle component with List/Calendar icons
+- Files changed: src/components/ViewModeToggle.tsx, src/components/index.ts
+- Props: viewMode: ViewMode, onChange: (mode: ViewMode) => void
+- Styled to match FilterTabs with purple highlight for active state
+- Uses direct lucide-react ESM imports (List, Calendar icons)
+- Component ready to be wired into MainLayout (US-CAL-03)
+
