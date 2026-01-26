@@ -116,3 +116,15 @@ Each iteration should APPEND to this file, never overwrite.
 - Extracted from inline rendering in CalendarDay for reusability
 - CalendarDay now imports and uses CalendarTaskItem
 
+## 2026-01-25 - US-CAL-09
+- Created CalendarView container component assembling all calendar pieces
+- Files changed: src/components/calendar/CalendarView.tsx, src/components/calendar/index.ts
+- Props: tasks (Task[])
+- Manages currentMonth state with useState, startOfMonth for initial value
+- Month navigation: handlePrevMonth/handleNextMonth using date-fns addMonths/subMonths
+- Today button resets to current month via startOfMonth(new Date())
+- Uses useMemo to memoize generateCalendarDays for performance
+- Composes CalendarHeader + CalendarDay in a 7-column grid
+- handleDayClick placeholder ready for US-CAL-12 modal integration
+- Ready to be wired into MainLayout (US-CAL-10)
+
