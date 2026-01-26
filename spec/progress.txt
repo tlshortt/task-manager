@@ -79,3 +79,12 @@ Each iteration should APPEND to this file, never overwrite.
 - 16 unit tests covering all utilities
 - Gotcha: Use `new Date(year, month, day)` in tests to avoid timezone issues with ISO strings
 
+## 2026-01-25 - US-CAL-05
+- Created CalendarHeader component with month/year display and navigation
+- Files changed: src/components/calendar/CalendarHeader.tsx, src/components/calendar/index.ts
+- Props: currentMonth, onPrevMonth, onNextMonth, onToday
+- Today button disabled when viewing current month (uses date-fns isSameMonth)
+- Uses ChevronLeft/ChevronRight icons from lucide-react
+- Pattern: Created calendar/ subdirectory with barrel file for calendar components
+- Ready to be composed into CalendarView (US-CAL-09)
+
