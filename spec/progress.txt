@@ -62,3 +62,11 @@ Each iteration should APPEND to this file, never overwrite.
 - Uses direct lucide-react ESM imports (List, Calendar icons)
 - Component ready to be wired into MainLayout (US-CAL-03)
 
+## 2026-01-25 - US-CAL-03
+- Added viewMode state to MainLayout with useState<ViewMode>('list')
+- Rendered ViewModeToggle between FilterTabs and TaskInput
+- Files changed: src/components/MainLayout.tsx
+- Imported ViewModeToggle component and ViewMode type
+- Toggle renders and switches between List/Calendar modes
+- Next step: US-CAL-04 (Calendar utilities) or later stories to wire CalendarView
+

@@ -4,13 +4,14 @@ import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
+import { ViewModeToggle } from './ViewModeToggle';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task, Tag } from '@/types';
+import type { FilterType, Priority, Task, Tag, ViewMode } from '@/types';
 
 const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
 const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
@@ -21,6 +22,7 @@ export function MainLayout() {
   const [filter, setFilter] = useState<FilterType>('current');
   const [searchQuery, setSearchQuery] = useState('');
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const searchInputRef = useRef<HTMLInputElement>(null);
   const taskInputRef = useRef<{ focus: () => void }>(null);
 
@@ -91,6 +93,8 @@ export function MainLayout() {
           onFilterChange={setFilter}
           counts={counts}
         />
+
+        <ViewModeToggle viewMode={viewMode} onChange={setViewMode} />
 
         <div className="mb-6">
           <TaskInput ref={taskInputRef} onAddTask={handleAddTask} />
