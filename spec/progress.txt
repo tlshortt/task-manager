@@ -97,3 +97,14 @@ Each iteration should APPEND to this file, never overwrite.
 - Uses gap-px trick with rounded overflow for clean grid borders
 - Ready to be composed with CalendarDay items (US-CAL-07) and CalendarView (US-CAL-09)
 
+## 2026-01-25 - US-CAL-07
+- Created CalendarDay component for individual day cell rendering
+- Files changed: src/components/calendar/CalendarDay.tsx, src/components/calendar/index.ts
+- Props: day (CalendarDay), onClick (optional callback)
+- Features: date number (dimmed if not current month), today highlight with purple ring
+- Task count badge, priority color dots (red/amber/gray for high/medium/low)
+- Max 2 task previews with truncated titles, "+N more" for remaining
+- Strikethrough for completed tasks, overdue indicator (red tint)
+- Uses getPriorityColor helper matching TaskRow pattern
+- Ready to replace inline rendering in CalendarGrid or for direct use in CalendarView
+
