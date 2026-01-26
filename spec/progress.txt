@@ -108,3 +108,11 @@ Each iteration should APPEND to this file, never overwrite.
 - Uses getPriorityColor helper matching TaskRow pattern
 - Ready to replace inline rendering in CalendarGrid or for direct use in CalendarView
 
+## 2026-01-25 - US-CAL-08
+- Created CalendarTaskItem component for compact task previews in calendar cells
+- Files changed: src/components/calendar/CalendarTaskItem.tsx, src/components/calendar/index.ts, src/components/calendar/CalendarDay.tsx
+- Props: task (Task)
+- Features: priority dot (red/amber/gray) + truncated title, strikethrough for completed
+- Extracted from inline rendering in CalendarDay for reusability
+- CalendarDay now imports and uses CalendarTaskItem
+

@@ -107,7 +107,7 @@
         "Strikethrough if task is completed",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-CAL-09",

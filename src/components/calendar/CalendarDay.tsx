@@ -2,6 +2,7 @@ import type { CalendarDay as CalendarDayType } from '@/utils/calendarUtils';
 import { hasOverdueTasks } from '@/utils/calendarUtils';
 import type { Priority } from '@/types';
 import { format } from 'date-fns';
+import { CalendarTaskItem } from './CalendarTaskItem';
 
 const MAX_TASK_PREVIEWS = 2;
 
@@ -82,16 +83,7 @@ export function CalendarDay({ day, onClick }: CalendarDayProps) {
       {/* Task previews */}
       <div className="flex-1 overflow-hidden space-y-0.5">
         {visibleTasks.map((task) => (
-          <div
-            key={task.id}
-            className={`
-              flex items-center gap-1 text-xs truncate
-              ${task.completed ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-700 dark:text-gray-300'}
-            `}
-          >
-            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`} />
-            <span className="truncate">{task.title}</span>
-          </div>
+          <CalendarTaskItem key={task.id} task={task} />
         ))}
         {remainingCount > 0 && (
           <div className="text-xs text-gray-400 dark:text-gray-500">
