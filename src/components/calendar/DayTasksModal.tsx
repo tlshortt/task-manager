@@ -52,13 +52,13 @@ export function DayTasksModal({
         className="bg-white dark:bg-slate-800 rounded-none sm:rounded-xl shadow-xl max-w-2xl w-full h-full sm:h-auto sm:mx-4 sm:max-h-[80vh] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
             {formattedDate}
           </h2>
           <button
             onClick={onClose}
-            className="min-h-[44px] min-w-[44px] p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:bg-gray-200 dark:active:bg-gray-600 flex items-center justify-center"
+            className="min-h-[44px] min-w-[44px] p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:bg-gray-200 dark:active:bg-gray-600 flex items-center justify-center touch-manipulation"
             aria-label="Close"
           >
             <X className="w-5 h-5 text-gray-500" />

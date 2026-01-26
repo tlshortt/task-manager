@@ -39,7 +39,10 @@ export function MainLayout() {
   });
 
   // Get filtered tasks
-  const filteredTasks = tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [];
+  const filteredTasks = useMemo(
+    () => tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [],
+    [tasks, filter, debouncedSearchQuery]
+  );
 
   // Get filter counts
   const counts = tasks ? getFilterCounts(tasks) : { current: 0, overdue: 0, completed: 0 };
