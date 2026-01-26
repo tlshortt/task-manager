@@ -1,19 +1,24 @@
 import { useState, useMemo } from 'react';
 import { addMonths, subMonths, startOfMonth } from 'date-fns';
 import type { Task } from '@/types';
-import { generateCalendarDays } from '@/utils/calendarUtils';
+import { generateCalendarDays, getTasksForDate } from '@/utils/calendarUtils';
 import type { CalendarDay as CalendarDayType } from '@/utils/calendarUtils';
 import { CalendarHeader } from './CalendarHeader';
 import { CalendarDay } from './CalendarDay';
+import { DayTasksModal } from './DayTasksModal';
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 interface CalendarViewProps {
   tasks: Task[];
+  onToggle: (task: Task) => void;
+  onUpdate: (task: Task) => void;
+  onDelete: (task: Task) => void;
 }
 
-export function CalendarView({ tasks }: CalendarViewProps) {
+export function CalendarView({ tasks, onToggle, onUpdate, onDelete }: CalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const handlePrevMonth = () => {
     setCurrentMonth((prev) => subMonths(prev, 1));
@@ -33,9 +38,17 @@ export function CalendarView({ tasks }: CalendarViewProps) {
   );
 
   const handleDayClick = (day: CalendarDayType) => {
-    // Will be used in US-CAL-12 for modal
-    console.log('Day clicked:', day.date);
+    setSelectedDate(day.date);
   };
+
+  const handleCloseModal = () => {
+    setSelectedDate(null);
+  };
+
+  const selectedDateTasks = useMemo(
+    () => (selectedDate ? getTasksForDate(tasks, selectedDate) : []),
+    [tasks, selectedDate]
+  );
 
   return (
     <div className="w-full">
@@ -65,6 +78,18 @@ export function CalendarView({ tasks }: CalendarViewProps) {
           />
         ))}
       </div>
+
+      {selectedDate && (
+        <DayTasksModal
+          isOpen={selectedDate !== null}
+          date={selectedDate}
+          tasks={selectedDateTasks}
+          onClose={handleCloseModal}
+          onToggle={onToggle}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />
+      )}
     </div>
   );
 }

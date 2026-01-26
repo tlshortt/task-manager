@@ -149,3 +149,14 @@ Each iteration should APPEND to this file, never overwrite.
 - Empty state message when no tasks for the day
 - Ready to be wired into CalendarView with day click handler (US-CAL-12)
 
+## 2026-01-25 - US-CAL-12
+- Added day click handler to open DayTasksModal from CalendarView
+- Files changed: src/components/calendar/CalendarView.tsx, src/components/MainLayout.tsx
+- Added selectedDate state (Date | null) to CalendarView
+- handleDayClick sets selectedDate, handleCloseModal clears it
+- selectedDateTasks computed via useMemo with getTasksForDate
+- CalendarView props extended with onToggle, onUpdate, onDelete for task actions
+- MainLayout passes handleToggle, handleUpdate, handleDelete to CalendarView
+- Modal renders conditionally when selectedDate is non-null
+- All task operations (toggle complete, edit, delete) work within modal
+

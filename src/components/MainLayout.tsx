@@ -110,7 +110,12 @@ export function MainLayout() {
         {isLoading ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-12" role="status" aria-live="polite">Loading tasks...</div>
         ) : viewMode === 'calendar' ? (
-          <CalendarView tasks={calendarTasks} />
+          <CalendarView
+            tasks={calendarTasks}
+            onToggle={handleToggle}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
         ) : sortedGroups.length === 0 ? (
           <Suspense fallback={null}>
             <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
