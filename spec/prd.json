@@ -51,7 +51,7 @@
         "npm run typecheck passes",
         "Add unit tests for utilities"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-CAL-05",

@@ -70,3 +70,12 @@ Each iteration should APPEND to this file, never overwrite.
 - Toggle renders and switches between List/Calendar modes
 - Next step: US-CAL-04 (Calendar utilities) or later stories to wire CalendarView
 
+## 2026-01-25 - US-CAL-04
+- Created src/utils/calendarUtils.ts with CalendarDay interface and utility functions
+- Implemented generateCalendarDays(month, tasks) returning 42 CalendarDay objects (6 weeks)
+- Implemented getTasksForDate(tasks, date) filtering tasks by due date
+- Added hasOverdueTasks helper for overdue indicator support
+- Files changed: src/utils/calendarUtils.ts, src/utils/calendarUtils.test.ts
+- 16 unit tests covering all utilities
+- Gotcha: Use `new Date(year, month, day)` in tests to avoid timezone issues with ISO strings
+
