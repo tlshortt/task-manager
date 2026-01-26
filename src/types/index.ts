@@ -6,6 +6,8 @@ export type Priority = 'low' | 'medium' | 'high';
 
 export type FilterType = 'current' | 'overdue' | 'completed';
 
+export type ViewMode = 'list' | 'calendar';
+
 export interface Subtask {
   id: string;
   title: string;

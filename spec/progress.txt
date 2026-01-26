@@ -48,3 +48,9 @@ Each iteration should APPEND to this file, never overwrite.
   - Patterns or learnings discovered
 -->
 
+## 2026-01-25 - US-CAL-01
+- Added ViewMode type: 'list' | 'calendar' to src/types/index.ts
+- Files changed: src/types/index.ts
+- No issues encountered
+- Simple foundational type for calendar feature toggle
+

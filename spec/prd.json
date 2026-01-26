@@ -12,7 +12,7 @@
         "Add ViewMode type: 'list' | 'calendar' to src/types/index.ts",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-CAL-02",
