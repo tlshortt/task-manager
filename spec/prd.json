@@ -1,135 +1,194 @@
 {
-  "projectName": "React Best Practices",
-  "branchName": "feature/react-best-practices",
-  "description": "Implement React best practices for bundle size and performance optimization",
+  "projectName": "Calendar View Feature",
+  "branchName": "feature/calendar-view",
+  "description": "Add a monthly calendar view to visualize tasks by due date with toggle between List and Calendar views",
   "created": "2026-01-25",
   "userStories": [
     {
-      "id": "US-REF-01",
-      "title": "Refactor TaskInput State",
-      "description": "As a developer, I want to extract form state logic from TaskInput to a custom hook to improve maintainability.",
+      "id": "US-CAL-01",
+      "title": "Add ViewMode Type",
+      "description": "As a developer, I need to define the view mode type for type safety.",
       "acceptanceCriteria": [
-        "Create src/hooks/useTaskForm.ts",
-        "Move state (title, description, tags, priority, etc.) and handlers to useTaskForm",
-        "Update TaskInput.tsx to use the new hook",
-        "npm run typecheck passes",
-        "Verify adding tasks works"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-REF-02",
-      "title": "Extract EditableText Component",
-      "description": "As a developer, I want to extract inline editing logic to a reusable component to simplify TaskRow.",
-      "acceptanceCriteria": [
-        "Create src/components/EditableText.tsx",
-        "Move editing state and input/textarea rendering logic from TaskRow to EditableText",
-        "Update TaskRow.tsx to use EditableText for title and description",
-        "npm run typecheck passes",
-        "Verify inline editing works"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-001",
-      "title": "Fix Lucide React Barrel Imports",
-      "description": "As a developer, I want to fix barrel imports in 9 components to reduce bundle size.",
-      "acceptanceCriteria": [
-        "Update imports in src/components/TaskRow.tsx to use direct paths",
-        "Update imports in src/components/TaskInput.tsx to use direct paths",
-        "Update imports in src/components/SubtaskList.tsx to use direct paths",
-        "Update imports in src/components/EmptyState.tsx to use direct paths",
-        "Update imports in src/components/SearchBar.tsx to use direct paths",
-        "Update imports in src/components/AppHeader.tsx to use direct paths",
-        "Update imports in src/components/TaskDateGroup.tsx to use direct paths",
-        "Update imports in src/components/TagBadge.tsx to use direct paths",
-        "Update imports in src/components/KeyboardShortcutsModal.tsx to use direct paths",
+        "Add ViewMode type: 'list' | 'calendar' to src/types/index.ts",
         "npm run typecheck passes"
       ],
-      "passes": true
+      "passes": false
     },
     {
-      "id": "US-002",
-      "title": "Add Dynamic Imports for Modals",
-      "description": "As a developer, I want to lazy load conditional components to improve initial load time.",
+      "id": "US-CAL-02",
+      "title": "Create ViewModeToggle Component",
+      "description": "As a user, I want to toggle between List and Calendar views.",
       "acceptanceCriteria": [
-        "Update src/components/MainLayout.tsx to lazy load KeyboardShortcutsModal",
-        "Update src/components/MainLayout.tsx to lazy load EmptyState",
-        "Wrap usages in Suspense with null fallback",
+        "Create src/components/ViewModeToggle.tsx",
+        "Props: viewMode: ViewMode, onChange: (mode: ViewMode) => void",
+        "Toggle button with List and Calendar icons matching FilterTabs styling",
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": true
+      "passes": false
     },
     {
-      "id": "US-004",
-      "title": "Optimize getFilterCounts",
-      "description": "As a developer, I want to optimize getFilterCounts to use a single pass for performance.",
+      "id": "US-CAL-03",
+      "title": "Add ViewMode State to MainLayout",
+      "description": "As a developer, I need to manage view mode state in MainLayout.",
       "acceptanceCriteria": [
-        "Refactor getFilterCounts in src/utils/filters.ts to use reduce",
-        "Ensure return type matches existing signature",
+        "Add viewMode state to src/components/MainLayout.tsx",
+        "Render ViewModeToggle between FilterTabs and TaskInput",
         "npm run typecheck passes",
+        "Verify toggle renders in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-04",
+      "title": "Create Calendar Utilities",
+      "description": "As a developer, I need utility functions to generate calendar data.",
+      "acceptanceCriteria": [
+        "Create src/utils/calendarUtils.ts",
+        "Implement generateCalendarDays(month: Date, tasks: Task[]): CalendarDay[]",
+        "Implement getTasksForDate(tasks: Task[], date: Date): Task[]",
+        "Add CalendarDay type with date, isCurrentMonth, isToday, tasks fields",
+        "npm run typecheck passes",
+        "Add unit tests for utilities"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-05",
+      "title": "Create CalendarHeader Component",
+      "description": "As a user, I want to navigate between months in the calendar.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/CalendarHeader.tsx",
+        "Display current month and year (e.g., 'January 2026')",
+        "Previous/Next month navigation arrows",
+        "Today button to jump to current month",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-06",
+      "title": "Create CalendarGrid Component",
+      "description": "As a developer, I need the calendar grid structure with day headers.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/CalendarGrid.tsx",
+        "7-column CSS grid layout",
+        "Day-of-week headers (Sun-Sat)",
+        "Render 6 weeks of CalendarDay cells",
+        "npm run typecheck passes"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-07",
+      "title": "Create CalendarDay Component",
+      "description": "As a user, I want to see task indicators on each calendar day.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/CalendarDay.tsx",
+        "Display date number (dimmed if not current month)",
+        "Today highlight with purple ring",
+        "Task count badge",
+        "Priority color dots for tasks",
+        "Overdue indicator (red tint)",
+        "Max 2-3 task previews, then '+N more'",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-08",
+      "title": "Create CalendarTaskItem Component",
+      "description": "As a user, I want to see compact task previews in calendar cells.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/CalendarTaskItem.tsx",
+        "Display priority dot + truncated title",
+        "Strikethrough if task is completed",
+        "npm run typecheck passes"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-09",
+      "title": "Create CalendarView Container",
+      "description": "As a developer, I need to assemble all calendar pieces.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/CalendarView.tsx",
+        "Manage current month state",
+        "Handle month navigation",
+        "Group tasks by date using calendarUtils",
+        "Compose CalendarHeader and CalendarGrid",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-10",
+      "title": "Wire CalendarView into MainLayout",
+      "description": "As a user, I want to see the calendar when I select Calendar view.",
+      "acceptanceCriteria": [
+        "Update MainLayout to conditionally render list view or CalendarView",
+        "Filter out tasks without dueDate for calendar view",
+        "Export new components from src/components/index.ts",
+        "npm run typecheck passes",
+        "Verify view toggle works in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-11",
+      "title": "Create DayTasksModal Component",
+      "description": "As a user, I want to see all tasks for a specific date.",
+      "acceptanceCriteria": [
+        "Create src/components/calendar/DayTasksModal.tsx",
+        "Modal showing all tasks for selected date",
+        "Use existing TaskRow component for task display",
+        "Close on Escape key",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-12",
+      "title": "Add Day Click Handler",
+      "description": "As a user, I want to click a day to see all its tasks.",
+      "acceptanceCriteria": [
+        "Add selected date state to CalendarView",
+        "Click day cell opens DayTasksModal",
+        "Modal shows tasks for clicked date",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-13",
+      "title": "Add Mobile Responsive Styles",
+      "description": "As a mobile user, I want the calendar to be usable on small screens.",
+      "acceptanceCriteria": [
+        "Compact grid with smaller cells on mobile",
+        "Show count badges only (no task previews) on mobile",
+        "Touch-friendly navigation buttons",
+        "Full-screen modal on mobile",
+        "npm run typecheck passes",
+        "Verify on mobile viewport in browser"
+      ],
+      "passes": false
+    },
+    {
+      "id": "US-CAL-14",
+      "title": "Add Calendar Tests",
+      "description": "As a developer, I want tests for calendar components and utilities.",
+      "acceptanceCriteria": [
+        "Add tests for calendarUtils.ts functions",
+        "Add tests for CalendarView component",
+        "Add tests for DayTasksModal component",
         "npm run test passes"
       ],
-      "passes": true
-    },
-    {
-      "id": "US-005",
-      "title": "Memoize MainLayout Event Handlers",
-      "description": "As a developer, I want to memoize event handlers in MainLayout to prevent child re-renders.",
-      "acceptanceCriteria": [
-        "Use useCallback for handleToggle in src/components/MainLayout.tsx",
-        "Use useCallback for handleUpdate in src/components/MainLayout.tsx",
-        "Use useCallback for handleDelete in src/components/MainLayout.tsx",
-        "Add correct dependency arrays",
-        "npm run typecheck passes",
-        "Verify in browser"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-006",
-      "title": "Hoist Static Functions in TaskRow",
-      "description": "As a developer, I want to hoist static functions in TaskRow to avoid recreation on render.",
-      "acceptanceCriteria": [
-        "Move getPriorityColor and PRIORITY_COLORS outside TaskRow component in src/components/TaskRow.tsx",
-        "npm run typecheck passes",
-        "Verify in browser"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-007",
-      "title": "Fix useKeyboardShortcuts Dependencies",
-      "description": "As a developer, I want to fix dependencies in useKeyboardShortcuts to prevent unnecessary re-registrations.",
-      "acceptanceCriteria": [
-        "Destructure handlers in useKeyboardShortcuts hook in src/hooks/useKeyboardShortcuts.ts",
-        "Update handleKeyDown dependency array to use destructured handlers",
-        "npm run typecheck passes",
-        "Verify in browser"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-008",
-      "title": "Use .toSorted()",
-      "description": "As a developer, I want to use modern array methods for cleaner code.",
-      "acceptanceCriteria": [
-        "Update src/utils/dateUtils.ts to use .toSorted()",
-        "npm run typecheck passes"
-      ],
-      "passes": true
-    },
-    {
-      "id": "US-009",
-      "title": "Add content-visibility",
-      "description": "As a developer, I want to add content-visibility to TaskRow for scroll performance.",
-      "acceptanceCriteria": [
-        "Add contentVisibility: 'auto' style to TaskRow container in src/components/TaskRow.tsx",
-        "npm run typecheck passes",
-        "Verify in browser"
-      ],
-      "passes": true
+      "passes": false
     }
   ]
 }

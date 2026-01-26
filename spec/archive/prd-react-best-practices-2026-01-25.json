@@ -1,0 +1,135 @@
+{
+  "projectName": "React Best Practices",
+  "branchName": "feature/react-best-practices",
+  "description": "Implement React best practices for bundle size and performance optimization",
+  "created": "2026-01-25",
+  "userStories": [
+    {
+      "id": "US-REF-01",
+      "title": "Refactor TaskInput State",
+      "description": "As a developer, I want to extract form state logic from TaskInput to a custom hook to improve maintainability.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useTaskForm.ts",
+        "Move state (title, description, tags, priority, etc.) and handlers to useTaskForm",
+        "Update TaskInput.tsx to use the new hook",
+        "npm run typecheck passes",
+        "Verify adding tasks works"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-REF-02",
+      "title": "Extract EditableText Component",
+      "description": "As a developer, I want to extract inline editing logic to a reusable component to simplify TaskRow.",
+      "acceptanceCriteria": [
+        "Create src/components/EditableText.tsx",
+        "Move editing state and input/textarea rendering logic from TaskRow to EditableText",
+        "Update TaskRow.tsx to use EditableText for title and description",
+        "npm run typecheck passes",
+        "Verify inline editing works"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-001",
+      "title": "Fix Lucide React Barrel Imports",
+      "description": "As a developer, I want to fix barrel imports in 9 components to reduce bundle size.",
+      "acceptanceCriteria": [
+        "Update imports in src/components/TaskRow.tsx to use direct paths",
+        "Update imports in src/components/TaskInput.tsx to use direct paths",
+        "Update imports in src/components/SubtaskList.tsx to use direct paths",
+        "Update imports in src/components/EmptyState.tsx to use direct paths",
+        "Update imports in src/components/SearchBar.tsx to use direct paths",
+        "Update imports in src/components/AppHeader.tsx to use direct paths",
+        "Update imports in src/components/TaskDateGroup.tsx to use direct paths",
+        "Update imports in src/components/TagBadge.tsx to use direct paths",
+        "Update imports in src/components/KeyboardShortcutsModal.tsx to use direct paths",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "title": "Add Dynamic Imports for Modals",
+      "description": "As a developer, I want to lazy load conditional components to improve initial load time.",
+      "acceptanceCriteria": [
+        "Update src/components/MainLayout.tsx to lazy load KeyboardShortcutsModal",
+        "Update src/components/MainLayout.tsx to lazy load EmptyState",
+        "Wrap usages in Suspense with null fallback",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-004",
+      "title": "Optimize getFilterCounts",
+      "description": "As a developer, I want to optimize getFilterCounts to use a single pass for performance.",
+      "acceptanceCriteria": [
+        "Refactor getFilterCounts in src/utils/filters.ts to use reduce",
+        "Ensure return type matches existing signature",
+        "npm run typecheck passes",
+        "npm run test passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-005",
+      "title": "Memoize MainLayout Event Handlers",
+      "description": "As a developer, I want to memoize event handlers in MainLayout to prevent child re-renders.",
+      "acceptanceCriteria": [
+        "Use useCallback for handleToggle in src/components/MainLayout.tsx",
+        "Use useCallback for handleUpdate in src/components/MainLayout.tsx",
+        "Use useCallback for handleDelete in src/components/MainLayout.tsx",
+        "Add correct dependency arrays",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-006",
+      "title": "Hoist Static Functions in TaskRow",
+      "description": "As a developer, I want to hoist static functions in TaskRow to avoid recreation on render.",
+      "acceptanceCriteria": [
+        "Move getPriorityColor and PRIORITY_COLORS outside TaskRow component in src/components/TaskRow.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-007",
+      "title": "Fix useKeyboardShortcuts Dependencies",
+      "description": "As a developer, I want to fix dependencies in useKeyboardShortcuts to prevent unnecessary re-registrations.",
+      "acceptanceCriteria": [
+        "Destructure handlers in useKeyboardShortcuts hook in src/hooks/useKeyboardShortcuts.ts",
+        "Update handleKeyDown dependency array to use destructured handlers",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-008",
+      "title": "Use .toSorted()",
+      "description": "As a developer, I want to use modern array methods for cleaner code.",
+      "acceptanceCriteria": [
+        "Update src/utils/dateUtils.ts to use .toSorted()",
+        "npm run typecheck passes"
+      ],
+      "passes": true
+    },
+    {
+      "id": "US-009",
+      "title": "Add content-visibility",
+      "description": "As a developer, I want to add content-visibility to TaskRow for scroll performance.",
+      "acceptanceCriteria": [
+        "Add contentVisibility: 'auto' style to TaskRow container in src/components/TaskRow.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": true
+    }
+  ]
+}
