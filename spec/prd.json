@@ -78,7 +78,7 @@
         "Render 6 weeks of CalendarDay cells",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-CAL-07",

@@ -88,3 +88,12 @@ Each iteration should APPEND to this file, never overwrite.
 - Pattern: Created calendar/ subdirectory with barrel file for calendar components
 - Ready to be composed into CalendarView (US-CAL-09)
 
+## 2026-01-25 - US-CAL-06
+- Created CalendarGrid component with 7-column CSS grid layout
+- Files changed: src/components/calendar/CalendarGrid.tsx, src/components/calendar/index.ts
+- Props: days (CalendarDay[]), onDayClick (optional callback)
+- Features: day-of-week headers (Sun-Sat), 6 weeks of cells, today highlight with purple ring
+- Task count badges shown on days with tasks, overdue days get red tint
+- Uses gap-px trick with rounded overflow for clean grid borders
+- Ready to be composed with CalendarDay items (US-CAL-07) and CalendarView (US-CAL-09)
+
