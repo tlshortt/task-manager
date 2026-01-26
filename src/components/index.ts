@@ -13,3 +13,12 @@ export { TagBadge, TAG_COLORS } from './TagBadge';
 export { SubtaskList } from './SubtaskList';
 export { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 export { ViewModeToggle } from './ViewModeToggle';
+
+// Calendar components
+export {
+  CalendarHeader,
+  CalendarGrid,
+  CalendarDay,
+  CalendarTaskItem,
+  CalendarView,
+} from './calendar';

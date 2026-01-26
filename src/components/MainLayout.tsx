@@ -1,10 +1,11 @@
-import { useState, useRef, lazy, Suspense, useCallback } from 'react';
+import { useState, useRef, lazy, Suspense, useCallback, useMemo } from 'react';
 import { AppHeader } from './AppHeader';
 import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
 import { ViewModeToggle } from './ViewModeToggle';
+import { CalendarView } from './calendar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -46,6 +47,12 @@ export function MainLayout() {
   // Group and sort tasks by date
   const groupedTasks = groupTasksByDate(filteredTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
+
+  // Filter tasks with due dates for calendar view
+  const calendarTasks = useMemo(
+    () => filteredTasks.filter((task) => task.dueDate !== undefined),
+    [filteredTasks]
+  );
 
   const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string) => {
     await addTask({
@@ -102,6 +109,8 @@ export function MainLayout() {
 
         {isLoading ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-12" role="status" aria-live="polite">Loading tasks...</div>
+        ) : viewMode === 'calendar' ? (
+          <CalendarView tasks={calendarTasks} />
         ) : sortedGroups.length === 0 ? (
           <Suspense fallback={null}>
             <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />

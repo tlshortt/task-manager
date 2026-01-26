@@ -128,3 +128,12 @@ Each iteration should APPEND to this file, never overwrite.
 - handleDayClick placeholder ready for US-CAL-12 modal integration
 - Ready to be wired into MainLayout (US-CAL-10)
 
+## 2026-01-25 - US-CAL-10
+- Wired CalendarView into MainLayout with conditional rendering based on viewMode
+- Files changed: src/components/MainLayout.tsx, src/components/index.ts
+- Added CalendarView import from ./calendar barrel file
+- Added useMemo-wrapped calendarTasks filtering tasks with dueDate for calendar
+- Conditional render: viewMode === 'calendar' shows CalendarView, else list view
+- Exported all calendar components from main index.ts barrel file
+- View toggle now fully functional: List shows task groups, Calendar shows monthly grid
+
