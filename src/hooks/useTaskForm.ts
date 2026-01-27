@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import type { Priority, Tag } from '@/types';
+import type { Priority, Tag, Subtask } from '@/types';
+
+const MAX_SUBTASKS = 10;
 
 interface UseTaskFormProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[]) => void;
 }
 
 export function useTaskForm({ onAddTask }: UseTaskFormProps) {
@@ -15,6 +17,9 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
   const [priority, setPriority] = useState<Priority>('medium');
   const [tags, setTags] = useState<Tag[]>([]);
   const [newTagName, setNewTagName] = useState('');
+  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
+  const [showSubtasks, setShowSubtasks] = useState(false);
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
 
   const resetForm = () => {
     setTitle('');
@@ -26,6 +31,24 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
     setPriority('medium');
     setTags([]);
     setNewTagName('');
+    setSubtasks([]);
+    setShowSubtasks(false);
+    setNewSubtaskTitle('');
+  };
+
+  const addSubtask = () => {
+    if (!newSubtaskTitle.trim() || subtasks.length >= MAX_SUBTASKS) return;
+    const subtask: Subtask = {
+      id: crypto.randomUUID(),
+      title: newSubtaskTitle.trim(),
+      completed: false,
+    };
+    setSubtasks([...subtasks, subtask]);
+    setNewSubtaskTitle('');
+  };
+
+  const removeSubtask = (subtaskId: string) => {
+    setSubtasks(subtasks.filter((s) => s.id !== subtaskId));
   };
 
   const handleSubmit = (e?: React.FormEvent) => {
@@ -36,7 +59,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
         dueDate,
         priority,
         tags.length > 0 ? tags : undefined,
-        description.trim() || undefined
+        description.trim() || undefined,
+        subtasks.length > 0 ? subtasks : undefined
       );
       resetForm();
     }
@@ -78,6 +102,9 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
       priority,
       tags,
       newTagName,
+      subtasks,
+      showSubtasks,
+      newSubtaskTitle,
     },
     setters: {
       setTitle,
@@ -87,11 +114,15 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
       setShowDescription,
       setPriority,
       setNewTagName,
+      setShowSubtasks,
+      setNewSubtaskTitle,
     },
     actions: {
       handleSubmit,
       addTag,
       removeTag,
+      addSubtask,
+      removeSubtask,
       handleDateChange,
       handleEscape,
       resetForm
