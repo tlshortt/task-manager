@@ -62,9 +62,9 @@ describe('useTaskForm', () => {
       });
 
       expect(result.current.formState.subtasks).toHaveLength(1);
-      expect(result.current.formState.subtasks[0].title).toBe('My subtask');
-      expect(result.current.formState.subtasks[0].completed).toBe(false);
-      expect(result.current.formState.subtasks[0].id).toBeDefined();
+      expect(result.current.formState.subtasks[0]!.title).toBe('My subtask');
+      expect(result.current.formState.subtasks[0]!.completed).toBe(false);
+      expect(result.current.formState.subtasks[0]!.id).toBeDefined();
     });
 
     it('clears newSubtaskTitle after adding', () => {
@@ -92,7 +92,7 @@ describe('useTaskForm', () => {
         result.current.actions.addSubtask();
       });
 
-      expect(result.current.formState.subtasks[0].title).toBe('Trimmed subtask');
+      expect(result.current.formState.subtasks[0]!.title).toBe('Trimmed subtask');
     });
 
     it('does not add subtask with empty title', () => {
@@ -163,7 +163,7 @@ describe('useTaskForm', () => {
         });
       }
 
-      const firstSubtaskId = result.current.formState.subtasks[0].id;
+      const firstSubtaskId = result.current.formState.subtasks[0]!.id;
 
       // Remove one
       act(() => {
@@ -197,7 +197,7 @@ describe('useTaskForm', () => {
         result.current.actions.addSubtask();
       });
 
-      const subtaskId = result.current.formState.subtasks[0].id;
+      const subtaskId = result.current.formState.subtasks[0]!.id;
 
       act(() => {
         result.current.actions.removeSubtask(subtaskId);
@@ -225,14 +225,14 @@ describe('useTaskForm', () => {
         result.current.actions.addSubtask();
       });
 
-      const firstSubtaskId = result.current.formState.subtasks[0].id;
+      const firstSubtaskId = result.current.formState.subtasks[0]!.id;
 
       act(() => {
         result.current.actions.removeSubtask(firstSubtaskId);
       });
 
       expect(result.current.formState.subtasks).toHaveLength(1);
-      expect(result.current.formState.subtasks[0].title).toBe('Second subtask');
+      expect(result.current.formState.subtasks[0]!.title).toBe('Second subtask');
     });
 
     it('does nothing when removing non-existent id', () => {

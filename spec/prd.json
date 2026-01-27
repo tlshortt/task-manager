@@ -3,7 +3,7 @@
   "branchName": "feature/subtasks-enhancement",
   "description": "Enhance subtasks with creation at task input, priority/due date properties, 10-subtask limit, auto-completion on parent complete, and full accessibility support.",
   "created": "2026-01-26",
-  "userStories": [
+  "tasks": [
     {
       "id": "US-001",
       "title": "Update Subtask interface with priority and dueDate",
@@ -14,7 +14,8 @@
         "Existing subtasks without these fields still work (backwards compatible)",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-002",
@@ -27,7 +28,8 @@
         "Export SUBTASK_LIMIT_WARNING_THRESHOLD = 7",
         "npm run typecheck passes"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-003",
@@ -43,7 +45,8 @@
         "Add tests to src/utils/dateUtils.test.ts for all new functions",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-004",
@@ -62,7 +65,8 @@
         "Create src/hooks/useTaskForm.test.ts with tests",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-005",
@@ -81,7 +85,8 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-006",
@@ -93,7 +98,8 @@
         "npm run typecheck passes",
         "Verify in browser: create task with subtasks, confirm they persist"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-007",
@@ -111,7 +117,8 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-008",
@@ -128,7 +135,8 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-009",
@@ -148,7 +156,8 @@
         "npm run typecheck passes",
         "Verify in browser"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-010",
@@ -166,7 +175,8 @@
         "npm run typecheck passes",
         "Verify in browser: both modes work correctly"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-011",
@@ -181,7 +191,8 @@
         "Add tests to src/hooks/useTasks.test.tsx",
         "npm run test passes"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-012",
@@ -197,7 +208,8 @@
         "npm run test passes",
         "Verify in browser: complete parent, verify subtasks complete"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     },
     {
       "id": "US-013",
@@ -215,7 +227,8 @@
         "No TypeScript errors: npm run typecheck",
         "No linter errors: npm run lint"
       ],
-      "passes": false
+      "passes": false,
+      "completed": true
     }
   ]
 }

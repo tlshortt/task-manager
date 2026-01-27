@@ -12,7 +12,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task, Tag, ViewMode } from '@/types';
+import type { FilterType, Priority, Task, Tag, ViewMode, Subtask } from '@/types';
 
 const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
 const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
@@ -57,14 +57,14 @@ export function MainLayout() {
     [filteredTasks]
   );
 
-  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string) => {
+  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string, subtasks?: Subtask[]) => {
     await addTask({
       title,
       description,
       completed: false,
       priority,
       dueDate,
-      subtasks: undefined,
+      subtasks,
       tags,
     });
   }, [addTask]);

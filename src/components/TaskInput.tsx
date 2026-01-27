@@ -3,14 +3,16 @@ import Plus from 'lucide-react/dist/esm/icons/plus';
 import Calendar from 'lucide-react/dist/esm/icons/calendar';
 import TagIcon from 'lucide-react/dist/esm/icons/tag';
 import FileText from 'lucide-react/dist/esm/icons/file-text';
+import ListTodo from 'lucide-react/dist/esm/icons/list-todo';
+import X from 'lucide-react/dist/esm/icons/x';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import type { Priority, Tag } from '@/types';
+import type { Priority, Tag, Subtask } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
 import { useTaskForm } from '@/hooks/useTaskForm';
 
 interface TaskInputProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[]) => void;
 }
 
 export interface TaskInputHandle {
@@ -26,9 +28,12 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       showDatePicker,
       showTagPicker,
       showDescription,
+      showSubtasks,
       priority,
       tags,
       newTagName,
+      subtasks,
+      newSubtaskTitle,
     },
     setters: {
       setTitle,
@@ -36,13 +41,17 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       setShowDatePicker,
       setShowTagPicker,
       setShowDescription,
+      setShowSubtasks,
       setPriority,
       setNewTagName,
+      setNewSubtaskTitle,
     },
     actions: {
       handleSubmit,
       addTag,
       removeTag,
+      addSubtask,
+      removeSubtask,
       handleDateChange,
       handleEscape,
     }
@@ -109,6 +118,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowTagPicker(!showTagPicker);
             setShowDatePicker(false);
             setShowDescription(false);
+            setShowSubtasks(false);
           }}
           aria-label={showTagPicker ? 'Hide tag picker' : 'Add tags'}
           aria-expanded={showTagPicker}
@@ -124,6 +134,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowDatePicker(!showDatePicker);
             setShowTagPicker(false);
             setShowDescription(false);
+            setShowSubtasks(false);
           }}
           aria-label={showDatePicker ? 'Hide deadline picker' : 'Show deadline picker'}
           aria-expanded={showDatePicker}
@@ -139,6 +150,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowDescription(!showDescription);
             setShowDatePicker(false);
             setShowTagPicker(false);
+            setShowSubtasks(false);
           }}
           aria-label={showDescription ? 'Hide note' : 'Add note'}
           aria-expanded={showDescription}
@@ -146,6 +158,22 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
         >
           <FileText className="w-4 h-4" />
           <span className="hidden sm:inline">Note</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setShowSubtasks(!showSubtasks);
+            setShowDatePicker(false);
+            setShowTagPicker(false);
+            setShowDescription(false);
+          }}
+          aria-label={showSubtasks ? 'Hide subtasks' : 'Add subtasks'}
+          aria-expanded={showSubtasks}
+          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+        >
+          <ListTodo className="w-4 h-4" />
+          <span className="hidden sm:inline">Subtasks</span>
         </button>
       </form>
 
@@ -218,6 +246,69 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             rows={3}
             className="w-full text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none resize-none"
           />
+        </div>
+      )}
+
+      {showSubtasks && (
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={newSubtaskTitle}
+              onChange={(e) => setNewSubtaskTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addSubtask();
+                }
+                handleEscape(e);
+              }}
+              placeholder="Add a subtask..."
+              aria-label="New subtask title"
+              className="flex-1 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
+            />
+            <button
+              type="button"
+              onClick={addSubtask}
+              disabled={!newSubtaskTitle.trim()}
+              className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+              aria-label="Add subtask"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+          </div>
+          {subtasks.length > 0 && (
+            <div className="mt-2 space-y-1">
+              {subtasks.map((subtask) => (
+                <div
+                  key={subtask.id}
+                  className="flex items-center gap-2 py-1 px-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg group"
+                >
+                  <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
+                    {subtask.title}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => removeSubtask(subtask.id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity"
+                    aria-label={`Remove subtask: ${subtask.title}`}
+                  >
+                    <X className="w-3 h-3 text-red-500" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          <p className="text-xs text-gray-400 mt-2">Press Enter or click + to add a subtask (max 10)</p>
+        </div>
+      )}
+
+      {subtasks.length > 0 && !showSubtasks && (
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <ListTodo className="w-4 h-4" />
+            <span>{subtasks.length} subtask{subtasks.length !== 1 ? 's' : ''} added</span>
+          </div>
         </div>
       )}
     </div>
