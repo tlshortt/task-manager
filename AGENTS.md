@@ -22,7 +22,6 @@ src/
 ├── test/setup.ts   # Vitest config, mocks
 ├── App.tsx, main.tsx, index.css
 
-scripts/ralph/      # ralph.sh, ralph-once.sh, ralph-status.sh, validate-prd.sh
 spec/               # prd.json, progress.txt, PROMPT.md
 skills/             # prd/, ralph/, agent-browser/
 tasks/              # prd-*.md files

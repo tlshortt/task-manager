@@ -1,7 +1,7 @@
 {
-  "name": "ralph-starter-kit",
+  "name": "task-manager",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,11 +10,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "ralph": "./scripts/ralph/ralph.sh",
-    "ralph:once": "./scripts/ralph/ralph-once.sh",
-    "ralph:status": "./scripts/ralph/ralph-status.sh",
-    "ralph:validate": "./scripts/ralph/validate-prd.sh"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "date-fns": "^4.1.0",

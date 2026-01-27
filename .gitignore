@@ -27,12 +27,9 @@ npm-debug.log*
 # Testing
 coverage/
 
-# Ralph logs (optional - you may want to commit these)
-# scripts/ralph/ralph.log
-scripts/ralph/.ralph.lock
-
-# Ralph archives (old prd.json/progress.txt from previous features)
-scripts/ralph/archive/
+# Ralphy worktrees / sandboxes
+.ralphy-worktrees/
+.ralphy-sandboxes/
 
 # Temporary files
 *.tmp

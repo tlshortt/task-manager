@@ -1,0 +1,46 @@
+# Ralph Progress Log
+
+This file tracks progress, learnings, and patterns discovered across Ralph iterations.
+Each iteration should APPEND to this file, never overwrite.
+
+---
+
+## Codebase Patterns
+
+<!--
+Add patterns discovered about this codebase here.
+Future iterations read this section FIRST.
+-->
+
+- **Component Style:** React functional components with TypeScript
+- **Styling:** Tailwind CSS utility classes
+- **State Management:** React hooks (no external state lib)
+- **Tests:** Vitest + React Testing Library
+- **DB:** Dexie + dexie-react-hooks
+
+---
+
+## Gotchas & Warnings
+
+<!--
+Add things that caused issues or took extra time.
+Helps future iterations avoid the same mistakes.
+-->
+
+- Tailwind dynamic classes need safelist or full class names
+- Path alias: `@/` maps to `src/`
+- Run `npm run typecheck` and `npm run test` before calling a story done
+
+---
+
+## Progress Entries
+
+<!--
+Append entries below.
+
+## YYYY-MM-DD HH:MM - US-0XX
+- What was implemented
+- Files changed
+- Any issues encountered
+- Patterns or learnings discovered
+-->
