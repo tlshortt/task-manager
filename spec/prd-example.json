@@ -1,0 +1,234 @@
+{
+  "projectName": "Subtasks Enhancement",
+  "branchName": "feature/subtasks-enhancement",
+  "description": "Enhance subtasks with creation at task input, priority/due date properties, 10-subtask limit, auto-completion on parent complete, and full accessibility support.",
+  "created": "2026-01-26",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Update Subtask interface with priority and dueDate",
+      "description": "As a developer, I need the Subtask type to support priority and dueDate for type safety.",
+      "acceptanceCriteria": [
+        "Add optional 'priority?: Priority' field to Subtask interface in src/types/index.ts",
+        "Add optional 'dueDate?: Date' field to Subtask interface",
+        "Existing subtasks without these fields still work (backwards compatible)",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-002",
+      "title": "Create subtask constants file",
+      "description": "As a developer, I need constants for subtask limits to avoid magic numbers.",
+      "acceptanceCriteria": [
+        "Create src/constants/subtasks.ts",
+        "Export MAX_SUBTASKS_PER_TASK = 10",
+        "Export SUBTASK_TITLE_MAX_LENGTH = 200",
+        "Export SUBTASK_LIMIT_WARNING_THRESHOLD = 7",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-003",
+      "title": "Add subtask date utilities to dateUtils",
+      "description": "As a developer, I need standardized overdue logic for subtasks.",
+      "acceptanceCriteria": [
+        "Add isDateOverdue(date: Date) function to src/utils/dateUtils.ts",
+        "Refactor existing isOverdue(task) to use isDateOverdue internally",
+        "Add isSubtaskOverdue(subtask: Subtask) function using isDateOverdue",
+        "Add isValidSubtaskDate(subtaskDate, parentDueDate?) returning boolean",
+        "Add getMaxSubtaskDate(parentDueDate?) returning Date | undefined",
+        "Import Subtask type from @/types",
+        "Add tests to src/utils/dateUtils.test.ts for all new functions",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-004",
+      "title": "Update useTaskForm with subtask state management",
+      "description": "As a user, I want to add subtasks while creating a task.",
+      "acceptanceCriteria": [
+        "Add subtasks state array to useTaskForm hook",
+        "Add showSubtasks and newSubtaskTitle state",
+        "Add addSubtask() - creates subtask with title only, validates max 10 limit",
+        "Add removeSubtask(id) - removes by id",
+        "Add canAddSubtask() - returns boolean",
+        "Update resetForm() to clear subtasks",
+        "Update handleSubmit to include subtasks in returned data",
+        "Show toast 'Maximum 10 subtasks per task' when limit reached",
+        "Trim whitespace and enforce 200 char limit on titles",
+        "Create src/hooks/useTaskForm.test.ts with tests",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-005",
+      "title": "Add subtasks UI to TaskInput component",
+      "description": "As a user, I want to see and manage subtasks in the task creation form.",
+      "acceptanceCriteria": [
+        "Add 'Subtasks' toggle button with ListTodo icon (same style as Tags/Deadline/Note)",
+        "Toggle button has aria-expanded attribute",
+        "Collapsible section shows: list of subtasks, input field, add button",
+        "Show 'X/10 subtasks' counter when >= 7 subtasks (with aria-live='polite')",
+        "Disable add button when at 10 subtask limit",
+        "Enter key adds subtask, Escape clears input (doesn't collapse section)",
+        "Remove button on each subtask item",
+        "Update onAddTask prop signature to include subtasks?: Subtask[]",
+        "Add tests to src/components/TaskInput.test.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-006",
+      "title": "Update MainLayout to pass subtasks",
+      "description": "As a developer, I need MainLayout to handle the new subtasks parameter.",
+      "acceptanceCriteria": [
+        "Update handleAddTask in MainLayout to accept subtasks parameter",
+        "Pass subtasks to addTask() call",
+        "npm run typecheck passes",
+        "Verify in browser: create task with subtasks, confirm they persist"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-007",
+      "title": "Create SubtaskPriorityPicker component",
+      "description": "As a user, I want to set subtask priority via a popover picker.",
+      "acceptanceCriteria": [
+        "Create src/components/SubtaskPriorityPicker.tsx",
+        "Props: priority?: Priority, onChange: (priority?: Priority) => void, trigger: ReactNode",
+        "Shows 3 colored priority dots in popover",
+        "Click dot to set priority, click current priority to clear",
+        "Close on selection or outside click",
+        "Keyboard accessible: arrow keys, Enter, Escape",
+        "role='radiogroup' and aria-checked on options",
+        "Create src/components/SubtaskPriorityPicker.test.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-008",
+      "title": "Create SubtaskDatePicker component",
+      "description": "As a user, I want to set subtask due date with parent date validation.",
+      "acceptanceCriteria": [
+        "Create src/components/SubtaskDatePicker.tsx",
+        "Props: dueDate?: Date, parentDueDate?: Date, onChange: (date?: Date) => void, trigger: ReactNode",
+        "Use react-datepicker with minDate={new Date()} and maxDate={parentDueDate}",
+        "Clear button to remove date",
+        "Tooltip explaining restriction if parent has due date",
+        "aria-describedby for validation message",
+        "Create src/components/SubtaskDatePicker.test.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-009",
+      "title": "Create SubtaskItem component",
+      "description": "As a user, I want to see subtask details with hover actions for editing.",
+      "acceptanceCriteria": [
+        "Create src/components/SubtaskItem.tsx",
+        "Props: subtask, taskId, parentDueDate?, parentCompleted, onToggle, onUpdate, onDelete",
+        "Checkbox for completed state",
+        "Priority dot if set (clickable to cycle)",
+        "Title with strikethrough when completed",
+        "Due date badge (red if overdue using isSubtaskOverdue utility)",
+        "Hover actions: priority picker, date picker, delete button",
+        "Actions always visible on touch devices (detect hover: none)",
+        "Minimum 44x44px tap targets",
+        "Create src/components/SubtaskItem.test.tsx",
+        "npm run typecheck passes",
+        "Verify in browser"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-010",
+      "title": "Refactor SubtaskList with mode prop",
+      "description": "As a developer, I need SubtaskList to work in both create and edit contexts.",
+      "acceptanceCriteria": [
+        "Add mode: 'create' | 'edit' prop to SubtaskList",
+        "Add taskId?: number prop (required in edit mode)",
+        "Add parentDueDate?: Date prop (only used in edit mode)",
+        "Create mode: simple row with checkbox, title, delete (current behavior)",
+        "Edit mode: render SubtaskItem with full hover actions",
+        "Import and enforce MAX_SUBTASKS_PER_TASK limit",
+        "Disable add button at limit, show counter when >= 7",
+        "Update SubtaskList.test.tsx with mode tests",
+        "npm run typecheck passes",
+        "Verify in browser: both modes work correctly"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-011",
+      "title": "Add updateSubtask function to useTasks",
+      "description": "As a developer, I need a dedicated function to update individual subtask properties.",
+      "acceptanceCriteria": [
+        "Add updateSubtask(taskId, subtaskId, updates: Partial<Subtask>) to useTasks hook",
+        "Function fetches task, maps over subtasks, updates matching one",
+        "Updates updatedAt timestamp on parent task",
+        "Handles missing task/subtask gracefully (no error)",
+        "Add to UseTasksReturn interface",
+        "Add tests to src/hooks/useTasks.test.tsx",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-012",
+      "title": "Auto-complete subtasks when parent completes",
+      "description": "As a user, I want all subtasks to complete when I complete the parent task.",
+      "acceptanceCriteria": [
+        "Update toggleComplete in useTasks hook",
+        "When parent marked complete: set all subtasks completed=true",
+        "When parent marked incomplete: leave subtasks unchanged",
+        "Toast message: 'Task and X subtasks completed' when subtasks exist",
+        "Undo button restores both parent and subtask states",
+        "Add tests to src/hooks/useTasks.test.tsx for auto-completion",
+        "npm run test passes",
+        "Verify in browser: complete parent, verify subtasks complete"
+      ],
+      "passes": false,
+      "completed": true
+    },
+    {
+      "id": "US-013",
+      "title": "Manual accessibility and mobile testing",
+      "description": "As a user, I want the subtask features to be accessible and mobile-friendly.",
+      "acceptanceCriteria": [
+        "Keyboard-only navigation works for all subtask actions",
+        "Tab order: checkbox → priority → date → delete",
+        "Escape closes all popovers",
+        "Screen reader announces subtask count and state changes",
+        "Test with axe DevTools - no new violations",
+        "Test on iOS Safari: touch actions visible, 44px tap targets",
+        "Test on Chrome Android: keyboard behavior works",
+        "All unit tests pass: npm run test",
+        "No TypeScript errors: npm run typecheck",
+        "No linter errors: npm run lint"
+      ],
+      "passes": false,
+      "completed": true
+    }
+  ]
+}
