@@ -12,6 +12,8 @@ export interface Subtask {
   id: string;
   title: string;
   completed: boolean;
+  priority?: Priority;
+  dueDate?: Date;
 }
 
 export interface Tag {
