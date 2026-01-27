@@ -9,7 +9,7 @@ import {
   startOfDay,
   isBefore
 } from 'date-fns';
-import type { Task } from '@/types';
+import type { Task, Subtask } from '@/types';
 
 /**
  * Groups tasks by date with keys: 'today', 'tomorrow', or formatted date string
@@ -74,14 +74,55 @@ export function formatDateLabel(date: Date): string {
 }
 
 /**
+ * Checks if a date is overdue (in the past, before today)
+ */
+export function isDateOverdue(date: Date): boolean {
+  const today = startOfDay(new Date());
+  return isBefore(startOfDay(date), today);
+}
+
+/**
  * Checks if a task is overdue (due date in past and not completed)
  */
 export function isOverdue(task: Task): boolean {
   if (!task.dueDate || task.completed) {
     return false;
   }
-  const today = startOfDay(new Date());
-  return isBefore(startOfDay(task.dueDate), today);
+  return isDateOverdue(task.dueDate);
+}
+
+/**
+ * Checks if a subtask is overdue (due date in past and not completed)
+ */
+export function isSubtaskOverdue(subtask: Subtask): boolean {
+  if (!subtask.dueDate || subtask.completed) {
+    return false;
+  }
+  return isDateOverdue(subtask.dueDate);
+}
+
+/**
+ * Validates if a subtask date is valid relative to an optional parent task due date.
+ * A subtask date is invalid if it's after the parent task's due date.
+ */
+export function isValidSubtaskDate(subtaskDate: Date, parentDueDate?: Date): boolean {
+  if (!parentDueDate) {
+    return true;
+  }
+  const normalizedSubtaskDate = startOfDay(subtaskDate);
+  const normalizedParentDate = startOfDay(parentDueDate);
+  return !isBefore(normalizedParentDate, normalizedSubtaskDate);
+}
+
+/**
+ * Returns the maximum allowed date for a subtask based on the parent task's due date.
+ * If no parent due date, returns undefined (no constraint).
+ */
+export function getMaxSubtaskDate(parentDueDate?: Date): Date | undefined {
+  if (!parentDueDate) {
+    return undefined;
+  }
+  return startOfDay(parentDueDate);
 }
 
 /**

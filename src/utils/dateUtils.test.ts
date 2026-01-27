@@ -3,9 +3,13 @@ import {
   groupTasksByDate,
   formatDateLabel,
   isOverdue,
+  isDateOverdue,
+  isSubtaskOverdue,
+  isValidSubtaskDate,
+  getMaxSubtaskDate,
   sortDateGroups
 } from './dateUtils';
-import type { Task } from '@/types';
+import type { Task, Subtask } from '@/types';
 
 describe('groupTasksByDate', () => {
   it('groups tasks by today', () => {
@@ -156,6 +160,31 @@ describe('formatDateLabel', () => {
   });
 });
 
+describe('isDateOverdue', () => {
+  it('returns true for dates in the past', () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    expect(isDateOverdue(yesterday)).toBe(true);
+  });
+
+  it('returns false for today', () => {
+    const today = new Date();
+    expect(isDateOverdue(today)).toBe(false);
+  });
+
+  it('returns false for future dates', () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    expect(isDateOverdue(tomorrow)).toBe(false);
+  });
+
+  it('returns true for dates far in the past', () => {
+    const longAgo = new Date();
+    longAgo.setFullYear(longAgo.getFullYear() - 1);
+    expect(isDateOverdue(longAgo)).toBe(true);
+  });
+});
+
 describe('isOverdue', () => {
   it('returns false for completed tasks', () => {
     const yesterday = new Date();
@@ -235,6 +264,166 @@ describe('isOverdue', () => {
     };
 
     expect(isOverdue(task)).toBe(false);
+  });
+});
+
+describe('isSubtaskOverdue', () => {
+  it('returns false for completed subtasks', () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: true,
+      dueDate: yesterday,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(false);
+  });
+
+  it('returns false for subtasks without due dates', () => {
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: false,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(false);
+  });
+
+  it('returns true for past due uncompleted subtasks', () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: false,
+      dueDate: yesterday,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(true);
+  });
+
+  it('returns false for subtasks due today', () => {
+    const today = new Date();
+
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: false,
+      dueDate: today,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(false);
+  });
+
+  it('returns false for future subtasks', () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: false,
+      dueDate: tomorrow,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(false);
+  });
+
+  it('returns true for subtasks with priority that are overdue', () => {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const subtask: Subtask = {
+      id: '1',
+      title: 'Subtask 1',
+      completed: false,
+      priority: 'high',
+      dueDate: yesterday,
+    };
+
+    expect(isSubtaskOverdue(subtask)).toBe(true);
+  });
+});
+
+describe('isValidSubtaskDate', () => {
+  it('returns true when no parent due date is provided', () => {
+    const subtaskDate = new Date();
+    subtaskDate.setDate(subtaskDate.getDate() + 30);
+    expect(isValidSubtaskDate(subtaskDate)).toBe(true);
+  });
+
+  it('returns true when subtask date is before parent due date', () => {
+    const parentDueDate = new Date();
+    parentDueDate.setDate(parentDueDate.getDate() + 7);
+
+    const subtaskDate = new Date();
+    subtaskDate.setDate(subtaskDate.getDate() + 3);
+
+    expect(isValidSubtaskDate(subtaskDate, parentDueDate)).toBe(true);
+  });
+
+  it('returns true when subtask date equals parent due date', () => {
+    const parentDueDate = new Date();
+    parentDueDate.setDate(parentDueDate.getDate() + 7);
+
+    const subtaskDate = new Date(parentDueDate);
+
+    expect(isValidSubtaskDate(subtaskDate, parentDueDate)).toBe(true);
+  });
+
+  it('returns false when subtask date is after parent due date', () => {
+    const parentDueDate = new Date();
+    parentDueDate.setDate(parentDueDate.getDate() + 7);
+
+    const subtaskDate = new Date();
+    subtaskDate.setDate(subtaskDate.getDate() + 10);
+
+    expect(isValidSubtaskDate(subtaskDate, parentDueDate)).toBe(false);
+  });
+
+  it('handles dates in the past correctly', () => {
+    const parentDueDate = new Date();
+    parentDueDate.setDate(parentDueDate.getDate() - 3);
+
+    const subtaskDate = new Date();
+    subtaskDate.setDate(subtaskDate.getDate() - 5);
+
+    expect(isValidSubtaskDate(subtaskDate, parentDueDate)).toBe(true);
+  });
+});
+
+describe('getMaxSubtaskDate', () => {
+  it('returns undefined when no parent due date is provided', () => {
+    expect(getMaxSubtaskDate()).toBeUndefined();
+  });
+
+  it('returns undefined when parent due date is undefined', () => {
+    expect(getMaxSubtaskDate(undefined)).toBeUndefined();
+  });
+
+  it('returns the parent due date normalized to start of day', () => {
+    const parentDueDate = new Date('2026-03-15T14:30:00');
+    const maxDate = getMaxSubtaskDate(parentDueDate);
+
+    expect(maxDate).toBeDefined();
+    expect(maxDate!.getFullYear()).toBe(2026);
+    expect(maxDate!.getMonth()).toBe(2); // March is month 2
+    expect(maxDate!.getDate()).toBe(15);
+    expect(maxDate!.getHours()).toBe(0);
+    expect(maxDate!.getMinutes()).toBe(0);
+    expect(maxDate!.getSeconds()).toBe(0);
+  });
+
+  it('returns the same day when parent due date is already start of day', () => {
+    const parentDueDate = new Date('2026-03-15T00:00:00');
+    const maxDate = getMaxSubtaskDate(parentDueDate);
+
+    expect(maxDate).toBeDefined();
+    expect(maxDate!.getDate()).toBe(15);
   });
 });
 
