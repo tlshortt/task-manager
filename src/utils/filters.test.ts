@@ -85,7 +85,7 @@ describe('filterTasks', () => {
     it('returns tasks that are overdue and not completed', () => {
       const filtered = filterTasks(tasks, 'overdue');
       expect(filtered).toHaveLength(1);
-      expect(filtered[0]!.id).toBe(3);
+      expect(filtered[0]!.id).toBe('3');
       expect(filtered[0]!.completed).toBe(false);
     });
 
@@ -214,7 +214,7 @@ describe('getFilterCounts', () => {
     const counts = getFilterCounts(tasks);
 
     expect(counts.current).toBe(2);
-    expect(counts.overdue).toBe('1');
+    expect(counts.overdue).toBe(1);
     expect(counts.completed).toBe(3);
   });
 
@@ -324,13 +324,13 @@ describe('searchTasks', () => {
   it('filters tasks by description', () => {
     const results = searchTasks(tasks, 'typos');
     expect(results).toHaveLength(1);
-    expect(results[0]?.id).toBe(2);
+    expect(results[0]?.id).toBe('2');
   });
 
   it('matches partial strings', () => {
     const results = searchTasks(tasks, 'doc');
     expect(results).toHaveLength(1);
-    expect(results[0]?.id).toBe(2);
+    expect(results[0]?.id).toBe('2');
   });
 
   it('returns empty array when no matches', () => {
@@ -352,6 +352,6 @@ describe('filterAndSearchTasks', () => {
 
     const results = filterAndSearchTasks(tasks, 'completed', 'fix');
     expect(results).toHaveLength(1);
-    expect(results[0]?.id).toBe(2);
+    expect(results[0]?.id).toBe('2');
   });
 });

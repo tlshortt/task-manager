@@ -132,7 +132,7 @@ describe('generateCalendarDays', () => {
     // First 4 days should be from December 2025 (Sun-Wed)
     const firstDay = result[0];
     expect(firstDay?.isCurrentMonth).toBe(false);
-    expect(firstDay?.date.getMonth()).toBe('11'); // December
+    expect(firstDay?.date.getMonth()).toBe(11); // December
   });
 
   it('includes padding days from next month', () => {
@@ -141,7 +141,7 @@ describe('generateCalendarDays', () => {
 
     const lastDay = result[41];
     expect(lastDay?.isCurrentMonth).toBe(false);
-    expect(lastDay?.date.getMonth()).toBe('1'); // February
+    expect(lastDay?.date.getMonth()).toBe(1); // February
   });
 
   it('marks today correctly', () => {
@@ -181,6 +181,6 @@ describe('generateCalendarDays', () => {
     const result = generateCalendarDays(month, []);
 
     // First day should be a Sunday
-    expect(result[0]?.date.getDay()).toBe('0');
+    expect(result[0]?.date.getDay()).toBe(0);
   });
 });
