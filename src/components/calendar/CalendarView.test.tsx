@@ -4,6 +4,15 @@ import { CalendarView } from './CalendarView';
 import type { Task } from '@/types';
 import { startOfMonth } from 'date-fns';
 
+// Mock the useRecurringTasks hook
+vi.mock('@/hooks/useRecurringTasks', () => ({
+  useRecurringTasks: () => ({
+    deleteRecurringSeries: vi.fn(),
+    updateRecurringSeries: vi.fn(),
+    extendLookaheadWindow: vi.fn().mockResolvedValue(undefined),
+  }),
+}));
+
 const createTask = (overrides: Partial<Task> = {}): Task => ({
   id: 1,
   title: 'Test Task',
