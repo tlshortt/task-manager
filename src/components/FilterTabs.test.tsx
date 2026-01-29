@@ -63,7 +63,7 @@ describe('FilterTabs', () => {
     expect(onFilterChange).toHaveBeenCalledTimes(1);
   });
 
-  it('applies active styling to current filter', () => {
+  it('marks current filter as selected', () => {
     const onFilterChange = vi.fn();
 
     render(
@@ -74,12 +74,11 @@ describe('FilterTabs', () => {
       />
     );
 
-    const overdueTab = screen.getByText('Overdue').closest('button');
-    expect(overdueTab?.className).toContain('text-navy-900');
-    expect(overdueTab?.className).toContain('border-purple-600');
+    const overdueTab = screen.getByRole('tab', { name: /overdue/i });
+    expect(overdueTab).toHaveAttribute('aria-selected', 'true');
   });
 
-  it('applies inactive styling to non-active tabs', () => {
+  it('marks non-active tabs as not selected', () => {
     const onFilterChange = vi.fn();
 
     render(
@@ -90,9 +89,8 @@ describe('FilterTabs', () => {
       />
     );
 
-    const currentTab = screen.getByText('Current').closest('button');
-    expect(currentTab?.className).toContain('text-gray-500');
-    expect(currentTab?.className).not.toContain('border-purple-600');
+    const currentTab = screen.getByRole('tab', { name: /current/i });
+    expect(currentTab).toHaveAttribute('aria-selected', 'false');
   });
 
   it('switches active tab when different filter is selected', async () => {
@@ -107,10 +105,8 @@ describe('FilterTabs', () => {
       />
     );
 
-    const completedTab = screen.getByText('Completed').closest('button');
-    if (completedTab) {
-      await user.click(completedTab);
-    }
+    const completedTab = screen.getByRole('tab', { name: /completed/i });
+    await user.click(completedTab);
 
     expect(onFilterChange).toHaveBeenCalledWith('completed');
 
@@ -123,8 +119,7 @@ describe('FilterTabs', () => {
       />
     );
 
-    const completedTabAfter = screen.getByText('Completed').closest('button');
-    expect(completedTabAfter?.className).toContain('text-navy-900');
-    expect(completedTabAfter?.className).toContain('border-purple-600');
+    const completedTabAfter = screen.getByRole('tab', { name: /completed/i });
+    expect(completedTabAfter).toHaveAttribute('aria-selected', 'true');
   });
 });
