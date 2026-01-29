@@ -21,8 +21,8 @@
         "Add recurring task fields: isRecurringParent, recurringParentId, instanceDateMs, isCustomized",
         "npm run typecheck passes"
       ],
-      "passes": false,
-      "completed": false
+      "passes": true,
+      "completed": true
     },
     {
       "id": "US-002",
@@ -36,8 +36,8 @@
         "tasks table has index by_isRecurringParent on ['isRecurringParent']",
         "npm run typecheck passes"
       ],
-      "passes": false,
-      "completed": false
+      "passes": true,
+      "completed": true
     },
     {
       "id": "US-003",
@@ -51,8 +51,8 @@
         "Test that index exists on tags table",
         "npm run test passes"
       ],
-      "passes": false,
-      "completed": false
+      "passes": true,
+      "completed": true
     }
   ]
 }

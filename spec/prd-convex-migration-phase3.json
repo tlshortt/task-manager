@@ -1,0 +1,219 @@
+{
+  "projectName": "Convex Migration Phase 3 - Functions",
+  "branchName": "feature/convex-functions",
+  "description": "Implement Convex queries and mutations to replace Dexie operations. Create task and tag functions including support for recurring tasks, series operations, and proper timestamp handling.",
+  "created": "2026-01-29",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Create tasks query function",
+      "description": "As a developer, I need a Convex query to list all tasks, replacing db.tasks.toArray().",
+      "acceptanceCriteria": [
+        "Create convex/tasks.ts file",
+        "Export 'list' query with no args",
+        "Query returns all tasks from ctx.db.query('tasks').collect()",
+        "Import query from './_generated/server'",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-002",
+      "title": "Create task create mutation",
+      "description": "As a developer, I need a mutation to create tasks with support for both regular and recurring tasks.",
+      "acceptanceCriteria": [
+        "Export 'create' mutation in convex/tasks.ts",
+        "Accept args: title (string), description (optional string), completed (boolean), priority (enum), dueDateMs (optional number), subtasks (optional array), tagIds (optional array of tag IDs), recurrence (optional object)",
+        "Set createdAtMs and updatedAtMs to current timestamp",
+        "Handle recurring tasks: set isRecurringParent=true for parent task",
+        "Return inserted task ID",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-003",
+      "title": "Create task update mutation",
+      "description": "As a developer, I need a mutation to update existing tasks with automatic timestamp tracking.",
+      "acceptanceCriteria": [
+        "Export 'update' mutation in convex/tasks.ts",
+        "Accept args: id (task ID) and partial task fields",
+        "Use ctx.db.patch() to update task",
+        "Automatically set updatedAtMs to current timestamp",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-004",
+      "title": "Create task remove mutation",
+      "description": "As a developer, I need a mutation to delete tasks with undo support.",
+      "acceptanceCriteria": [
+        "Export 'remove' mutation in convex/tasks.ts",
+        "Accept args: id (task ID)",
+        "Retrieve task before deletion with ctx.db.get()",
+        "Delete task with ctx.db.delete()",
+        "Return deleted task object for undo functionality",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-005",
+      "title": "Create toggle complete mutation",
+      "description": "As a developer, I need a mutation to toggle task completion status with undo support.",
+      "acceptanceCriteria": [
+        "Export 'toggleComplete' mutation in convex/tasks.ts",
+        "Accept args: id (task ID)",
+        "Retrieve task and throw error if not found",
+        "Toggle completed field to opposite value",
+        "Update updatedAtMs to current timestamp",
+        "Return old completion status for undo",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-006",
+      "title": "Create delete series mutation",
+      "description": "As a developer, I need a mutation to delete all instances of a recurring task series.",
+      "acceptanceCriteria": [
+        "Export 'deleteSeries' mutation in convex/tasks.ts",
+        "Accept args: parentId (task ID)",
+        "Query all instances with by_recurringParentId index",
+        "Delete all instances in a loop",
+        "Delete parent task",
+        "Operation is transactional (all-or-nothing)",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-007",
+      "title": "Create update series mutation",
+      "description": "As a developer, I need a mutation to update recurring task series, affecting parent and future non-customized instances.",
+      "acceptanceCriteria": [
+        "Export 'updateSeries' mutation in convex/tasks.ts",
+        "Accept args: parentId (task ID), updates (partial task object)",
+        "Update parent task with ctx.db.patch()",
+        "Query all instances with by_recurringParentId index",
+        "Update only future instances (instanceDateMs >= now) that are not customized",
+        "Set updatedAtMs on all updated records",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-008",
+      "title": "Create generate instances mutation",
+      "description": "As a developer, I need a mutation to generate recurring task instances for a lookahead window.",
+      "acceptanceCriteria": [
+        "Export 'generateInstances' mutation in convex/tasks.ts",
+        "Accept args: parentId (task ID)",
+        "Retrieve parent task with recurrence configuration",
+        "Generate instances using recurrence utility functions",
+        "Insert instances with proper instanceDateMs and recurringParentId",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-009",
+      "title": "Create tags query function",
+      "description": "As a developer, I need a Convex query to list all tags.",
+      "acceptanceCriteria": [
+        "Create convex/tags.ts file",
+        "Export 'list' query with no args",
+        "Query returns all tags from ctx.db.query('tags').collect()",
+        "Import query and mutation from './_generated/server'",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-010",
+      "title": "Create tag create mutation",
+      "description": "As a developer, I need a mutation to create new tags.",
+      "acceptanceCriteria": [
+        "Export 'create' mutation in convex/tags.ts",
+        "Accept args: name (string), color (string)",
+        "Insert tag with ctx.db.insert('tags', args)",
+        "Return inserted tag ID",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-011",
+      "title": "Create tag remove mutation",
+      "description": "As a developer, I need a mutation to delete tags.",
+      "acceptanceCriteria": [
+        "Export 'remove' mutation in convex/tags.ts",
+        "Accept args: id (tag ID)",
+        "Delete tag with ctx.db.delete()",
+        "npm run typecheck passes"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-012",
+      "title": "Move recurrence utils to shared location",
+      "description": "As a developer, I need recurrence utility functions that work with Convex (timestamp-based, no browser APIs).",
+      "acceptanceCriteria": [
+        "Modify src/utils/recurrenceUtils.ts to work with number (ms) instead of Date objects",
+        "Remove any browser-only API usage",
+        "Ensure functions can be imported by Convex functions",
+        "Functions handle timezone-agnostic timestamp math",
+        "Existing client code still works (or is updated)",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-013",
+      "title": "Verify function mapping completeness",
+      "description": "As a developer, I need to confirm all Dexie operations have Convex equivalents.",
+      "acceptanceCriteria": [
+        "db.tasks.toArray() maps to api.tasks.list",
+        "db.tasks.add() maps to api.tasks.create",
+        "db.tasks.update() maps to api.tasks.update",
+        "db.tasks.delete() maps to api.tasks.remove",
+        "generateInstancesForParent() maps to api.tasks.generateInstances",
+        "deleteRecurringSeries() maps to api.tasks.deleteSeries",
+        "updateRecurringSeries() maps to api.tasks.updateSeries",
+        "All mutations return appropriate values for undo support"
+      ],
+      "passes": true,
+      "completed": true
+    },
+    {
+      "id": "US-013",
+      "title": "Verify function mapping completeness",
+      "description": "As a developer, I need to confirm all Dexie operations have Convex equivalents.",
+      "acceptanceCriteria": [
+        "db.tasks.toArray() maps to api.tasks.list",
+        "db.tasks.add() maps to api.tasks.create",
+        "db.tasks.update() maps to api.tasks.update",
+        "db.tasks.delete() maps to api.tasks.remove",
+        "generateInstancesForParent() maps to api.tasks.generateInstances",
+        "deleteRecurringSeries() maps to api.tasks.deleteSeries",
+        "updateRecurringSeries() maps to api.tasks.updateSeries",
+        "All mutations return appropriate values for undo support"
+      ],
+      "passes": true,
+      "completed": true
+    }
+  ]
+}
