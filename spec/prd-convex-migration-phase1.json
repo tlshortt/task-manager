@@ -1,0 +1,76 @@
+{
+  "projectName": "Convex Migration Phase 1 - Setup",
+  "branchName": "feature/convex-setup",
+  "description": "Initial Convex project setup and React integration. Install Convex, initialize project, add environment variables, wrap app with ConvexProvider, and verify deployment connection.",
+  "created": "2026-01-29",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Install Convex dependency",
+      "description": "As a developer, I need the Convex package installed to use Convex backend services.",
+      "acceptanceCriteria": [
+        "Run npm i convex",
+        "convex appears in package.json dependencies",
+        "node_modules/convex exists",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-002",
+      "title": "Initialize Convex project",
+      "description": "As a developer, I need a Convex project created and linked to this codebase.",
+      "acceptanceCriteria": [
+        "Run npx convex dev and follow prompts",
+        "Login with GitHub when prompted",
+        "Create new project named 'task-manager'",
+        "convex/ folder exists with _generated/ types",
+        "convex.json config file created at project root"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-003",
+      "title": "Add Convex environment variable",
+      "description": "As a developer, I need the Convex deployment URL configured for the app to connect.",
+      "acceptanceCriteria": [
+        "Create .env.local file at project root",
+        "Add VITE_CONVEX_URL=<deployment-url> with actual Convex URL",
+        ".env.local is in .gitignore (add if missing)",
+        "Create .env.local.example with placeholder value for documentation"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-004",
+      "title": "Wrap app with ConvexProvider",
+      "description": "As a developer, I need the React app wrapped with ConvexProvider to use Convex hooks.",
+      "acceptanceCriteria": [
+        "Import ConvexProvider and ConvexReactClient from 'convex/react' in main.tsx",
+        "Create ConvexReactClient instance with import.meta.env.VITE_CONVEX_URL",
+        "Wrap App component with ConvexProvider passing client prop",
+        "npm run typecheck passes",
+        "Verify in browser: app renders without errors"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-005",
+      "title": "Verify Convex setup",
+      "description": "As a developer, I need to confirm Convex is properly connected and working.",
+      "acceptanceCriteria": [
+        "npm run dev starts Vite without errors",
+        "npx convex dev runs without errors in separate terminal",
+        "Convex dashboard shows deployment as connected",
+        "No Convex-related errors in browser console",
+        "Existing Dexie functionality still works (dual-write not needed yet)"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}
