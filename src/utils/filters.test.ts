@@ -12,7 +12,7 @@ describe('filterTasks', () => {
   const tasks: Task[] = [
     // Current task (not completed, not overdue, no due date)
     {
-      id: 1,
+      id: '1' as any,
       title: 'Current Task 1',
       completed: false,
       priority: 'medium',
@@ -21,7 +21,7 @@ describe('filterTasks', () => {
     },
     // Current task (not completed, not overdue, future due date)
     {
-      id: 2,
+      id: '2' as any,
       title: 'Current Task 2',
       completed: false,
       priority: 'high',
@@ -31,7 +31,7 @@ describe('filterTasks', () => {
     },
     // Overdue task (not completed, past due date)
     {
-      id: 3,
+      id: '3' as any,
       title: 'Overdue Task',
       completed: false,
       priority: 'high',
@@ -41,7 +41,7 @@ describe('filterTasks', () => {
     },
     // Completed task
     {
-      id: 4,
+      id: '4' as any,
       title: 'Completed Task',
       completed: true,
       priority: 'low',
@@ -51,7 +51,7 @@ describe('filterTasks', () => {
     },
     // Another completed task
     {
-      id: 5,
+      id: '5' as any,
       title: 'Completed Task 2',
       completed: true,
       priority: 'medium',
@@ -65,12 +65,12 @@ describe('filterTasks', () => {
       const filtered = filterTasks(tasks, 'current');
       expect(filtered).toHaveLength(2);
       expect(filtered.every(t => !t.completed)).toBe(true);
-      expect(filtered.map(t => t.id)).toEqual([1, 2]);
+      expect(filtered.map(t => t.id)).toEqual(['1', '2']);
     });
 
     it('excludes overdue tasks', () => {
       const filtered = filterTasks(tasks, 'current');
-      const hasOverdueTask = filtered.some(t => t.id === 3);
+      const hasOverdueTask = filtered.some(t => t.id === ('3' as any));
       expect(hasOverdueTask).toBe(false);
     });
 
@@ -91,13 +91,13 @@ describe('filterTasks', () => {
 
     it('excludes completed tasks even if past due', () => {
       const filtered = filterTasks(tasks, 'overdue');
-      const hasCompletedTask = filtered.some(t => t.id === 4);
+      const hasCompletedTask = filtered.some(t => t.id === ('4' as any));
       expect(hasCompletedTask).toBe(false);
     });
 
     it('excludes current tasks', () => {
       const filtered = filterTasks(tasks, 'overdue');
-      const currentTasks = filtered.filter(t => [1, 2].includes(t.id as number));
+      const currentTasks = filtered.filter(t => ['1', '2'].includes(t.id as string));
       expect(currentTasks).toHaveLength(0);
     });
   });
@@ -107,7 +107,7 @@ describe('filterTasks', () => {
       const filtered = filterTasks(tasks, 'completed');
       expect(filtered).toHaveLength(2);
       expect(filtered.every(t => t.completed)).toBe(true);
-      expect(filtered.map(t => t.id).sort()).toEqual([4, 5]);
+      expect(filtered.map(t => t.id).sort()).toEqual(['4', '5']);
     });
 
     it('excludes incomplete tasks', () => {
@@ -127,7 +127,7 @@ describe('filterTasks', () => {
     it('handles tasks due today correctly (not overdue)', () => {
       const todayTasks: Task[] = [
         {
-          id: 10,
+          id: '10' as any,
           title: 'Due Today',
           completed: false,
           priority: 'medium',
@@ -157,7 +157,7 @@ describe('getFilterCounts', () => {
     const tasks: Task[] = [
       // 2 current tasks
       {
-        id: 1,
+        id: '1' as any,
         title: 'Current 1',
         completed: false,
         priority: 'medium',
@@ -165,7 +165,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: 2,
+        id: '2' as any,
         title: 'Current 2',
         completed: false,
         priority: 'high',
@@ -175,7 +175,7 @@ describe('getFilterCounts', () => {
       },
       // 1 overdue task
       {
-        id: 3,
+        id: '3' as any,
         title: 'Overdue',
         completed: false,
         priority: 'high',
@@ -185,7 +185,7 @@ describe('getFilterCounts', () => {
       },
       // 3 completed tasks
       {
-        id: 4,
+        id: '4' as any,
         title: 'Completed 1',
         completed: true,
         priority: 'low',
@@ -193,7 +193,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: 5,
+        id: '5' as any,
         title: 'Completed 2',
         completed: true,
         priority: 'medium',
@@ -201,7 +201,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: 6,
+        id: '6' as any,
         title: 'Completed 3',
         completed: true,
         priority: 'high',
@@ -214,7 +214,7 @@ describe('getFilterCounts', () => {
     const counts = getFilterCounts(tasks);
 
     expect(counts.current).toBe(2);
-    expect(counts.overdue).toBe(1);
+    expect(counts.overdue).toBe('1');
     expect(counts.completed).toBe(3);
   });
 
@@ -229,7 +229,7 @@ describe('getFilterCounts', () => {
   it('returns correct counts when all tasks are current', () => {
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -237,7 +237,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: 2,
+        id: '2' as any,
         title: 'Task 2',
         completed: false,
         priority: 'high',
@@ -256,7 +256,7 @@ describe('getFilterCounts', () => {
   it('returns correct counts when all tasks are completed', () => {
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: true,
         priority: 'medium',
@@ -264,7 +264,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: 2,
+        id: '2' as any,
         title: 'Task 2',
         completed: true,
         priority: 'high',
@@ -284,7 +284,7 @@ describe('getFilterCounts', () => {
 describe('searchTasks', () => {
   const tasks: Task[] = [
     {
-      id: 1,
+      id: '1' as any,
       title: 'Fix login bug',
       completed: false,
       priority: 'high',
@@ -292,7 +292,7 @@ describe('searchTasks', () => {
       updatedAt: new Date()
     },
     {
-      id: 2,
+      id: '2' as any,
       title: 'Update documentation',
       description: 'Correct typos in README',
       completed: false,
@@ -301,7 +301,7 @@ describe('searchTasks', () => {
       updatedAt: new Date()
     },
     {
-      id: 3,
+      id: '3' as any,
       title: 'Refactor API',
       completed: false,
       priority: 'medium',
@@ -318,7 +318,7 @@ describe('searchTasks', () => {
   it('filters tasks by title (case-insensitive)', () => {
     const results = searchTasks(tasks, 'fix');
     expect(results).toHaveLength(1);
-    expect(results[0]?.id).toBe(1);
+    expect(results[0]?.id).toBe('1');
   });
 
   it('filters tasks by description', () => {
@@ -346,8 +346,8 @@ describe('searchTasks', () => {
 describe('filterAndSearchTasks', () => {
   it('applies both status filter and search', () => {
     const tasks: Task[] = [
-      { id: 1, title: 'Fix bug', completed: false, priority: 'high', createdAt: new Date(), updatedAt: new Date() },
-      { id: 2, title: 'Fix typo', completed: true, priority: 'low', createdAt: new Date(), updatedAt: new Date() },
+      { id: '1' as any, title: 'Fix bug', completed: false, priority: 'high', createdAt: new Date(), updatedAt: new Date() },
+      { id: '2' as any, title: 'Fix typo', completed: true, priority: 'low', createdAt: new Date(), updatedAt: new Date() },
     ];
 
     const results = filterAndSearchTasks(tasks, 'completed', 'fix');

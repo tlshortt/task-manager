@@ -4,7 +4,7 @@ import { DayTasksModal } from './DayTasksModal';
 import type { Task } from '@/types';
 
 const createTask = (overrides: Partial<Task> = {}): Task => ({
-  id: 1,
+  id: '1' as any,
   title: 'Test Task',
   completed: false,
   priority: 'medium',
@@ -16,8 +16,8 @@ const createTask = (overrides: Partial<Task> = {}): Task => ({
 describe('DayTasksModal', () => {
   const mockDate = new Date(2026, 0, 15); // January 15, 2026
   const mockTasks: Task[] = [
-    createTask({ id: 1, title: 'Task 1', dueDate: mockDate }),
-    createTask({ id: 2, title: 'Task 2', dueDate: mockDate }),
+    createTask({ id: '1' as any, title: 'Task 1', dueDate: mockDate }),
+    createTask({ id: '2' as any, title: 'Task 2', dueDate: mockDate }),
   ];
 
   const defaultProps = {
@@ -155,7 +155,7 @@ describe('DayTasksModal', () => {
     await user.keyboard('{Enter}');
     
     expect(onUpdate).toHaveBeenCalledWith(expect.objectContaining({ 
-      id: 1, 
+      id: '1' as any, 
       title: 'Updated Task' 
     }));
   });

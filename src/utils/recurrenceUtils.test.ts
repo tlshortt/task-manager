@@ -9,7 +9,7 @@ import type { Task, RecurrencePattern } from '@/types';
 
 describe('recurrenceUtils', () => {
   const baseTask: Task = {
-    id: 1,
+    id: '1' as any,
     title: 'Test Task',
     completed: false,
     priority: 'medium',
@@ -344,12 +344,12 @@ describe('recurrenceUtils', () => {
     it('sets recurringParentId on instances', () => {
       const task: Task = {
         ...baseTask,
-        id: 42,
+        id: '42' as any,
         recurrence: { frequency: 'daily', interval: 1 },
       };
       const instances = generateRecurrenceInstances(task, new Date('2026-01-15T00:00:00'), 7);
       instances.forEach((instance) => {
-        expect(instance.recurringParentId).toBe(42);
+        expect(instance.recurringParentId).toBe('42');
         expect(instance.isCustomized).toBe(false);
       });
     });

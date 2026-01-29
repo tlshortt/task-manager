@@ -6,7 +6,7 @@ import type { Task } from '@/types';
 
 describe('TaskRow', () => {
   const mockTask: Task = {
-    id: 1,
+    id: '1' as any,
     title: 'Test Task',
     completed: false,
     priority: 'medium',

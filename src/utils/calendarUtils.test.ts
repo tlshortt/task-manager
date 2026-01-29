@@ -7,7 +7,7 @@ import {
 import type { Task } from '@/types';
 
 const createTask = (overrides: Partial<Task> = {}): Task => ({
-  id: 1,
+  id: '1' as any,
   title: 'Test Task',
   completed: false,
   priority: 'medium',
@@ -20,20 +20,20 @@ describe('getTasksForDate', () => {
   it('returns tasks matching the given date', () => {
     const targetDate = new Date('2026-01-15');
     const tasks: Task[] = [
-      createTask({ id: 1, title: 'Task 1', dueDate: new Date('2026-01-15') }),
-      createTask({ id: 2, title: 'Task 2', dueDate: new Date('2026-01-16') }),
-      createTask({ id: 3, title: 'Task 3', dueDate: new Date('2026-01-15') })
+      createTask({ id: '1' as any, title: 'Task 1', dueDate: new Date('2026-01-15') }),
+      createTask({ id: '2' as any, title: 'Task 2', dueDate: new Date('2026-01-16') }),
+      createTask({ id: '3' as any, title: 'Task 3', dueDate: new Date('2026-01-15') })
     ];
 
     const result = getTasksForDate(tasks, targetDate);
     expect(result).toHaveLength(2);
-    expect(result.map((t) => t.id)).toEqual([1, 3]);
+    expect(result.map((t) => t.id)).toEqual(['1', '3']);
   });
 
   it('returns empty array when no tasks match', () => {
     const targetDate = new Date('2026-01-20');
     const tasks: Task[] = [
-      createTask({ id: 1, dueDate: new Date('2026-01-15') })
+      createTask({ id: '1' as any, dueDate: new Date('2026-01-15') })
     ];
 
     const result = getTasksForDate(tasks, targetDate);
@@ -43,20 +43,20 @@ describe('getTasksForDate', () => {
   it('excludes tasks without due dates', () => {
     const targetDate = new Date('2026-01-15');
     const tasks: Task[] = [
-      createTask({ id: 1, dueDate: new Date('2026-01-15') }),
-      createTask({ id: 2, dueDate: undefined })
+      createTask({ id: '1' as any, dueDate: new Date('2026-01-15') }),
+      createTask({ id: '2' as any, dueDate: undefined })
     ];
 
     const result = getTasksForDate(tasks, targetDate);
     expect(result).toHaveLength(1);
-    expect(result[0]?.id).toBe(1);
+    expect(result[0]?.id).toBe('1');
   });
 
   it('handles different times on same day', () => {
     const targetDate = new Date('2026-01-15T00:00:00');
     const tasks: Task[] = [
-      createTask({ id: 1, dueDate: new Date('2026-01-15T09:30:00') }),
-      createTask({ id: 2, dueDate: new Date('2026-01-15T23:59:59') })
+      createTask({ id: '1' as any, dueDate: new Date('2026-01-15T09:30:00') }),
+      createTask({ id: '2' as any, dueDate: new Date('2026-01-15T23:59:59') })
     ];
 
     const result = getTasksForDate(tasks, targetDate);
@@ -132,7 +132,7 @@ describe('generateCalendarDays', () => {
     // First 4 days should be from December 2025 (Sun-Wed)
     const firstDay = result[0];
     expect(firstDay?.isCurrentMonth).toBe(false);
-    expect(firstDay?.date.getMonth()).toBe(11); // December
+    expect(firstDay?.date.getMonth()).toBe('11'); // December
   });
 
   it('includes padding days from next month', () => {
@@ -141,7 +141,7 @@ describe('generateCalendarDays', () => {
 
     const lastDay = result[41];
     expect(lastDay?.isCurrentMonth).toBe(false);
-    expect(lastDay?.date.getMonth()).toBe(1); // February
+    expect(lastDay?.date.getMonth()).toBe('1'); // February
   });
 
   it('marks today correctly', () => {
@@ -156,9 +156,9 @@ describe('generateCalendarDays', () => {
   it('assigns tasks to correct days', () => {
     const month = new Date(2026, 0, 15); // Jan 15, 2026 (local time)
     const tasks: Task[] = [
-      createTask({ id: 1, title: 'Task 1', dueDate: new Date(2026, 0, 10) }),
-      createTask({ id: 2, title: 'Task 2', dueDate: new Date(2026, 0, 10) }),
-      createTask({ id: 3, title: 'Task 3', dueDate: new Date(2026, 0, 20) })
+      createTask({ id: '1' as any, title: 'Task 1', dueDate: new Date(2026, 0, 10) }),
+      createTask({ id: '2' as any, title: 'Task 2', dueDate: new Date(2026, 0, 10) }),
+      createTask({ id: '3' as any, title: 'Task 3', dueDate: new Date(2026, 0, 20) })
     ];
 
     const result = generateCalendarDays(month, tasks);
@@ -181,6 +181,6 @@ describe('generateCalendarDays', () => {
     const result = generateCalendarDays(month, []);
 
     // First day should be a Sunday
-    expect(result[0]?.date.getDay()).toBe(0);
+    expect(result[0]?.date.getDay()).toBe('0');
   });
 });

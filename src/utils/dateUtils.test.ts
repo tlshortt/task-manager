@@ -16,7 +16,7 @@ describe('groupTasksByDate', () => {
     const today = new Date();
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -36,7 +36,7 @@ describe('groupTasksByDate', () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -58,7 +58,7 @@ describe('groupTasksByDate', () => {
 
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -84,7 +84,7 @@ describe('groupTasksByDate', () => {
   it('groups tasks without due dates under no-date key', () => {
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -105,7 +105,7 @@ describe('groupTasksByDate', () => {
 
     const tasks: Task[] = [
       {
-        id: 1,
+        id: '1' as any,
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -114,7 +114,7 @@ describe('groupTasksByDate', () => {
         updatedAt: new Date(),
       },
       {
-        id: 2,
+        id: '2' as any,
         title: 'Task 2',
         completed: false,
         priority: 'medium',
@@ -123,7 +123,7 @@ describe('groupTasksByDate', () => {
         updatedAt: new Date(),
       },
       {
-        id: 3,
+        id: '3' as any,
         title: 'Task 3',
         completed: false,
         priority: 'medium',
@@ -191,7 +191,7 @@ describe('isOverdue', () => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     const task: Task = {
-      id: 1,
+      id: '1' as any,
       title: 'Task 1',
       completed: true,
       priority: 'medium',
@@ -205,7 +205,7 @@ describe('isOverdue', () => {
 
   it('returns false for tasks without due dates', () => {
     const task: Task = {
-      id: 1,
+      id: '1' as any,
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -221,7 +221,7 @@ describe('isOverdue', () => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     const task: Task = {
-      id: 1,
+      id: '1' as any,
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -237,7 +237,7 @@ describe('isOverdue', () => {
     const today = new Date();
 
     const task: Task = {
-      id: 1,
+      id: '1' as any,
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -254,7 +254,7 @@ describe('isOverdue', () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const task: Task = {
-      id: 1,
+      id: '1' as any,
       title: 'Task 1',
       completed: false,
       priority: 'medium',
