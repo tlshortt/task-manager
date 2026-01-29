@@ -1,0 +1,424 @@
+{
+  "projectName": "Recurring Tasks Feature",
+  "branchName": "feature/recurring-tasks",
+  "description": "Add recurring task functionality using a parent-child instance model with structured recurrence patterns and a 90-day lookahead window for instance generation. Supports daily, weekly, monthly, and yearly recurrence with customizable intervals and end conditions.",
+  "created": "2026-01-28",
+  "planReference": "abundant-prancing-feather",
+  "tasks": [
+    {
+      "id": "RT-001",
+      "title": "Add RecurrencePattern interface to types",
+      "description": "As a developer, I need a structured recurrence pattern type that supports flexible recurrence rules.",
+      "acceptanceCriteria": [
+        "Create RecurrencePattern interface in src/types/index.ts",
+        "Include frequency field: 'daily' | 'weekly' | 'monthly' | 'yearly'",
+        "Include interval field: number (1 = every occurrence, 2 = every other, etc.)",
+        "Include optional daysOfWeek field: number[] (0=Sun, 1=Mon, ..., 6=Sat)",
+        "Include optional dayOfMonth field: number (1-31)",
+        "Include optional endDate field: Date",
+        "Include optional count field: number (max instances)",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-002",
+      "title": "Extend Task interface with recurring fields",
+      "description": "As a developer, I need the Task type to support parent-child recurring task relationships.",
+      "acceptanceCriteria": [
+        "Add optional isRecurringParent?: boolean to Task interface in src/types/index.ts",
+        "Add optional recurringParentId?: number to link instances to parent",
+        "Add optional recurrence?: RecurrencePattern (only on parent tasks)",
+        "Add optional instanceDate?: Date (for child instances, the specific occurrence date)",
+        "Add optional isCustomized?: boolean (if instance was edited individually)",
+        "Existing tasks without these fields still work (backwards compatible)",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-003",
+      "title": "Update Dexie schema to version 3 with recurring indexes",
+      "description": "As a developer, I need database indexes for efficient recurring task queries.",
+      "acceptanceCriteria": [
+        "Add db.version(3) to src/db/index.ts",
+        "Add recurringParentId index to tasks table",
+        "Add isRecurringParent index to tasks table",
+        "Keep all existing indexes: id, completed, priority, dueDate, createdAt",
+        "Version 3 is additive - no data migration required",
+        "Existing tasks work unchanged after upgrade",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-004",
+      "title": "Create recurrenceUtils with core generation logic",
+      "description": "As a developer, I need utilities to generate recurring task instances from a pattern.",
+      "acceptanceCriteria": [
+        "Create src/utils/recurrenceUtils.ts",
+        "Add generateRecurrenceInstances(parentTask, startDate, lookaheadDays) function",
+        "Returns array of Omit<Task, 'id'> instances for next N days",
+        "Each instance has recurringParentId, instanceDate, and inherited title/priority/tags",
+        "Add getNextOccurrence(recurrence, fromDate) function returning Date | null",
+        "Add isValidRecurrence(pattern) validation function",
+        "Add getValidDayOfMonth(year, month, day) for month boundary handling",
+        "Add needsLookaheadExtension(instances, currentDate, windowDays) check",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-005",
+      "title": "Add comprehensive tests for recurrenceUtils",
+      "description": "As a developer, I need comprehensive test coverage for recurrence logic edge cases.",
+      "acceptanceCriteria": [
+        "Create src/utils/recurrenceUtils.test.ts",
+        "Test daily recurrence: every day, every N days",
+        "Test weekly recurrence: specific days of week, every N weeks",
+        "Test monthly recurrence: specific day of month",
+        "Test month boundary edge cases: 31st → Feb 28/29, leap years",
+        "Test end conditions: endDate stops generation, count limits instances",
+        "Test DST transitions handled correctly with startOfDay",
+        "Test invalid pattern validation",
+        "npm run test passes with 100% coverage on recurrenceUtils"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-006",
+      "title": "Create RecurrencePicker component (MVP)",
+      "description": "As a user, I want to select recurrence patterns when creating a task.",
+      "acceptanceCriteria": [
+        "Create src/components/RecurrencePicker.tsx",
+        "Props: value?: RecurrencePattern, onChange: (pattern?) => void, onClose?: () => void",
+        "Dropdown with options: None, Daily, Weekly, Monthly",
+        "Weekly shows day-of-week multi-select checkboxes (Mon, Tue, Wed, etc.)",
+        "Optional 'Ends on' date picker using react-datepicker",
+        "Clear button to remove recurrence",
+        "Keyboard accessible: Escape to close, Enter to apply",
+        "Similar styling to existing TagPicker component",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-007",
+      "title": "Add RecurrencePicker tests",
+      "description": "As a developer, I need tests for the RecurrencePicker component.",
+      "acceptanceCriteria": [
+        "Create src/components/RecurrencePicker.test.tsx",
+        "Test selecting frequency updates pattern",
+        "Test weekly shows day-of-week checkboxes",
+        "Test end date can be set and cleared",
+        "Test 'None' option clears recurrence",
+        "Test keyboard navigation (Escape closes)",
+        "Test onChange callback receives correct pattern",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-008",
+      "title": "Create RecurrenceBadge component",
+      "description": "As a user, I want to see visual indicators for recurring tasks.",
+      "acceptanceCriteria": [
+        "Create src/components/RecurrenceBadge.tsx",
+        "Props: pattern: RecurrencePattern",
+        "Display text: 'Daily', 'Weekly', 'Every 2 weeks', 'Monthly', etc.",
+        "Include Repeat icon from lucide-react",
+        "Similar styling to TagBadge (rounded, colored background)",
+        "Size variants: 'sm' | 'md'",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-009",
+      "title": "Add Repeat button to TaskInput",
+      "description": "As a user, I want to access recurrence settings from the task creation form.",
+      "acceptanceCriteria": [
+        "Add Repeat button to TaskInput.tsx alongside Calendar/Tags/Note buttons",
+        "Use Repeat icon from lucide-react",
+        "Button has aria-expanded attribute",
+        "Clicking toggles RecurrencePicker expandable section",
+        "Section shows RecurrencePicker component",
+        "Visual indicator when recurrence is set (button highlighted)",
+        "npm run typecheck passes",
+        "Verify in browser: button appears and toggles correctly"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-010",
+      "title": "Update useTaskForm with recurrence state",
+      "description": "As a developer, I need the task form hook to manage recurrence state.",
+      "acceptanceCriteria": [
+        "Add recurrence state to useTaskForm: useState<RecurrencePattern | undefined>()",
+        "Add showRecurrencePicker state: useState(false)",
+        "Add setRecurrence and setShowRecurrencePicker to return object",
+        "Update resetForm() to clear recurrence and hide picker",
+        "Update handleSubmit to include recurrence in returned data",
+        "Add handleRecurrenceChange handler",
+        "Update useTaskForm.test.ts with recurrence tests",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-011",
+      "title": "Update MainLayout to pass recurrence to addTask",
+      "description": "As a developer, I need MainLayout to handle the new recurrence parameter.",
+      "acceptanceCriteria": [
+        "Update handleAddTask in MainLayout.tsx to accept recurrence parameter",
+        "Pass recurrence to addTask() call",
+        "npm run typecheck passes",
+        "Verify in browser: recurrence data flows to useTasks hook"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-012",
+      "title": "Add instance generation to useTasks.addTask",
+      "description": "As a user, I want recurring task instances to be auto-generated when I create a recurring task.",
+      "acceptanceCriteria": [
+        "Update addTask in src/hooks/useTasks.tsx to check for recurrence field",
+        "If recurrence exists, update task with isRecurringParent: true",
+        "Call generateRecurrenceInstances with 90-day lookahead",
+        "Use db.tasks.bulkAdd to insert instances efficiently",
+        "Each instance has recurringParentId, instanceDate, and dueDate set to instanceDate",
+        "Parent task is marked but not included in instance list",
+        "Add tests to useTasks.test.tsx for instance generation",
+        "npm run test passes",
+        "Verify in browser: create daily task, check db has 90 instances"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-013",
+      "title": "Create useRecurringTasks hook",
+      "description": "As a developer, I need specialized operations for managing recurring task series.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useRecurringTasks.ts",
+        "Export generateInstancesForParent(parentId) function",
+        "Export extendLookaheadWindow() function to check all parents",
+        "Export deleteRecurringSeries(parentId) function",
+        "Export updateRecurringSeries(parentId, updates) function for future instances",
+        "All functions use db.tasks for Dexie operations",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-014",
+      "title": "Add useRecurringTasks tests",
+      "description": "As a developer, I need tests for recurring task operations.",
+      "acceptanceCriteria": [
+        "Create src/hooks/useRecurringTasks.test.tsx",
+        "Test generateInstancesForParent creates instances",
+        "Test deleteRecurringSeries removes parent and all instances",
+        "Test updateRecurringSeries updates future non-customized instances",
+        "Test extendLookaheadWindow generates new instances when needed",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-015",
+      "title": "Show RecurrenceBadge in TaskRow",
+      "description": "As a user, I want to see which tasks are recurring instances.",
+      "acceptanceCriteria": [
+        "Update TaskRow.tsx to check for recurringParentId field",
+        "If present, fetch parent task's recurrence pattern",
+        "Display RecurrenceBadge next to tags section",
+        "Badge shows pattern summary (e.g., 'Daily', 'Weekly')",
+        "Click badge shows tooltip or link to series options (future enhancement)",
+        "npm run typecheck passes",
+        "Verify in browser: recurring instances show badge"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-016",
+      "title": "Add repeat icon to CalendarTaskItem",
+      "description": "As a user, I want to see recurring indicators in the calendar view.",
+      "acceptanceCriteria": [
+        "Update CalendarTaskItem.tsx to check for recurringParentId",
+        "If present, show small Repeat icon next to task title",
+        "Icon size: 12px, opacity: 0.6",
+        "Icon positioned inline before title text",
+        "npm run typecheck passes",
+        "Verify in browser: calendar shows repeat icons on recurring tasks"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-017",
+      "title": "Add lookahead extension to CalendarView",
+      "description": "As a user, I want recurring instances to auto-generate when I navigate to future months.",
+      "acceptanceCriteria": [
+        "Add useEffect to CalendarView.tsx that runs when currentMonth changes",
+        "Effect queries all isRecurringParent=true tasks",
+        "For each parent, check if needsLookaheadExtension(instances, currentMonth, 90)",
+        "If needed, call generateInstancesForParent(parentId)",
+        "Effect runs async with error handling",
+        "npm run typecheck passes",
+        "Verify in browser: navigate 3 months ahead, instances auto-generate"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-018",
+      "title": "Filter out parent tasks from main task lists",
+      "description": "As a user, I don't want to see template parent tasks in my regular task lists.",
+      "acceptanceCriteria": [
+        "Update MainLayout.tsx to filter tasks where isRecurringParent !== true",
+        "Calendar view already works (instances have dueDate)",
+        "List view shows only instances and regular tasks",
+        "Parent tasks are hidden from UI but remain in database",
+        "npm run typecheck passes",
+        "Verify in browser: parent tasks don't appear in list"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-019",
+      "title": "Create recurrence constants file",
+      "description": "As a developer, I need constants for recurrence configuration.",
+      "acceptanceCriteria": [
+        "Create src/constants/recurrence.ts",
+        "Export DEFAULT_LOOKAHEAD_DAYS = 90",
+        "Export MAX_RECURRENCE_INSTANCES = 365 (safety limit)",
+        "Export LOOKAHEAD_EXTENSION_THRESHOLD_DAYS = 30",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-020",
+      "title": "End-to-end testing: Daily recurrence",
+      "description": "As a user, I want daily recurring tasks to work correctly.",
+      "acceptanceCriteria": [
+        "Create task 'Daily standup' with Daily recurrence",
+        "Verify 90 instances created in database",
+        "Verify calendar shows instances for next 30 days",
+        "Verify each instance has correct dueDate (consecutive days)",
+        "Verify TaskRow shows RecurrenceBadge with 'Daily'",
+        "Verify calendar items show repeat icon",
+        "Complete one instance, verify others remain incomplete"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-021",
+      "title": "End-to-end testing: Weekly recurrence with day selection",
+      "description": "As a user, I want weekly recurring tasks on specific days to work correctly.",
+      "acceptanceCriteria": [
+        "Create task 'Team sync' with Weekly recurrence on Mon/Wed",
+        "Verify only Monday and Wednesday instances generated",
+        "Verify no instances on Tue/Thu/Fri/Sat/Sun",
+        "Verify calendar shows correct days over 4 weeks",
+        "Verify RecurrenceBadge shows 'Weekly'",
+        "Edit one instance title, verify others unchanged",
+        "Verify edited instance has isCustomized: true"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-022",
+      "title": "End-to-end testing: Monthly recurrence with month boundaries",
+      "description": "As a user, I want monthly recurring tasks to handle month boundaries correctly.",
+      "acceptanceCriteria": [
+        "Create task 'Monthly review' on Jan 31 with Monthly recurrence",
+        "Verify Feb instance falls on Feb 28 (or 29 in leap year)",
+        "Verify Mar instance on Mar 31",
+        "Verify Apr instance on Apr 30 (no 31st)",
+        "Verify calendar shows all instances correctly",
+        "Navigate calendar to future months, verify lookahead extends"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-023",
+      "title": "End-to-end testing: End date stops generation",
+      "description": "As a user, I want recurring tasks to stop generating after the end date.",
+      "acceptanceCriteria": [
+        "Create daily task with endDate = 30 days from now",
+        "Verify exactly 30 instances created (not 90)",
+        "Verify no instances after end date",
+        "Navigate calendar beyond end date, no new instances generated",
+        "RecurrenceBadge shows pattern (doesn't show end date)"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-024",
+      "title": "End-to-end testing: Count limit",
+      "description": "As a user, I want recurring tasks to stop after a specific number of occurrences.",
+      "acceptanceCriteria": [
+        "Create daily task with count = 14",
+        "Verify exactly 14 instances created",
+        "Verify instances span 14 consecutive days",
+        "Complete first 5 instances, verify remaining 9 unchanged",
+        "No new instances generated beyond count"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-025",
+      "title": "Manual accessibility testing",
+      "description": "As a user, I want recurring task features to be accessible.",
+      "acceptanceCriteria": [
+        "Keyboard-only: Tab to Repeat button, Enter to open picker",
+        "Keyboard-only: Select frequency with arrow keys",
+        "Keyboard-only: Toggle day checkboxes with Space",
+        "Keyboard-only: Escape closes picker",
+        "Screen reader announces recurrence pattern on badges",
+        "Test with axe DevTools - no new violations",
+        "RecurrencePicker has proper aria-labels and roles"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "RT-026",
+      "title": "Documentation: Recurring tasks user guide",
+      "description": "As a user, I want documentation explaining how recurring tasks work.",
+      "acceptanceCriteria": [
+        "Add section to README.md explaining recurring tasks feature",
+        "Document frequency options: Daily, Weekly, Monthly",
+        "Explain day-of-week selection for weekly tasks",
+        "Explain end date vs count limit options",
+        "Explain that instances are independent (can be edited/deleted individually)",
+        "Add screenshots showing RecurrencePicker and badges",
+        "Document limitations: 90-day lookahead, no custom intervals in MVP"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}
