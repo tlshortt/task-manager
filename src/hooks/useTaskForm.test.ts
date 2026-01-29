@@ -333,7 +333,8 @@ describe('useTaskForm', () => {
             title: 'Subtask 1',
             completed: false,
           }),
-        ])
+        ]),
+        undefined
       );
     });
 
@@ -352,6 +353,7 @@ describe('useTaskForm', () => {
         'Task without subtasks',
         undefined,
         'medium',
+        undefined,
         undefined,
         undefined,
         undefined

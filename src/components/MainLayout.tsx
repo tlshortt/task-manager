@@ -4,6 +4,7 @@ import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
+import { RecurringTaskGroup } from './RecurringTaskGroup';
 import { ViewModeToggle } from './ViewModeToggle';
 import { CalendarView } from './calendar';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -12,7 +13,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task, Tag, ViewMode, Subtask } from '@/types';
+import type { FilterType, Priority, Task, Tag, ViewMode, Subtask, RecurrencePattern } from '@/types';
 
 const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
 const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
@@ -38,17 +39,60 @@ export function MainLayout() {
     onSearch: () => searchInputRef.current?.focus(),
   });
 
-  // Get filtered tasks
+  // Get filtered tasks (excluding recurring parents)
   const filteredTasks = useMemo(
-    () => tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [],
+    () => {
+      const filtered = tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [];
+      return filtered.filter(task => !task.isRecurringParent);
+    },
     [tasks, filter, debouncedSearchQuery]
   );
+
+  // Separate recurring instances from regular tasks
+  const { regularTasks, recurringGroups } = useMemo(() => {
+    const regular: Task[] = [];
+    const recurringByParent = new Map<number, { frequency: string; tasks: Task[] }>();
+
+    for (const task of filteredTasks) {
+      if (task.recurringParentId) {
+        const parentId = task.recurringParentId;
+        const existing = recurringByParent.get(parentId);
+        if (existing) {
+          existing.tasks.push(task);
+        } else {
+          // Find the parent to get frequency, or use task's recurrence
+          const parentTask = tasks?.find(t => t.id === parentId);
+          const frequency = parentTask?.recurrence?.frequency || 'weekly';
+          recurringByParent.set(parentId, { frequency, tasks: [task] });
+        }
+      } else {
+        regular.push(task);
+      }
+    }
+
+    // Convert to array of groups with labels
+    const groups: { label: string; task: Task; count: number }[] = [];
+    for (const [, { frequency, tasks: recurringTasks }] of recurringByParent) {
+      if (recurringTasks.length > 0) {
+        const label = frequency.charAt(0).toUpperCase() + frequency.slice(1);
+        // Sort by due date, use the first (earliest) as representative
+        const sorted = [...recurringTasks].sort((a, b) => {
+          if (!a.dueDate) return 1;
+          if (!b.dueDate) return -1;
+          return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+        });
+        groups.push({ label, task: sorted[0] as Task, count: sorted.length });
+      }
+    }
+
+    return { regularTasks: regular, recurringGroups: groups };
+  }, [filteredTasks, tasks]);
 
   // Get filter counts
   const counts = tasks ? getFilterCounts(tasks) : { current: 0, overdue: 0, completed: 0 };
 
-  // Group and sort tasks by date
-  const groupedTasks = groupTasksByDate(filteredTasks);
+  // Group and sort regular tasks by date
+  const groupedTasks = groupTasksByDate(regularTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
 
   // Filter tasks with due dates for calendar view
@@ -57,7 +101,7 @@ export function MainLayout() {
     [filteredTasks]
   );
 
-  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string, subtasks?: Subtask[]) => {
+  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => {
     await addTask({
       title,
       description,
@@ -66,6 +110,7 @@ export function MainLayout() {
       dueDate,
       subtasks,
       tags,
+      recurrence,
     });
   }, [addTask]);
 
@@ -119,7 +164,7 @@ export function MainLayout() {
             onUpdate={handleUpdate}
             onDelete={handleDelete}
           />
-        ) : sortedGroups.length === 0 ? (
+        ) : sortedGroups.length === 0 && recurringGroups.length === 0 ? (
           <Suspense fallback={null}>
             <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
           </Suspense>
@@ -151,6 +196,17 @@ export function MainLayout() {
                 />
               );
             })}
+            {recurringGroups.map((group) => (
+              <RecurringTaskGroup
+                key={`recurring-${group.task.recurringParentId}`}
+                label={group.label}
+                count={group.count}
+                task={group.task}
+                onToggle={handleToggle}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+              />
+            ))}
           </main>
         )}
       </div>

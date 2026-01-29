@@ -11,6 +11,11 @@ export function createTodoDatabase() {
     tasks: '++id, completed, priority, dueDate, createdAt',
     tags: '++id, name'
   });
+  // v3: add recurring task indexes
+  db.version(3).stores({
+    tasks: '++id, completed, priority, dueDate, createdAt, recurringParentId, isRecurringParent',
+    tags: '++id, name'
+  });
   return db as Dexie & { tasks: Table<Task>; tags: Table<Tag> };
 }
 

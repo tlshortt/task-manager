@@ -12,8 +12,8 @@ export function AppHeader({ isDark, onToggleDarkMode }: AppHeaderProps) {
 
   return (
     <div className="flex items-center justify-between py-6 mb-2">
-      {/* Left: App title */}
-      <h1 className="text-2xl font-bold text-navy-900 dark:text-white">Tasks</h1>
+      {/* Left spacer */}
+      <div />
 
       {/* Right: Date and dark mode toggle */}
       <div className="flex items-center gap-4">

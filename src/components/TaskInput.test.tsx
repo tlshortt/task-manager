@@ -16,7 +16,7 @@ describe('TaskInput', () => {
     await user.type(input, 'New task');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('New task', undefined, 'medium', undefined, undefined, undefined);
+    expect(onAddTask).toHaveBeenCalledWith('New task', undefined, 'medium', undefined, undefined, undefined, undefined);
     expect(onAddTask).toHaveBeenCalledTimes(1);
   });
 
@@ -115,7 +115,7 @@ describe('TaskInput', () => {
     await user.type(input, '  Task with spaces  ');
     await user.click(plusButton);
 
-    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined, 'medium', undefined, undefined, undefined);
+    expect(onAddTask).toHaveBeenCalledWith('Task with spaces', undefined, 'medium', undefined, undefined, undefined, undefined);
   });
 
   describe('priority picker', () => {
@@ -151,7 +151,7 @@ describe('TaskInput', () => {
       await user.type(input, 'High priority task');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('High priority task', undefined, 'high', undefined, undefined, undefined);
+      expect(onAddTask).toHaveBeenCalledWith('High priority task', undefined, 'high', undefined, undefined, undefined, undefined);
     });
 
     it('submits with low priority when selected', async () => {
@@ -168,7 +168,7 @@ describe('TaskInput', () => {
       await user.type(input, 'Low priority task');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Low priority task', undefined, 'low', undefined, undefined, undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Low priority task', undefined, 'low', undefined, undefined, undefined, undefined);
     });
 
     it('resets priority to medium after submit', async () => {
@@ -240,7 +240,7 @@ describe('TaskInput', () => {
       await user.type(descriptionTextarea, 'This is a note');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Task with description', undefined, 'medium', undefined, 'This is a note', undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Task with description', undefined, 'medium', undefined, 'This is a note', undefined, undefined);
     });
 
     it('submits with undefined description when textarea is empty', async () => {
@@ -257,7 +257,7 @@ describe('TaskInput', () => {
       await user.click(noteButton);
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Task without description', undefined, 'medium', undefined, undefined, undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Task without description', undefined, 'medium', undefined, undefined, undefined, undefined);
     });
 
     it('trims whitespace from description', async () => {
@@ -277,7 +277,7 @@ describe('TaskInput', () => {
       await user.type(descriptionTextarea, '  Note with spaces  ');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Task', undefined, 'medium', undefined, 'Note with spaces', undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Task', undefined, 'medium', undefined, 'Note with spaces', undefined, undefined);
     });
 
     it('clears description after submit', async () => {
@@ -434,7 +434,7 @@ describe('TaskInput', () => {
       await user.type(input, 'Task without subtasks');
       await user.click(plusButton);
 
-      expect(onAddTask).toHaveBeenCalledWith('Task without subtasks', undefined, 'medium', undefined, undefined, undefined);
+      expect(onAddTask).toHaveBeenCalledWith('Task without subtasks', undefined, 'medium', undefined, undefined, undefined, undefined);
     });
 
     it('clears subtasks after submit', async () => {

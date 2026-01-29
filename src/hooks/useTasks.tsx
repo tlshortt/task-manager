@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import toast from 'react-hot-toast';
 import { db } from '@/db';
 import type { Task } from '@/types';
+import { generateRecurrenceInstances, isValidRecurrence } from '@/utils/recurrenceUtils';
 
 interface UseTasksReturn {
   tasks: Task[] | undefined;
@@ -19,13 +20,36 @@ export function useTasks(): UseTasksReturn {
 
   const addTask = async (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
     const now = new Date();
-    const newTask: Omit<Task, 'id'> = {
-      ...task,
-      priority: task.priority || 'medium',
-      createdAt: now,
-      updatedAt: now,
-    };
-    await db.tasks.add(newTask as Task);
+    
+    if (task.recurrence && isValidRecurrence(task.recurrence)) {
+      const parentTask: Omit<Task, 'id'> = {
+        ...task,
+        priority: task.priority || 'medium',
+        createdAt: now,
+        updatedAt: now,
+        isRecurringParent: true,
+      };
+      
+      const parentId = await db.tasks.add(parentTask as Task);
+      
+      const instances = generateRecurrenceInstances(
+        { ...parentTask, id: parentId } as Task,
+        task.dueDate || new Date(),
+        90
+      );
+      
+      if (instances.length > 0) {
+        await db.tasks.bulkAdd(instances as Task[]);
+      }
+    } else {
+      const newTask: Omit<Task, 'id'> = {
+        ...task,
+        priority: task.priority || 'medium',
+        createdAt: now,
+        updatedAt: now,
+      };
+      await db.tasks.add(newTask as Task);
+    }
   };
 
   const updateTask = async (id: number, updates: Partial<Task>) => {

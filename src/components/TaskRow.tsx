@@ -1,13 +1,16 @@
 import { useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import type { Task, Subtask } from '@/types';
 import Check from 'lucide-react/dist/esm/icons/check';
 import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
 import { format } from 'date-fns';
+import { db } from '@/db';
 import { TagBadge } from './TagBadge';
 import { SubtaskList } from './SubtaskList';
 import { EditableText } from './EditableText';
+import { RecurrenceBadge } from './RecurrenceBadge';
 
 interface TaskRowProps {
   task: Task;
@@ -35,6 +38,12 @@ function formatCreatedDate(date: Date): string {
 
 export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const parentTask = useLiveQuery(
+    () => task.recurringParentId ? db.tasks.get(task.recurringParentId) : undefined,
+    [task.recurringParentId]
+  );
+  const isRecurringInstance = !!task.recurringParentId;
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
   const hasTags = task.tags && task.tags.length > 0;
@@ -120,6 +129,9 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
                     />
                   ))}
                 </div>
+              )}
+              {isRecurringInstance && parentTask?.recurrence && (
+                <RecurrenceBadge pattern={parentTask.recurrence} size="sm" />
               )}
             </div>
 

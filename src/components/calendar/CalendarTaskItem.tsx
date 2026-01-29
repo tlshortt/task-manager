@@ -1,3 +1,4 @@
+import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import type { Task, Priority } from '@/types';
 
 interface CalendarTaskItemProps {
@@ -16,6 +17,8 @@ function getPriorityColor(priority: Priority): string {
 }
 
 export function CalendarTaskItem({ task }: CalendarTaskItemProps) {
+  const isRecurringInstance = !!task.recurringParentId;
+
   return (
     <div
       className={`
@@ -24,6 +27,9 @@ export function CalendarTaskItem({ task }: CalendarTaskItemProps) {
       `}
     >
       <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getPriorityColor(task.priority)}`} />
+      {isRecurringInstance && (
+        <Repeat className="w-3 h-3 opacity-60 flex-shrink-0" />
+      )}
       <span className="truncate">{task.title}</span>
     </div>
   );

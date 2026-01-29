@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import type { Priority, Tag, Subtask } from '@/types';
+import type { Priority, Tag, Subtask, RecurrencePattern } from '@/types';
 
 const MAX_SUBTASKS = 10;
 
 interface UseTaskFormProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[]) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
 }
 
 export function useTaskForm({ onAddTask }: UseTaskFormProps) {
@@ -20,6 +20,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
+  const [recurrence, setRecurrence] = useState<RecurrencePattern | undefined>(undefined);
+  const [showRecurrencePicker, setShowRecurrencePicker] = useState(false);
 
   const resetForm = () => {
     setTitle('');
@@ -34,6 +36,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
     setSubtasks([]);
     setShowSubtasks(false);
     setNewSubtaskTitle('');
+    setRecurrence(undefined);
+    setShowRecurrencePicker(false);
   };
 
   const addSubtask = () => {
@@ -60,7 +64,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
         priority,
         tags.length > 0 ? tags : undefined,
         description.trim() || undefined,
-        subtasks.length > 0 ? subtasks : undefined
+        subtasks.length > 0 ? subtasks : undefined,
+        recurrence
       );
       resetForm();
     }
@@ -91,6 +96,10 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
     }
   };
 
+  const handleRecurrenceChange = (pattern?: RecurrencePattern) => {
+    setRecurrence(pattern);
+  };
+
   return {
     formState: {
       title,
@@ -105,6 +114,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
       subtasks,
       showSubtasks,
       newSubtaskTitle,
+      recurrence,
+      showRecurrencePicker,
     },
     setters: {
       setTitle,
@@ -116,6 +127,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
       setNewTagName,
       setShowSubtasks,
       setNewSubtaskTitle,
+      setRecurrence,
+      setShowRecurrencePicker,
     },
     actions: {
       handleSubmit,
@@ -125,7 +138,8 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
       removeSubtask,
       handleDateChange,
       handleEscape,
-      resetForm
+      resetForm,
+      handleRecurrenceChange,
     }
   };
 }

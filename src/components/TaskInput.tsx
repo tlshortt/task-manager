@@ -4,15 +4,17 @@ import Calendar from 'lucide-react/dist/esm/icons/calendar';
 import TagIcon from 'lucide-react/dist/esm/icons/tag';
 import FileText from 'lucide-react/dist/esm/icons/file-text';
 import ListTodo from 'lucide-react/dist/esm/icons/list-todo';
+import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import X from 'lucide-react/dist/esm/icons/x';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import type { Priority, Tag, Subtask } from '@/types';
+import type { Priority, Tag, Subtask, RecurrencePattern } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
+import { RecurrencePicker } from './RecurrencePicker';
 import { useTaskForm } from '@/hooks/useTaskForm';
 
 interface TaskInputProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[]) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
 }
 
 export interface TaskInputHandle {
@@ -29,11 +31,13 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       showTagPicker,
       showDescription,
       showSubtasks,
+      showRecurrencePicker,
       priority,
       tags,
       newTagName,
       subtasks,
       newSubtaskTitle,
+      recurrence,
     },
     setters: {
       setTitle,
@@ -42,6 +46,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       setShowTagPicker,
       setShowDescription,
       setShowSubtasks,
+      setShowRecurrencePicker,
       setPriority,
       setNewTagName,
       setNewSubtaskTitle,
@@ -53,6 +58,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       addSubtask,
       removeSubtask,
       handleDateChange,
+      handleRecurrenceChange,
       handleEscape,
     }
   } = useTaskForm({ onAddTask });
@@ -119,6 +125,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowDatePicker(false);
             setShowDescription(false);
             setShowSubtasks(false);
+            setShowRecurrencePicker(false);
           }}
           aria-label={showTagPicker ? 'Hide tag picker' : 'Add tags'}
           aria-expanded={showTagPicker}
@@ -135,6 +142,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowTagPicker(false);
             setShowDescription(false);
             setShowSubtasks(false);
+            setShowRecurrencePicker(false);
           }}
           aria-label={showDatePicker ? 'Hide deadline picker' : 'Show deadline picker'}
           aria-expanded={showDatePicker}
@@ -151,6 +159,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowDatePicker(false);
             setShowTagPicker(false);
             setShowSubtasks(false);
+            setShowRecurrencePicker(false);
           }}
           aria-label={showDescription ? 'Hide note' : 'Add note'}
           aria-expanded={showDescription}
@@ -167,6 +176,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowDatePicker(false);
             setShowTagPicker(false);
             setShowDescription(false);
+            setShowRecurrencePicker(false);
           }}
           aria-label={showSubtasks ? 'Hide subtasks' : 'Add subtasks'}
           aria-expanded={showSubtasks}
@@ -174,6 +184,23 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
         >
           <ListTodo className="w-4 h-4" />
           <span className="hidden sm:inline">Subtasks</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setShowRecurrencePicker(!showRecurrencePicker);
+            setShowDatePicker(false);
+            setShowTagPicker(false);
+            setShowDescription(false);
+            setShowSubtasks(false);
+          }}
+          aria-label={showRecurrencePicker ? 'Hide recurrence' : 'Set recurrence'}
+          aria-expanded={showRecurrencePicker}
+          className={`flex items-center gap-1.5 text-sm ${recurrence ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 dark:text-gray-400'} hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]`}
+        >
+          <Repeat className="w-4 h-4" />
+          <span className="hidden sm:inline">Repeat</span>
         </button>
       </form>
 
@@ -300,6 +327,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             </div>
           )}
           <p className="text-xs text-gray-400 mt-2">Press Enter or click + to add a subtask (max 10)</p>
+        </div>
+      )}
+
+      {showRecurrencePicker && (
+        <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+          <RecurrencePicker
+            value={recurrence}
+            onChange={handleRecurrenceChange}
+            onClose={() => setShowRecurrencePicker(false)}
+          />
         </div>
       )}
 
