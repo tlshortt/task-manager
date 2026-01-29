@@ -1,11 +1,3 @@
-1. Go back through git history, grab all of the old PRDs,and consolidate them with the current PRD.Maybe iterate your way through this using Opus.Finally, to create one prd file.Keep @progress.txt   the way it is.And then run Ralphie on it in parallel.
-
-
-
-
-
-
-
 {
   "projectName": "Subtasks Enhancement",
   "branchName": "feature/subtasks-enhancement",
