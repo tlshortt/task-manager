@@ -1,0 +1,58 @@
+{
+  "projectName": "Convex Migration Phase 2 - Schema",
+  "branchName": "feature/convex-schema",
+  "description": "Define Convex schema matching current Task/Tag TypeScript types. Create schema file with tables, validators, and indexes. Add automated tests for schema validation.",
+  "created": "2026-01-29",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Create Convex Schema File",
+      "description": "As an AI agent, I need to create the Convex schema file so the database structure matches our TypeScript types.",
+      "acceptanceCriteria": [
+        "Create convex/schema.ts with defineSchema and defineTable imports",
+        "Define tags table with name (v.string()) and color (v.string())",
+        "Define tasks table with title (v.string()), completed (v.boolean()), priority union",
+        "Priority uses v.union with literals: 'low', 'medium', 'high'",
+        "Add optional fields: description, dueDateMs, subtasks, tagIds, recurrence fields",
+        "Subtasks defined as v.optional(v.array(v.object({...}))) with id, title, completed, priority, dueDateMs",
+        "Recurrence object with frequency union (daily/weekly/monthly/yearly), interval, daysOfWeek, dayOfMonth, endDateMs, count",
+        "Add createdAtMs and updatedAtMs as v.number()",
+        "tagIds uses v.optional(v.array(v.id('tags')))",
+        "Add recurring task fields: isRecurringParent, recurringParentId, instanceDateMs, isCustomized",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-002",
+      "title": "Add Database Indexes",
+      "description": "As an AI agent, I need to add indexes for efficient querying of common access patterns.",
+      "acceptanceCriteria": [
+        "tags table has index by_name on ['name']",
+        "tasks table has index by_completed on ['completed']",
+        "tasks table has index by_dueDateMs on ['dueDateMs']",
+        "tasks table has index by_recurringParentId on ['recurringParentId']",
+        "tasks table has index by_isRecurringParent on ['isRecurringParent']",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-003",
+      "title": "Add Schema Validation Tests",
+      "description": "As an AI agent, I need automated tests to validate the schema structure is correct.",
+      "acceptanceCriteria": [
+        "Create convex/schema.test.ts",
+        "Test that schema exports default defineSchema result",
+        "Test that tasks and tags tables are defined",
+        "Test that required indexes exist on tasks table",
+        "Test that index exists on tags table",
+        "npm run test passes"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}
