@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import type { Priority, Tag, Subtask, RecurrencePattern } from '@/types';
+import type { Priority, Tag, Subtask, RecurrencePattern, Id } from '@/types';
+
+// Note: Tag is still used for internal form state management
 
 const MAX_SUBTASKS = 10;
 
 interface UseTaskFormProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
 }
 
 export function useTaskForm({ onAddTask }: UseTaskFormProps) {
@@ -62,7 +64,7 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
         title.trim(),
         dueDate,
         priority,
-        tags.length > 0 ? tags : undefined,
+        tags.length > 0 ? tags.map(t => t.id as Id<'tags'>) : undefined,
         description.trim() || undefined,
         subtasks.length > 0 ? subtasks : undefined,
         recurrence

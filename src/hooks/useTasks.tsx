@@ -1,69 +1,78 @@
-import { useLiveQuery } from 'dexie-react-hooks';
+import { useQuery, useMutation } from 'convex/react';
 import toast from 'react-hot-toast';
-import { db } from '@/db';
-import type { Task } from '@/types';
-import { generateRecurrenceInstances, isValidRecurrence } from '@/utils/recurrenceUtils';
+import { api } from '../../convex/_generated/api';
+import type { Task, Id } from '@/types';
+import { mapTaskDocToTask, mapTaskToArgs } from '@/utils/convexMappers';
+import { isValidRecurrence } from '@/utils/recurrenceUtils';
 
 interface UseTasksReturn {
   tasks: Task[] | undefined;
   isLoading: boolean;
   addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
-  updateTask: (id: number, updates: Partial<Task>) => Promise<void>;
-  deleteTask: (id: number) => Promise<void>;
-  toggleComplete: (id: number) => Promise<void>;
+  updateTask: (id: Id<'tasks'>, updates: Partial<Task>) => Promise<void>;
+  deleteTask: (id: Id<'tasks'>) => Promise<void>;
+  toggleComplete: (id: Id<'tasks'>) => Promise<void>;
 }
 
 export function useTasks(): UseTasksReturn {
-  // Load tasks reactively with useLiveQuery
-  const tasks = useLiveQuery(() => db.tasks.toArray());
+  // Load tasks reactively with Convex useQuery
+  const taskDocs = useQuery(api.tasks.list);
+  const tasks = taskDocs?.map(mapTaskDocToTask);
   const isLoading = tasks === undefined;
 
+  // Convex mutations
+  const createMutation = useMutation(api.tasks.create);
+  const updateMutation = useMutation(api.tasks.update);
+  const removeMutation = useMutation(api.tasks.remove);
+  const toggleMutation = useMutation(api.tasks.toggleComplete);
+  const generateInstancesMutation = useMutation(api.tasks.generateInstances);
+
   const addTask = async (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const now = new Date();
-    
+    const taskArgs = mapTaskToArgs(task);
+
     if (task.recurrence && isValidRecurrence(task.recurrence)) {
-      const parentTask: Omit<Task, 'id'> = {
-        ...task,
-        priority: task.priority || 'medium',
-        createdAt: now,
-        updatedAt: now,
-        isRecurringParent: true,
-      };
-      
-      const parentId = await db.tasks.add(parentTask as Task);
-      
-      const instances = generateRecurrenceInstances(
-        { ...parentTask, id: parentId } as Task,
-        task.dueDate || new Date(),
-        90
-      );
-      
-      if (instances.length > 0) {
-        await db.tasks.bulkAdd(instances as Task[]);
-      }
+      // Create recurring parent task
+      const parentId = await createMutation(taskArgs);
+
+      // Generate instances
+      await generateInstancesMutation({
+        parentId,
+        lookaheadDays: 90,
+      });
     } else {
-      const newTask: Omit<Task, 'id'> = {
-        ...task,
-        priority: task.priority || 'medium',
-        createdAt: now,
-        updatedAt: now,
-      };
-      await db.tasks.add(newTask as Task);
+      // Create regular task
+      await createMutation(taskArgs);
     }
   };
 
-  const updateTask = async (id: number, updates: Partial<Task>) => {
-    await db.tasks.update(id, {
-      ...updates,
-      updatedAt: new Date(),
-    });
+  const updateTask = async (id: Id<'tasks'>, updates: Partial<Task>) => {
+    // Extract only the fields that can be updated
+    const updateArgs: any = { id };
+
+    if (updates.title !== undefined) updateArgs.title = updates.title;
+    if (updates.description !== undefined) updateArgs.description = updates.description;
+    if (updates.completed !== undefined) updateArgs.completed = updates.completed;
+    if (updates.priority !== undefined) updateArgs.priority = updates.priority;
+    if (updates.dueDate !== undefined) {
+      updateArgs.dueDateMs = updates.dueDate ? updates.dueDate.getTime() : undefined;
+    }
+    if (updates.subtasks !== undefined) {
+      updateArgs.subtasks = updates.subtasks?.map((st: import('@/types').Subtask) => ({
+        id: st.id,
+        title: st.title,
+        completed: st.completed,
+        priority: st.priority,
+        dueDateMs: st.dueDate ? st.dueDate.getTime() : undefined,
+      }));
+    }
+    if (updates.tagIds !== undefined) updateArgs.tagIds = updates.tagIds;
+    if (updates.isCustomized !== undefined) updateArgs.isCustomized = updates.isCustomized;
+
+    await updateMutation(updateArgs);
   };
 
-  const deleteTask = async (id: number) => {
-    const task = await db.tasks.get(id);
-    if (!task) return;
-
-    await db.tasks.delete(id);
+  const deleteTask = async (id: Id<'tasks'>) => {
+    const deletedTask = await removeMutation({ id });
 
     toast(
       (t) => (
@@ -71,7 +80,24 @@ export function useTasks(): UseTasksReturn {
           <span>Task deleted</span>
           <button
             onClick={async () => {
-              await db.tasks.add(task);
+              // Restore the deleted task
+              const restoreArgs = mapTaskToArgs({
+                title: deletedTask.title,
+                description: deletedTask.description,
+                completed: deletedTask.completed,
+                priority: deletedTask.priority,
+                dueDate: deletedTask.dueDateMs ? new Date(deletedTask.dueDateMs) : undefined,
+                subtasks: deletedTask.subtasks?.map((st: any) => ({
+                  id: st.id,
+                  title: st.title,
+                  completed: st.completed,
+                  priority: st.priority,
+                  dueDate: st.dueDateMs ? new Date(st.dueDateMs) : undefined,
+                })),
+                tagIds: deletedTask.tagIds,
+                recurrence: deletedTask.recurrence,
+              });
+              await createMutation(restoreArgs);
               toast.dismiss(t.id);
             }}
             style={{
@@ -90,27 +116,18 @@ export function useTasks(): UseTasksReturn {
     );
   };
 
-  const toggleComplete = async (id: number) => {
-    const task = await db.tasks.get(id);
-    if (!task) return;
+  const toggleComplete = async (id: Id<'tasks'>) => {
+    const oldCompleted = await toggleMutation({ id });
 
-    const newCompleted = !task.completed;
-    await db.tasks.update(id, {
-      completed: newCompleted,
-      updatedAt: new Date(),
-    });
-
-    const message = newCompleted ? 'Task completed' : 'Task reopened';
+    const message = !oldCompleted ? 'Task completed' : 'Task reopened';
     toast(
       (t) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <span>{message}</span>
           <button
             onClick={async () => {
-              await db.tasks.update(id, {
-                completed: task.completed,
-                updatedAt: new Date(),
-              });
+              // Toggle back to previous state
+              await toggleMutation({ id });
               toast.dismiss(t.id);
             }}
             style={{

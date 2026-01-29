@@ -6,7 +6,7 @@ import type { CalendarDay as CalendarDayType } from '@/utils/calendarUtils';
 import { CalendarHeader } from './CalendarHeader';
 import { CalendarDay } from './CalendarDay';
 import { DayTasksModal } from './DayTasksModal';
-import { extendLookaheadWindow } from '@/hooks/useRecurringTasks';
+import { useRecurringTasks } from '@/hooks/useRecurringTasks';
 
 const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -20,6 +20,7 @@ interface CalendarViewProps {
 export function CalendarView({ tasks, onToggle, onUpdate, onDelete }: CalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const { extendLookaheadWindow } = useRecurringTasks();
 
   const handlePrevMonth = () => {
     setCurrentMonth((prev) => subMonths(prev, 1));
@@ -36,7 +37,7 @@ export function CalendarView({ tasks, onToggle, onUpdate, onDelete }: CalendarVi
   // Extend lookahead window when navigating to future months
   useEffect(() => {
     extendLookaheadWindow().catch(console.error);
-  }, [currentMonth]);
+  }, [currentMonth, extendLookaheadWindow]);
 
   const calendarDays = useMemo(
     () => generateCalendarDays(currentMonth, tasks),

@@ -13,7 +13,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task, Tag, ViewMode, Subtask, RecurrencePattern } from '@/types';
+import type { FilterType, Priority, Task, ViewMode, Subtask, RecurrencePattern, Id } from '@/types';
 
 const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
 const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
@@ -51,7 +51,7 @@ export function MainLayout() {
   // Separate recurring instances from regular tasks
   const { regularTasks, recurringGroups } = useMemo(() => {
     const regular: Task[] = [];
-    const recurringByParent = new Map<number, { frequency: string; tasks: Task[] }>();
+    const recurringByParent = new Map<Id<'tasks'>, { frequency: string; tasks: Task[] }>();
 
     for (const task of filteredTasks) {
       if (task.recurringParentId) {
@@ -101,7 +101,7 @@ export function MainLayout() {
     [filteredTasks]
   );
 
-  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => {
+  const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => {
     await addTask({
       title,
       description,
@@ -109,7 +109,7 @@ export function MainLayout() {
       priority,
       dueDate,
       subtasks,
-      tags,
+      tagIds,
       recurrence,
     });
   }, [addTask]);

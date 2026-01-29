@@ -1,6 +1,10 @@
 /**
  * Type definitions for the application
  */
+import type { GenericId } from 'convex/values';
+
+// Type alias for Convex ID
+export type Id<T extends string> = GenericId<T>;
 
 export type Priority = 'low' | 'medium' | 'high';
 
@@ -32,18 +36,18 @@ export interface RecurrencePattern {
 }
 
 export interface Task {
-  id?: number;
+  id?: Id<'tasks'>;
   title: string;
   description?: string;
   completed: boolean;
   priority: Priority;
   dueDate?: Date;
   subtasks?: Subtask[];
-  tags?: Tag[];
+  tagIds?: Id<'tags'>[];
   createdAt: Date;
   updatedAt: Date;
   isRecurringParent?: boolean;
-  recurringParentId?: number;
+  recurringParentId?: Id<'tasks'>;
   recurrence?: RecurrencePattern;
   instanceDate?: Date;
   isCustomized?: boolean;

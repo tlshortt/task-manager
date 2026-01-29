@@ -154,7 +154,7 @@ export function generateRecurrenceInstances(
       priority: parentTask.priority,
       dueDate: currentDate,
       subtasks: parentTask.subtasks,
-      tags: parentTask.tags,
+      tagIds: parentTask.tagIds,
       createdAt: new Date(),
       updatedAt: new Date(),
       recurringParentId: parentTask.id,

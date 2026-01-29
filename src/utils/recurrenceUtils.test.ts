@@ -360,7 +360,7 @@ describe('recurrenceUtils', () => {
         title: 'Daily Task',
         description: 'Task description',
         priority: 'high',
-        tags: [{ id: '1', name: 'work', color: 'blue' }],
+        tagIds: ['tag1' as any],
         recurrence: { frequency: 'daily', interval: 1 },
       };
       const instances = generateRecurrenceInstances(task, new Date('2026-01-15T00:00:00'), 7);
@@ -368,7 +368,7 @@ describe('recurrenceUtils', () => {
         expect(instance.title).toBe('Daily Task');
         expect(instance.description).toBe('Task description');
         expect(instance.priority).toBe('high');
-        expect(instance.tags).toEqual(task.tags);
+        expect(instance.tagIds).toEqual(task.tagIds);
       });
     });
 

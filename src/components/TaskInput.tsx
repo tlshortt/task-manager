@@ -8,13 +8,15 @@ import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import X from 'lucide-react/dist/esm/icons/x';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import type { Priority, Tag, Subtask, RecurrencePattern } from '@/types';
+import type { Priority, Tag, Subtask, RecurrencePattern, Id } from '@/types';
+
+// Note: Tag is still used for internal form state management
 import { TagBadge, TAG_COLORS } from './TagBadge';
 import { RecurrencePicker } from './RecurrencePicker';
 import { useTaskForm } from '@/hooks/useTaskForm';
 
 interface TaskInputProps {
-  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tags?: Tag[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
+  onAddTask: (title: string, dueDate?: Date, priority?: Priority, tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
 }
 
 export interface TaskInputHandle {

@@ -1,97 +1,85 @@
-import { db } from '@/db';
-import type { Task } from '@/types';
-import { generateRecurrenceInstances, needsLookaheadExtension } from '@/utils/recurrenceUtils';
-import { DEFAULT_LOOKAHEAD_DAYS } from '@/constants/recurrence';
+import { useMutation, useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
+import type { Task, Id } from '@/types';
+import { mapTaskDocToTask } from '@/utils/convexMappers';
 
-export async function generateInstancesForParent(parentId: number): Promise<number> {
-  const parent = await db.tasks.get(parentId);
-  if (!parent?.recurrence || !parent.isRecurringParent) {
-    return 0;
-  }
+export function useRecurringTasks() {
+  // Convex mutations
+  const deleteSeriesMutation = useMutation(api.tasks.deleteSeries);
+  const updateSeriesMutation = useMutation(api.tasks.updateSeries);
+  const generateInstancesMutation = useMutation(api.tasks.generateInstances);
 
-  // Get existing instances to find the latest date
-  const existingInstances = await db.tasks
-    .where('recurringParentId')
-    .equals(parentId)
-    .toArray();
+  // Query for tasks to check lookahead window
+  const taskDocs = useQuery(api.tasks.list);
+  const tasks = taskDocs?.map(mapTaskDocToTask);
 
-  // Find the latest instance date to continue from
-  let startDate = new Date();
-  if (existingInstances.length > 0) {
-    const latestInstance = existingInstances.reduce((latest, inst) => {
-      if (!inst.instanceDate) return latest;
-      return inst.instanceDate > latest ? inst.instanceDate : latest;
-    }, existingInstances[0]?.instanceDate ?? new Date());
-    startDate = latestInstance;
-  }
+  const deleteRecurringSeries = async (parentId: Id<'tasks'>): Promise<void> => {
+    await deleteSeriesMutation({ parentId });
+  };
 
-  const newInstances = generateRecurrenceInstances(parent, startDate, DEFAULT_LOOKAHEAD_DAYS);
-  
-  if (newInstances.length > 0) {
-    await db.tasks.bulkAdd(newInstances as Task[]);
-  }
-  
-  return newInstances.length;
-}
+  const updateRecurringSeries = async (
+    parentId: Id<'tasks'>,
+    updates: Partial<Task>
+  ): Promise<void> => {
+    // Extract only the fields that can be updated in a series
+    const seriesUpdates: any = {};
 
-export async function extendLookaheadWindow(): Promise<void> {
-  // Filter for recurring parents - query all and filter in memory
-  // since indexed boolean behavior varies
-  const allTasks = await db.tasks.toArray();
-  const parents = allTasks.filter(t => t.isRecurringParent === true);
-
-  for (const parent of parents) {
-    if (!parent.id) continue;
-    
-    const instances = await db.tasks
-      .where('recurringParentId')
-      .equals(parent.id)
-      .toArray();
-    
-    if (needsLookaheadExtension(instances, new Date(), DEFAULT_LOOKAHEAD_DAYS)) {
-      await generateInstancesForParent(parent.id);
+    if (updates.title !== undefined) seriesUpdates.title = updates.title;
+    if (updates.description !== undefined) seriesUpdates.description = updates.description;
+    if (updates.priority !== undefined) seriesUpdates.priority = updates.priority;
+    if (updates.subtasks !== undefined) {
+      seriesUpdates.subtasks = updates.subtasks?.map((st) => ({
+        id: st.id,
+        title: st.title,
+        completed: st.completed,
+        priority: st.priority,
+        dueDateMs: st.dueDate ? st.dueDate.getTime() : undefined,
+      }));
     }
-  }
-}
+    if (updates.tagIds !== undefined) seriesUpdates.tagIds = updates.tagIds;
 
-export async function deleteRecurringSeries(parentId: number): Promise<void> {
-  // Delete all instances
-  await db.tasks
-    .where('recurringParentId')
-    .equals(parentId)
-    .delete();
-  
-  // Delete parent
-  await db.tasks.delete(parentId);
-}
+    await updateSeriesMutation({
+      parentId,
+      updates: seriesUpdates,
+    });
+  };
 
-export async function updateRecurringSeries(
-  parentId: number, 
-  updates: Partial<Task>
-): Promise<void> {
-  // Update parent
-  await db.tasks.update(parentId, {
-    ...updates,
-    updatedAt: new Date(),
-  });
+  const extendLookaheadWindow = async (): Promise<void> => {
+    if (!tasks) return;
 
-  // Update future non-customized instances
-  const now = new Date();
-  const instances = await db.tasks
-    .where('recurringParentId')
-    .equals(parentId)
-    .toArray();
+    // Find all recurring parent tasks
+    const parents = tasks.filter((t: Task) => t.isRecurringParent === true);
 
-  const futureInstances = instances.filter(
-    (inst) => inst.instanceDate && inst.instanceDate >= now && !inst.isCustomized
-  );
+    for (const parent of parents) {
+      if (!parent.id) continue;
 
-  for (const instance of futureInstances) {
-    if (instance.id) {
-      await db.tasks.update(instance.id, {
-        ...updates,
-        updatedAt: new Date(),
-      });
+      // Get instances for this parent
+      const instances = tasks.filter((t: Task) => t.recurringParentId === parent.id);
+
+      // Check if lookahead extension is needed
+      const lookaheadDays = 90;
+      const now = new Date();
+      const lookaheadDate = new Date(now.getTime() + lookaheadDays * 24 * 60 * 60 * 1000);
+
+      // Find the latest instance date
+      const latestInstance = instances.reduce((latest: Date, inst: Task) => {
+        if (!inst.instanceDate) return latest;
+        return inst.instanceDate > latest ? inst.instanceDate : latest;
+      }, instances[0]?.instanceDate ?? now);
+
+      // If latest instance is within 30 days of lookahead window, extend it
+      if (latestInstance < new Date(lookaheadDate.getTime() - 30 * 24 * 60 * 60 * 1000)) {
+        await generateInstancesMutation({
+          parentId: parent.id,
+          lookaheadDays,
+        });
+      }
     }
-  }
+  };
+
+  return {
+    deleteRecurringSeries,
+    updateRecurringSeries,
+    extendLookaheadWindow,
+  };
 }
