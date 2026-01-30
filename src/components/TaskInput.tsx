@@ -12,6 +12,7 @@ import type { Priority, Subtask, RecurrencePattern, Id } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
 import { RecurrencePicker } from './RecurrencePicker';
 import { useTaskForm } from '@/hooks/useTaskForm';
+import { useTags } from '@/hooks/useTags';
 
 interface TaskInputProps {
   onAddTask: (title: string, dueDate?: Date, priority?: Priority, tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
@@ -22,6 +23,7 @@ export interface TaskInputHandle {
 }
 
 export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function TaskInput({ onAddTask }, ref) {
+  const { createTag } = useTags();
   const {
     formState: {
       title,
@@ -61,7 +63,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       handleRecurrenceChange,
       handleEscape,
     }
-  } = useTaskForm({ onAddTask });
+  } = useTaskForm({ onAddTask, onCreateTag: createTag });
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -238,7 +240,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
-                  if (newTagName.trim()) addTag('blue');
+                  if (newTagName.trim()) void addTag('blue');
                 }
                 handleEscape(e);
               }}
@@ -250,7 +252,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
                 <button
                   key={color}
                   type="button"
-                  onClick={() => addTag(color)}
+                  onClick={() => void addTag(color)}
                   disabled={!newTagName.trim()}
                   className={`w-6 h-6 rounded-full bg-${color}-500 hover:scale-110 transition-transform disabled:opacity-30 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500`}
                   aria-label={`Add ${color} tag`}

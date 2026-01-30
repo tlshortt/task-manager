@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import type { Task, Subtask } from '@/types';
+import type { Task, Subtask, Tag } from '@/types';
 import Check from 'lucide-react/dist/esm/icons/check';
 import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
 import { format } from 'date-fns';
 import { db } from '@/db';
-// import { TagBadge } from './TagBadge'; // TODO: Re-enable when tag display is implemented with Convex
+import { TagBadge } from './TagBadge';
 import { SubtaskList } from './SubtaskList';
 import { EditableText } from './EditableText';
 import { RecurrenceBadge } from './RecurrenceBadge';
@@ -17,6 +17,7 @@ interface TaskRowProps {
   onToggle: (task: Task) => void;
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
+  tagsById?: Record<string, Tag>;
 }
 
 const PRIORITIES: Task['priority'][] = ['low', 'medium', 'high'];
@@ -36,7 +37,7 @@ function formatCreatedDate(date: Date): string {
   return format(date, 'MMM d, h:mm a');
 }
 
-export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
+export function TaskRow({ task, onToggle, onUpdate, onDelete, tagsById }: TaskRowProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const parentTask = useLiveQuery(
@@ -46,7 +47,10 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
   const isRecurringInstance = !!task.recurringParentId;
 
   const hasSubtasks = task.subtasks && task.subtasks.length > 0;
-  const hasTags = task.tagIds && task.tagIds.length > 0;
+  const tags = task.tagIds
+    ?.map((tagId) => tagsById?.[tagId])
+    .filter((tag): tag is Tag => Boolean(tag)) ?? [];
+  const hasTags = tags.length > 0;
 
   const handleSubtasksUpdate = (subtasks: Subtask[]) => {
     onUpdate({ ...task, subtasks });
@@ -119,13 +123,11 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete }: TaskRowProps) {
                 inputClassName="text-sm flex-1 min-w-0 px-2 py-1 border border-purple-500 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 text-gray-900 dark:text-white dark:bg-gray-700"
                 ariaLabel="Edit task title"
               />
-              {/* Tags - TODO: Implement tag display with Convex query */}
+              {/* Tags */}
               {hasTags && (
                 <div className="flex items-center gap-1 flex-wrap">
-                  {task.tagIds!.map((tagId) => (
-                    <span key={tagId} className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
-                      Tag: {tagId}
-                    </span>
+                  {tags.map((tag) => (
+                    <TagBadge key={tag.id} tag={tag} />
                   ))}
                 </div>
               )}

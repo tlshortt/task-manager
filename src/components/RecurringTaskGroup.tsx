@@ -11,6 +11,7 @@ interface RecurringTaskGroupProps {
   onToggle: (task: Task) => void;
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
+  tagsById?: Record<string, import('@/types').Tag>;
 }
 
 export function RecurringTaskGroup({
@@ -20,6 +21,7 @@ export function RecurringTaskGroup({
   onToggle,
   onUpdate,
   onDelete,
+  tagsById,
 }: RecurringTaskGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -50,6 +52,7 @@ export function RecurringTaskGroup({
             onToggle={onToggle}
             onUpdate={onUpdate}
             onDelete={onDelete}
+            tagsById={tagsById}
           />
         </div>
       )}

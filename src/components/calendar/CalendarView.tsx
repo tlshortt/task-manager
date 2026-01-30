@@ -15,9 +15,10 @@ interface CalendarViewProps {
   onToggle: (task: Task) => void;
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
+  tagsById?: Record<string, import('@/types').Tag>;
 }
 
-export function CalendarView({ tasks, onToggle, onUpdate, onDelete }: CalendarViewProps) {
+export function CalendarView({ tasks, onToggle, onUpdate, onDelete, tagsById }: CalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState(() => startOfMonth(new Date()));
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const { extendLookaheadWindow } = useRecurringTasks();
@@ -95,6 +96,7 @@ export function CalendarView({ tasks, onToggle, onUpdate, onDelete }: CalendarVi
           onToggle={onToggle}
           onUpdate={onUpdate}
           onDelete={onDelete}
+          tagsById={tagsById}
         />
       )}
     </div>

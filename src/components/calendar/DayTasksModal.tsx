@@ -12,6 +12,7 @@ interface DayTasksModalProps {
   onToggle: (task: Task) => void;
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
+  tagsById?: Record<string, import('@/types').Tag>;
 }
 
 export function DayTasksModal({
@@ -22,6 +23,7 @@ export function DayTasksModal({
   onToggle,
   onUpdate,
   onDelete,
+  tagsById,
 }: DayTasksModalProps) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -79,6 +81,7 @@ export function DayTasksModal({
                   onToggle={onToggle}
                   onUpdate={onUpdate}
                   onDelete={onDelete}
+                  tagsById={tagsById}
                 />
               ))}
             </div>

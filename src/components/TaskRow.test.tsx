@@ -32,6 +32,31 @@ describe('TaskRow', () => {
     expect(screen.getByText('Test Task')).toBeInTheDocument();
   });
 
+  it('renders tags when tag data is available', () => {
+    const onToggle = vi.fn();
+    const onUpdate = vi.fn();
+    const onDelete = vi.fn();
+
+    const taskWithTags: Task = {
+      ...mockTask,
+      tagIds: [testId('tag-1')],
+    };
+
+    render(
+      <TaskRow
+        task={taskWithTags}
+        onToggle={onToggle}
+        onUpdate={onUpdate}
+        onDelete={onDelete}
+        tagsById={{
+          'tag-1': { id: 'tag-1', name: 'Work', color: 'blue' },
+        }}
+      />
+    );
+
+    expect(screen.getByText('Work')).toBeInTheDocument();
+  });
+
   it('calls onToggle when check button is clicked', async () => {
     const user = userEvent.setup();
     const onToggle = vi.fn();

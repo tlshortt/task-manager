@@ -7,9 +7,10 @@ const MAX_SUBTASKS = 10;
 
 interface UseTaskFormProps {
   onAddTask: (title: string, dueDate?: Date, priority?: Priority, tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
+  onCreateTag?: (name: string, color: string) => Promise<Id<'tags'>>;
 }
 
-export function useTaskForm({ onAddTask }: UseTaskFormProps) {
+export function useTaskForm({ onAddTask, onCreateTag }: UseTaskFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState<Date | undefined>(undefined);
@@ -73,11 +74,15 @@ export function useTaskForm({ onAddTask }: UseTaskFormProps) {
     }
   };
 
-  const addTag = (color: string) => {
+  const addTag = async (color: string) => {
     if (!newTagName.trim()) return;
+    const name = newTagName.trim();
+    const tagId = onCreateTag
+      ? await onCreateTag(name, color)
+      : (crypto.randomUUID() as Id<'tags'>);
     const tag: Tag = {
-      id: crypto.randomUUID(),
-      name: newTagName.trim(),
+      id: tagId as unknown as string,
+      name,
       color,
     };
     setTags([...tags, tag]);

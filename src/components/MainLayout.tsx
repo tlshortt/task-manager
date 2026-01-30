@@ -9,6 +9,7 @@ import { ViewModeToggle } from './ViewModeToggle';
 import { CalendarView } from './calendar';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { useTasks } from '@/hooks/useTasks';
+import { useTags } from '@/hooks/useTags';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
@@ -21,6 +22,7 @@ const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').the
 export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
   const { tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete } = useTasks();
+  const { tags } = useTags();
   const [filter, setFilter] = useState<FilterType>('current');
   const [searchQuery, setSearchQuery] = useState('');
   const [showShortcuts, setShowShortcuts] = useState(false);
@@ -101,6 +103,14 @@ export function MainLayout() {
     [filteredTasks]
   );
 
+  const tagsById = useMemo(() => {
+    if (!tags) return {};
+    return tags.reduce<Record<string, typeof tags[number]>>((acc, tag) => {
+      acc[tag.id] = tag;
+      return acc;
+    }, {});
+  }, [tags]);
+
   const handleAddTask = useCallback(async (title: string, dueDate?: Date, priority: Priority = 'medium', tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => {
     await addTask({
       title,
@@ -163,6 +173,7 @@ export function MainLayout() {
             onToggle={handleToggle}
             onUpdate={handleUpdate}
             onDelete={handleDelete}
+            tagsById={tagsById}
           />
         ) : sortedGroups.length === 0 && recurringGroups.length === 0 ? (
           <Suspense fallback={null}>
@@ -193,6 +204,7 @@ export function MainLayout() {
                   onToggle={handleToggle}
                   onUpdate={handleUpdate}
                   onDelete={handleDelete}
+                  tagsById={tagsById}
                 />
               );
             })}
@@ -205,6 +217,7 @@ export function MainLayout() {
                 onToggle={handleToggle}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
+                tagsById={tagsById}
               />
             ))}
           </main>

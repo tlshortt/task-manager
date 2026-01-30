@@ -3,6 +3,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TaskInput } from './TaskInput';
 
+vi.mock('@/hooks/useTags', () => ({
+  useTags: () => ({
+    tags: [],
+    isLoading: false,
+    createTag: vi.fn().mockResolvedValue('tag-1'),
+    removeTag: vi.fn(),
+  }),
+}));
+
 describe('TaskInput', () => {
   it('calls onAddTask when plus button is clicked with valid title', async () => {
     const user = userEvent.setup();

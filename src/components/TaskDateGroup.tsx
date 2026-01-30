@@ -10,6 +10,7 @@ interface TaskDateGroupProps {
   onToggle: (task: Task) => void;
   onUpdate: (task: Task) => void;
   onDelete: (task: Task) => void;
+  tagsById?: Record<string, import('@/types').Tag>;
 }
 
 export function TaskDateGroup({
@@ -19,6 +20,7 @@ export function TaskDateGroup({
   onToggle,
   onUpdate,
   onDelete,
+  tagsById,
 }: TaskDateGroupProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -52,6 +54,7 @@ export function TaskDateGroup({
               onToggle={onToggle}
               onUpdate={onUpdate}
               onDelete={onDelete}
+              tagsById={tagsById}
             />
           ))}
         </div>
