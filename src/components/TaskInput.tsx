@@ -8,8 +8,7 @@ import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import X from 'lucide-react/dist/esm/icons/x';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-// @ts-expect-error - Tag is used in useTaskForm hook return type
-import type { Priority, Tag, Subtask, RecurrencePattern, Id } from '@/types';
+import type { Priority, Subtask, RecurrencePattern, Id } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
 import { RecurrencePicker } from './RecurrencePicker';
 import { useTaskForm } from '@/hooks/useTaskForm';

@@ -6,10 +6,11 @@ import {
   needsLookaheadExtension,
 } from './recurrenceUtils';
 import type { Task, RecurrencePattern } from '@/types';
+import { testId } from '@/types';
 
 describe('recurrenceUtils', () => {
   const baseTask: Task = {
-    id: '1' as any,
+    id: testId('1'),
     title: 'Test Task',
     completed: false,
     priority: 'medium',
@@ -247,9 +248,9 @@ describe('recurrenceUtils', () => {
       };
       const instances = generateRecurrenceInstances(task, new Date('2026-01-15T00:00:00'), 90);
       expect(instances.length).toBe(91);
-      expect(instances[0]!.dueDate).toEqual(new Date('2026-01-15T00:00:00'));
-      expect(instances[1]!.dueDate).toEqual(new Date('2026-01-16T00:00:00'));
-      expect(instances[90]!.dueDate).toEqual(new Date('2026-04-15T00:00:00'));
+      expect(instances[0]?.dueDate).toEqual(new Date('2026-01-15T00:00:00'));
+      expect(instances[1]?.dueDate).toEqual(new Date('2026-01-16T00:00:00'));
+      expect(instances[90]?.dueDate).toEqual(new Date('2026-04-15T00:00:00'));
     });
 
     it('generates every-other-day instances', () => {
@@ -344,7 +345,7 @@ describe('recurrenceUtils', () => {
     it('sets recurringParentId on instances', () => {
       const task: Task = {
         ...baseTask,
-        id: '42' as any,
+        id: testId('42'),
         recurrence: { frequency: 'daily', interval: 1 },
       };
       const instances = generateRecurrenceInstances(task, new Date('2026-01-15T00:00:00'), 7);
@@ -360,7 +361,7 @@ describe('recurrenceUtils', () => {
         title: 'Daily Task',
         description: 'Task description',
         priority: 'high',
-        tagIds: ['tag1' as any],
+        tagIds: [testId<'tags'>('tag1')],
         recurrence: { frequency: 'daily', interval: 1 },
       };
       const instances = generateRecurrenceInstances(task, new Date('2026-01-15T00:00:00'), 7);

@@ -182,7 +182,7 @@ export const deleteSeries = mutation({
     const instances = await ctx.db
       .query("tasks")
       .withIndex("by_recurringParentId", (q) =>
-        q.eq("recurringParentId", args.parentId as any)
+        q.eq("recurringParentId", args.parentId)
       )
       .collect();
 
@@ -246,7 +246,7 @@ export const updateSeries = mutation({
     const instances = await ctx.db
       .query("tasks")
       .withIndex("by_recurringParentId", (q) =>
-        q.eq("recurringParentId", args.parentId as any)
+        q.eq("recurringParentId", args.parentId)
       )
       .collect();
 
@@ -312,7 +312,7 @@ export const generateInstances = mutation({
         dueDateMs: instance.dueDateMs,
         subtasks: instance.subtasks,
         tagIds: instance.tagIds,
-        recurringParentId: parentTask._id as any,
+        recurringParentId: parentTask._id,
         instanceDateMs: instance.instanceDateMs,
         isCustomized: instance.isCustomized,
         createdAtMs: now,

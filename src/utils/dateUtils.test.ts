@@ -10,13 +10,14 @@ import {
   sortDateGroups
 } from './dateUtils';
 import type { Task, Subtask } from '@/types';
+import { testId } from '@/types';
 
 describe('groupTasksByDate', () => {
   it('groups tasks by today', () => {
     const today = new Date();
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -36,7 +37,7 @@ describe('groupTasksByDate', () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -58,7 +59,7 @@ describe('groupTasksByDate', () => {
 
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -84,7 +85,7 @@ describe('groupTasksByDate', () => {
   it('groups tasks without due dates under no-date key', () => {
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -105,7 +106,7 @@ describe('groupTasksByDate', () => {
 
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -114,7 +115,7 @@ describe('groupTasksByDate', () => {
         updatedAt: new Date(),
       },
       {
-        id: '2' as any,
+        id: testId('2'),
         title: 'Task 2',
         completed: false,
         priority: 'medium',
@@ -123,7 +124,7 @@ describe('groupTasksByDate', () => {
         updatedAt: new Date(),
       },
       {
-        id: '3' as any,
+        id: testId('3'),
         title: 'Task 3',
         completed: false,
         priority: 'medium',
@@ -191,7 +192,7 @@ describe('isOverdue', () => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     const task: Task = {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Task 1',
       completed: true,
       priority: 'medium',
@@ -205,7 +206,7 @@ describe('isOverdue', () => {
 
   it('returns false for tasks without due dates', () => {
     const task: Task = {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -221,7 +222,7 @@ describe('isOverdue', () => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     const task: Task = {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -237,7 +238,7 @@ describe('isOverdue', () => {
     const today = new Date();
 
     const task: Task = {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Task 1',
       completed: false,
       priority: 'medium',
@@ -254,7 +255,7 @@ describe('isOverdue', () => {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     const task: Task = {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Task 1',
       completed: false,
       priority: 'medium',

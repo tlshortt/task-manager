@@ -54,7 +54,7 @@ const schema = defineSchema({
     createdAtMs: v.number(),
     updatedAtMs: v.number(),
     isRecurringParent: v.optional(v.boolean()),
-    recurringParentId: v.optional(v.number()),
+    recurringParentId: v.optional(v.id("tasks")),
     instanceDateMs: v.optional(v.number()),
     isCustomized: v.optional(v.boolean()),
   })

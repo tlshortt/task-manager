@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CalendarView } from './CalendarView';
 import type { Task } from '@/types';
+import { testId } from '@/types';
 import { startOfMonth } from 'date-fns';
 
 // Mock the useRecurringTasks hook
@@ -14,7 +15,7 @@ vi.mock('@/hooks/useRecurringTasks', () => ({
 }));
 
 const createTask = (overrides: Partial<Task> = {}): Task => ({
-  id: '1' as any,
+  id: testId('1'),
   title: 'Test Task',
   completed: false,
   priority: 'medium',
@@ -25,8 +26,8 @@ const createTask = (overrides: Partial<Task> = {}): Task => ({
 
 describe('CalendarView', () => {
   const mockTasks: Task[] = [
-    createTask({ id: '1' as any, title: 'Task 1', dueDate: new Date(2026, 0, 15) }),
-    createTask({ id: '2' as any, title: 'Task 2', dueDate: new Date(2026, 0, 20) }),
+    createTask({ id: testId('1'), title: 'Task 1', dueDate: new Date(2026, 0, 15) }),
+    createTask({ id: testId('2'), title: 'Task 2', dueDate: new Date(2026, 0, 20) }),
   ];
 
   const defaultProps = {
@@ -106,7 +107,7 @@ describe('CalendarView', () => {
     await user.click(toggleButton); // Use last one (should be in modal)
 
     expect(onToggle).toHaveBeenCalledTimes(1);
-    expect(onToggle).toHaveBeenCalledWith(expect.objectContaining({ id: '1' as any }));
+    expect(onToggle).toHaveBeenCalledWith(expect.objectContaining({ id: testId('1') }));
   });
 
   it('opens modal when day is clicked', async () => {
@@ -245,6 +246,6 @@ describe('CalendarView', () => {
     await user.click(deleteButton); // Use last one (should be in modal)
 
     expect(onDelete).toHaveBeenCalledTimes(1);
-    expect(onDelete).toHaveBeenCalledWith(expect.objectContaining({ id: '1' as any }));
+    expect(onDelete).toHaveBeenCalledWith(expect.objectContaining({ id: testId('1') }));
   });
 });

@@ -22,7 +22,19 @@ export function useRecurringTasks() {
     updates: Partial<Task>
   ): Promise<void> => {
     // Extract only the fields that can be updated in a series
-    const seriesUpdates: any = {};
+    const seriesUpdates: {
+      title?: string;
+      description?: string;
+      priority?: import('@/types').Priority;
+      subtasks?: Array<{
+        id: string;
+        title: string;
+        completed: boolean;
+        priority?: import('@/types').Priority;
+        dueDateMs?: number;
+      }>;
+      tagIds?: Id<'tags'>[];
+    } = {};
 
     if (updates.title !== undefined) seriesUpdates.title = updates.title;
     if (updates.description !== undefined) seriesUpdates.description = updates.description;

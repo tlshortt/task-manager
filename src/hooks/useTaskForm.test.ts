@@ -227,7 +227,7 @@ describe('useTaskForm', () => {
         undefined
       );
 
-      const submittedSubtasks = mockOnAddTask.mock.calls[0][5];
+      const submittedSubtasks = mockOnAddTask.mock.calls[0]?.[5];
       expect(submittedSubtasks).toHaveLength(1);
     });
 
@@ -252,7 +252,7 @@ describe('useTaskForm', () => {
         result.current.actions.handleSubmit();
       });
 
-      const submittedSubtasks = mockOnAddTask.mock.calls[0][5];
+      const submittedSubtasks = mockOnAddTask.mock.calls[0]?.[5];
       expect(submittedSubtasks).toHaveLength(10);
     });
 

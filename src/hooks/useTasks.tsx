@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from 'convex/react';
 import toast from 'react-hot-toast';
 import { api } from '../../convex/_generated/api';
-import type { Task, Id } from '@/types';
+import type { Task, Id, Priority } from '@/types';
 import { mapTaskDocToTask, mapTaskToArgs } from '@/utils/convexMappers';
 import { isValidRecurrence } from '@/utils/recurrenceUtils';
 
@@ -47,7 +47,23 @@ export function useTasks(): UseTasksReturn {
 
   const updateTask = async (id: Id<'tasks'>, updates: Partial<Task>) => {
     // Extract only the fields that can be updated
-    const updateArgs: any = { id };
+    const updateArgs: {
+      id: Id<'tasks'>;
+      title?: string;
+      description?: string;
+      completed?: boolean;
+      priority?: Priority;
+      dueDateMs?: number;
+      subtasks?: Array<{
+        id: string;
+        title: string;
+        completed: boolean;
+        priority?: Priority;
+        dueDateMs?: number;
+      }>;
+      tagIds?: Id<'tags'>[];
+      isCustomized?: boolean;
+    } = { id };
 
     if (updates.title !== undefined) updateArgs.title = updates.title;
     if (updates.description !== undefined) updateArgs.description = updates.description;
@@ -87,7 +103,13 @@ export function useTasks(): UseTasksReturn {
                 completed: deletedTask.completed,
                 priority: deletedTask.priority,
                 dueDate: deletedTask.dueDateMs ? new Date(deletedTask.dueDateMs) : undefined,
-                subtasks: deletedTask.subtasks?.map((st: any) => ({
+                subtasks: deletedTask.subtasks?.map((st: {
+                  id: string;
+                  title: string;
+                  completed: boolean;
+                  priority?: Priority;
+                  dueDateMs?: number;
+                }) => ({
                   id: st.id,
                   title: st.title,
                   completed: st.completed,

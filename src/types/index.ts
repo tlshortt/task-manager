@@ -6,6 +6,9 @@ import type { GenericId } from 'convex/values';
 // Type alias for Convex ID
 export type Id<T extends string> = GenericId<T>;
 
+// Helper for test mocks - casts string to Id type
+export const testId = <T extends string>(id: string): Id<T> => id as Id<T>;
+
 export type Priority = 'low' | 'medium' | 'high';
 
 export type FilterType = 'current' | 'overdue' | 'completed';

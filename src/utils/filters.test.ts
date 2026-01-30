@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { filterTasks, getFilterCounts, searchTasks, filterAndSearchTasks } from './filters';
 import type { Task } from '@/types';
+import { testId } from '@/types';
 
 describe('filterTasks', () => {
   const now = new Date();
@@ -12,7 +13,7 @@ describe('filterTasks', () => {
   const tasks: Task[] = [
     // Current task (not completed, not overdue, no due date)
     {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Current Task 1',
       completed: false,
       priority: 'medium',
@@ -21,7 +22,7 @@ describe('filterTasks', () => {
     },
     // Current task (not completed, not overdue, future due date)
     {
-      id: '2' as any,
+      id: testId('2'),
       title: 'Current Task 2',
       completed: false,
       priority: 'high',
@@ -31,7 +32,7 @@ describe('filterTasks', () => {
     },
     // Overdue task (not completed, past due date)
     {
-      id: '3' as any,
+      id: testId('3'),
       title: 'Overdue Task',
       completed: false,
       priority: 'high',
@@ -41,7 +42,7 @@ describe('filterTasks', () => {
     },
     // Completed task
     {
-      id: '4' as any,
+      id: testId('4'),
       title: 'Completed Task',
       completed: true,
       priority: 'low',
@@ -51,7 +52,7 @@ describe('filterTasks', () => {
     },
     // Another completed task
     {
-      id: '5' as any,
+      id: testId('5'),
       title: 'Completed Task 2',
       completed: true,
       priority: 'medium',
@@ -70,7 +71,7 @@ describe('filterTasks', () => {
 
     it('excludes overdue tasks', () => {
       const filtered = filterTasks(tasks, 'current');
-      const hasOverdueTask = filtered.some(t => t.id === ('3' as any));
+      const hasOverdueTask = filtered.some(t => t.id === testId('3'));
       expect(hasOverdueTask).toBe(false);
     });
 
@@ -91,7 +92,7 @@ describe('filterTasks', () => {
 
     it('excludes completed tasks even if past due', () => {
       const filtered = filterTasks(tasks, 'overdue');
-      const hasCompletedTask = filtered.some(t => t.id === ('4' as any));
+      const hasCompletedTask = filtered.some(t => t.id === testId('4'));
       expect(hasCompletedTask).toBe(false);
     });
 
@@ -127,7 +128,7 @@ describe('filterTasks', () => {
     it('handles tasks due today correctly (not overdue)', () => {
       const todayTasks: Task[] = [
         {
-          id: '10' as any,
+          id: testId('10'),
           title: 'Due Today',
           completed: false,
           priority: 'medium',
@@ -157,7 +158,7 @@ describe('getFilterCounts', () => {
     const tasks: Task[] = [
       // 2 current tasks
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Current 1',
         completed: false,
         priority: 'medium',
@@ -165,7 +166,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: '2' as any,
+        id: testId('2'),
         title: 'Current 2',
         completed: false,
         priority: 'high',
@@ -175,7 +176,7 @@ describe('getFilterCounts', () => {
       },
       // 1 overdue task
       {
-        id: '3' as any,
+        id: testId('3'),
         title: 'Overdue',
         completed: false,
         priority: 'high',
@@ -185,7 +186,7 @@ describe('getFilterCounts', () => {
       },
       // 3 completed tasks
       {
-        id: '4' as any,
+        id: testId('4'),
         title: 'Completed 1',
         completed: true,
         priority: 'low',
@@ -193,7 +194,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: '5' as any,
+        id: testId('5'),
         title: 'Completed 2',
         completed: true,
         priority: 'medium',
@@ -201,7 +202,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: '6' as any,
+        id: testId('6'),
         title: 'Completed 3',
         completed: true,
         priority: 'high',
@@ -229,7 +230,7 @@ describe('getFilterCounts', () => {
   it('returns correct counts when all tasks are current', () => {
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: false,
         priority: 'medium',
@@ -237,7 +238,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: '2' as any,
+        id: testId('2'),
         title: 'Task 2',
         completed: false,
         priority: 'high',
@@ -256,7 +257,7 @@ describe('getFilterCounts', () => {
   it('returns correct counts when all tasks are completed', () => {
     const tasks: Task[] = [
       {
-        id: '1' as any,
+        id: testId('1'),
         title: 'Task 1',
         completed: true,
         priority: 'medium',
@@ -264,7 +265,7 @@ describe('getFilterCounts', () => {
         updatedAt: now,
       },
       {
-        id: '2' as any,
+        id: testId('2'),
         title: 'Task 2',
         completed: true,
         priority: 'high',
@@ -284,7 +285,7 @@ describe('getFilterCounts', () => {
 describe('searchTasks', () => {
   const tasks: Task[] = [
     {
-      id: '1' as any,
+      id: testId('1'),
       title: 'Fix login bug',
       completed: false,
       priority: 'high',
@@ -292,7 +293,7 @@ describe('searchTasks', () => {
       updatedAt: new Date()
     },
     {
-      id: '2' as any,
+      id: testId('2'),
       title: 'Update documentation',
       description: 'Correct typos in README',
       completed: false,
@@ -301,7 +302,7 @@ describe('searchTasks', () => {
       updatedAt: new Date()
     },
     {
-      id: '3' as any,
+      id: testId('3'),
       title: 'Refactor API',
       completed: false,
       priority: 'medium',
@@ -346,8 +347,8 @@ describe('searchTasks', () => {
 describe('filterAndSearchTasks', () => {
   it('applies both status filter and search', () => {
     const tasks: Task[] = [
-      { id: '1' as any, title: 'Fix bug', completed: false, priority: 'high', createdAt: new Date(), updatedAt: new Date() },
-      { id: '2' as any, title: 'Fix typo', completed: true, priority: 'low', createdAt: new Date(), updatedAt: new Date() },
+      { id: testId('1'), title: 'Fix bug', completed: false, priority: 'high', createdAt: new Date(), updatedAt: new Date() },
+      { id: testId('2'), title: 'Fix typo', completed: true, priority: 'low', createdAt: new Date(), updatedAt: new Date() },
     ];
 
     const results = filterAndSearchTasks(tasks, 'completed', 'fix');

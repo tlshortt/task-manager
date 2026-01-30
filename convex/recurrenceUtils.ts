@@ -4,6 +4,8 @@
  * No browser APIs or date-fns dependencies
  */
 
+import type { GenericId } from "convex/values";
+
 export const DEFAULT_LOOKAHEAD_DAYS = 90;
 export const MAX_RECURRENCE_INSTANCES = 365;
 
@@ -170,8 +172,8 @@ export interface TaskInstance {
     priority?: 'low' | 'medium' | 'high';
     dueDateMs?: number;
   }>;
-  tagIds?: any[];
-  recurringParentId: any;
+  tagIds?: GenericId<'tags'>[];
+  recurringParentId: GenericId<'tasks'>;
   instanceDateMs: number;
   isCustomized: boolean;
 }
@@ -181,7 +183,7 @@ export interface TaskInstance {
  */
 export function generateRecurrenceInstancesMs(
   parentTask: {
-    id: any;
+    id: GenericId<'tasks'>;
     title: string;
     description?: string;
     priority: 'low' | 'medium' | 'high';
@@ -192,7 +194,7 @@ export function generateRecurrenceInstancesMs(
       priority?: 'low' | 'medium' | 'high';
       dueDateMs?: number;
     }>;
-    tagIds?: any[];
+    tagIds?: GenericId<'tags'>[];
     recurrence: RecurrencePattern;
   },
   startTimestampMs: number = Date.now(),

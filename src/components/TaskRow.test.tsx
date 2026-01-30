@@ -3,10 +3,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TaskRow } from './TaskRow';
 import type { Task } from '@/types';
+import { testId } from '@/types';
 
 describe('TaskRow', () => {
   const mockTask: Task = {
-    id: '1' as any,
+    id: testId('1'),
     title: 'Test Task',
     completed: false,
     priority: 'medium',
