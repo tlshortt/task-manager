@@ -1,12 +1,11 @@
 # Task Manager
 
-Vite + React + TypeScript task manager app, set up to work with `ralphy` (autonomous AI coding loop).
+Vite + React + TypeScript task manager app, built to experiment with agentic loop workflows. Convex persistence.
 
 ## Prerequisites
 
 - Node.js 18+ and npm
 - Git
-- `ralphy` installed and on PATH
 
 ## Quick Start
 
@@ -14,11 +13,19 @@ Vite + React + TypeScript task manager app, set up to work with `ralphy` (autono
 
 ```bash
 git clone <this-repo>
-cd ralph-starter-kit
+cd task-manager
 npm install
 ```
 
-### 2. Initialize Git (if not already)
+### 2. Convex Setup
+
+```bash
+npx convex dev
+```
+
+Follow prompts to link or create a Convex project.
+
+### 3. Initialize Git (if not already)
 
 ```bash
 git init
@@ -26,25 +33,31 @@ git add -A
 git commit -m "Initial commit"
 ```
 
-### Run ralphy
+### Run your agentic loop workflow
 
-```bash
-ralphy --prd spec/prd.json
-```
+Use your preferred agentic loop runner with `spec/prd.json` as input.
 
 ## Project Structure
 
 ```
-ralph-starter-kit/
+task-manager/
+├── convex/                 # Convex functions/schema
+├── CONVEX_SETUP.md         # Convex setup notes
+├── convex.json             # Convex config
 ├── src/                    # Application source code
 │   ├── components/         # React components
-│   │   └── index.ts        # Component barrel exports
+│   ├── constants/          # App constants
+│   ├── db/                 # Legacy Dexie (unused)
+│   ├── hooks/              # Custom hooks
 │   ├── types/              # TypeScript types
+│   ├── utils/              # Utilities
 │   ├── test/               # Test setup
+│   ├── App.test.tsx        # App tests
 │   ├── App.tsx             # Root component
 │   ├── main.tsx            # Entry point
-│   └── index.css           # Global styles + Tailwind
-├── spec/                   # Ralph specification files
+│   ├── index.css           # Global styles + Tailwind
+│   └── vite-env.d.ts       # Vite env types
+├── spec/                   # Agentic loop workflow specs
 │   ├── prd.json            # Task definitions
 │   ├── progress.txt        # Progress tracking
 │   └── PROMPT.md           # Instructions for AI agent
@@ -53,7 +66,7 @@ ralph-starter-kit/
 │   │   └── SKILL.md
 │   ├── prd/                # PRD Generator skill
 │   │   └── SKILL.md
-│   └── ralph/              # Ralph PRD Converter skill
+│   └── ralph/              # Agentic loop PRD converter skill
 │       └── SKILL.md
 ├── tasks/                  # Generated PRD documents
 │   └── prd-*.md            # PRDs created by the prd skill
@@ -121,9 +134,7 @@ Edit `spec/prd.json` to define your own tasks:
 
 ### Check Status
 
-```bash
-ralphy --dry-run --prd spec/prd.json
-```
+Check your runner's dry-run or status output.
 
 ### View Progress Log
 
@@ -133,10 +144,7 @@ cat spec/progress.txt
 
 ### View Execution Log
 
-```bash
-# ralphy prints output to stdout; redirect if you want a log:
-# ralphy --prd spec/prd.json | tee ralphy.log
-```
+Redirect your runner's stdout to a log if needed.
 
 ### Check Git History
 
@@ -153,32 +161,16 @@ git log --oneline -20
 
 ## Troubleshooting
 
-### "Claude Code CLI not found"
-
-Install with: `curl -fsSL https://claude.ai/install.sh | bash`
-
-### "jq not found"
-
-Install jq for your OS (see Prerequisites)
-
-### ralphy completes immediately
+### Runner completes immediately
 
 Check if your PRD has any remaining tasks (e.g. tasks already marked complete).
 
-### ralphy gets stuck on a task
+### Runner gets stuck on a task
 
 - Re-run with `--verbose`
 - Task might be too big - split into smaller items
 - Add more specific acceptance criteria
 
-## Resources
-
-- [Ralph Loop Concept](https://ghuntley.com/ralph/) - Geoffrey Huntley's original article
-- [Matt Pocock's Tips](https://www.aihero.dev/tips-for-ai-coding-with-ralph-wiggum) - 11 tips for effective Ralph usage
-- [snarktank/ralph](https://github.com/snarktank/ralph) - Ryan Carson's implementation
-- [Claude Code Docs](https://docs.anthropic.com/en/docs/claude-code) - Official documentation
-
 ## License
 
 MIT - Use freely, modify as needed.
-
