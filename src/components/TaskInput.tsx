@@ -129,12 +129,12 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
             setShowSubtasks(false);
             setShowRecurrencePicker(false);
           }}
-          aria-label={showTagPicker ? 'Hide tag picker' : 'Add tags'}
+          aria-label={showTagPicker ? 'Hide category picker' : 'Add categories'}
           aria-expanded={showTagPicker}
           className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
         >
           <TagIcon className="w-4 h-4" />
-          <span className="hidden sm:inline">Tags</span>
+          <span className="hidden sm:inline">Categories</span>
         </button>
 
         <button

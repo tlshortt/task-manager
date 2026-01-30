@@ -38,6 +38,13 @@ describe('TaskInput', () => {
     expect(plusButton).toBeDisabled();
   });
 
+  it('shows categories label for tag picker', () => {
+    render(<TaskInput onAddTask={vi.fn()} />);
+
+    expect(screen.getByText('Categories')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add categories' })).toBeInTheDocument();
+  });
+
   it('enables plus button when input has text', async () => {
     const user = userEvent.setup();
     const onAddTask = vi.fn();
