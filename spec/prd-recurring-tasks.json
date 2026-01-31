@@ -62,7 +62,7 @@
         "Create src/utils/recurrenceUtils.ts",
         "Add generateRecurrenceInstances(parentTask, startDate, lookaheadDays) function",
         "Returns array of Omit<Task, 'id'> instances for next N days",
-        "Each instance has recurringParentId, instanceDate, and inherited title/priority/tags",
+        "Each instance has recurringParentId, instanceDate, and inherited title/priority/categories",
         "Add getNextOccurrence(recurrence, fromDate) function returning Date | null",
         "Add isValidRecurrence(pattern) validation function",
         "Add getValidDayOfMonth(year, month, day) for month boundary handling",
@@ -102,7 +102,7 @@
         "Optional 'Ends on' date picker using react-datepicker",
         "Clear button to remove recurrence",
         "Keyboard accessible: Escape to close, Enter to apply",
-        "Similar styling to existing TagPicker component",
+        "Similar styling to existing CategoryPicker component",
         "npm run typecheck passes"
       ],
       "passes": false,
@@ -134,7 +134,7 @@
         "Props: pattern: RecurrencePattern",
         "Display text: 'Daily', 'Weekly', 'Every 2 weeks', 'Monthly', etc.",
         "Include Repeat icon from lucide-react",
-        "Similar styling to TagBadge (rounded, colored background)",
+        "Similar styling to CategoryBadge (rounded, colored background)",
         "Size variants: 'sm' | 'md'",
         "npm run typecheck passes"
       ],
@@ -146,7 +146,7 @@
       "title": "Add Repeat button to TaskInput",
       "description": "As a user, I want to access recurrence settings from the task creation form.",
       "acceptanceCriteria": [
-        "Add Repeat button to TaskInput.tsx alongside Calendar/Tags/Note buttons",
+        "Add Repeat button to TaskInput.tsx alongside Calendar/Categories/Note buttons",
         "Use Repeat icon from lucide-react",
         "Button has aria-expanded attribute",
         "Clicking toggles RecurrencePicker expandable section",
@@ -244,7 +244,7 @@
       "acceptanceCriteria": [
         "Update TaskRow.tsx to check for recurringParentId field",
         "If present, fetch parent task's recurrence pattern",
-        "Display RecurrenceBadge next to tags section",
+        "Display RecurrenceBadge next to categories section",
         "Badge shows pattern summary (e.g., 'Daily', 'Weekly')",
         "Click badge shows tooltip or link to series options (future enhancement)",
         "npm run typecheck passes",

@@ -1,7 +1,7 @@
 # Phase 2: Convex Schema
 
 ## Overview
-Define Convex schema matching current Task/Tag types.
+Define Convex schema matching current Task/Category types.
 
 **Estimated time:** ~30 minutes
 
@@ -43,7 +43,7 @@ const recurrence = v.object({
 });
 
 export default defineSchema({
-  tags: defineTable({
+  categories: defineTable({
     name: v.string(),
     color: v.string(),
   }).index('by_name', ['name']),
@@ -56,7 +56,7 @@ export default defineSchema({
     dueDateMs: v.optional(v.number()),
 
     subtasks: v.optional(v.array(subtask)),
-    tagIds: v.optional(v.array(v.id('tags'))),
+    categoryIds: v.optional(v.array(v.id('categories'))),
 
     createdAtMs: v.number(),
     updatedAtMs: v.number(),
@@ -86,12 +86,12 @@ export default defineSchema({
 | `id?: number` | `_id: Id<"tasks">` (auto-generated) |
 | `dueDate?: Date` | `dueDateMs?: number` (timestamp) |
 | `createdAt: Date` | `createdAtMs: number` |
-| `tags?: Tag[]` | `tagIds?: Id<"tags">[]` (normalized) |
+| `categories?: Category[]` | `categoryIds?: Id<"categories">[]` (normalized) |
 
 ## Acceptance Criteria
 - [ ] Schema file created and valid
 - [ ] `npx convex dev` pushes schema successfully
-- [ ] Dashboard shows `tasks` and `tags` tables
+- [ ] Dashboard shows `tasks` and `categories` tables
 - [ ] Indexes visible in dashboard
 
 ## Dependencies
@@ -100,4 +100,4 @@ export default defineSchema({
 ## Notes
 - Dates stored as milliseconds (`Date.now()` / `date.getTime()`)
 - Subtasks embedded as array (not separate table)
-- Tags normalized via `tagIds` reference
+- Categories normalized via `categoryIds` reference

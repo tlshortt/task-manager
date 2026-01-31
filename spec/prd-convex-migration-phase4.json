@@ -28,7 +28,7 @@
         "Import Id type from convex/_generated/dataModel in src/types/index.ts",
         "Change Task.id type from number to Id<'tasks'>",
         "Change Task.recurringParentId type from number to Id<'tasks'>",
-        "Change Task.tagIds type from Tag[] to Id<'tags'>[]",
+        "Change Task.categoryIds type from Category[] to Id<'categories'>[]",
         "npm run typecheck passes",
         "All components importing Task type still compile"
       ],

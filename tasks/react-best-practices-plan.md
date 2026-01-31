@@ -47,7 +47,7 @@ import { ChevronDown } from 'lucide-react/dist/esm/icons/chevron-down';
 - `src/components/SearchBar.tsx` (2 icons)
 - `src/components/AppHeader.tsx` (2 icons)
 - `src/components/TaskDateGroup.tsx` (1 icon)
-- `src/components/TagBadge.tsx` (1 icon)
+- `src/components/CategoryBadge.tsx` (1 icon)
 - `src/components/KeyboardShortcutsModal.tsx` (1 icon)
 
 ### 2. Dynamic Import for Conditional Components
@@ -309,7 +309,7 @@ These areas are already following best practices:
 - `src/components/SearchBar.tsx`
 - `src/components/AppHeader.tsx`
 - `src/components/TaskDateGroup.tsx`
-- `src/components/TagBadge.tsx`
+- `src/components/CategoryBadge.tsx`
 - `src/components/KeyboardShortcutsModal.tsx`
 
 ---

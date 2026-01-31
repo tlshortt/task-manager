@@ -73,7 +73,7 @@
       "title": "Add subtasks UI to TaskInput component",
       "description": "As a user, I want to see and manage subtasks in the task creation form.",
       "acceptanceCriteria": [
-        "Add 'Subtasks' toggle button with ListTodo icon (same style as Tags/Deadline/Note)",
+        "Add 'Subtasks' toggle button with ListTodo icon (same style as Categories/Deadline/Note)",
         "Toggle button has aria-expanded attribute",
         "Collapsible section shows: list of subtasks, input field, add button",
         "Show 'X/10 subtasks' counter when >= 7 subtasks (with aria-live='polite')",

@@ -97,7 +97,7 @@ Update `toggleComplete` to auto-complete subtasks:
 
 ### TaskInput - Subtasks Section (Simple List)
 ```
-[+] Add a new task...          [●●●] Tags Deadline Note Subtasks
+[+] Add a new task...          [●●●] Categories Deadline Note Subtasks
 ─────────────────────────────────────────────────────────────────
 ○ Buy groceries                                              [x]
 ○ Call dentist                                               [x]

@@ -13,7 +13,7 @@ One-time import of existing Dexie data to Convex.
 import { mutation } from './_generated/server';
 import { v } from 'convex/values';
 
-const importTagValidator = v.object({
+const importCategoryValidator = v.object({
   oldId: v.number(),
   name: v.string(),
   color: v.string(),
@@ -32,7 +32,7 @@ const importTaskValidator = v.object({
     priority: v.optional(v.union(v.literal('low'), v.literal('medium'), v.literal('high'))),
     dueDateMs: v.optional(v.number()),
   }))),
-  oldTagIds: v.optional(v.array(v.number())),
+  oldCategoryIds: v.optional(v.array(v.number())),
   createdAtMs: v.number(),
   updatedAtMs: v.number(),
   isRecurringParent: v.optional(v.boolean()),
@@ -52,19 +52,19 @@ const importTaskValidator = v.object({
 
 export const importFromDexie = mutation({
   args: {
-    tags: v.array(importTagValidator),
+    categories: v.array(importCategoryValidator),
     tasks: v.array(importTaskValidator),
   },
   handler: async (ctx, args) => {
-    // Map old tag IDs to new Convex IDs
-    const tagIdMap = new Map<number, Id<'tags'>>();
+    // Map old category IDs to new Convex IDs
+    const categoryIdMap = new Map<number, Id<'categories'>>();
     
-    for (const tag of args.tags) {
-      const newId = await ctx.db.insert('tags', {
-        name: tag.name,
-        color: tag.color,
+    for (const category of args.categories) {
+      const newId = await ctx.db.insert('categories', {
+        name: category.name,
+        color: category.color,
       });
-      tagIdMap.set(tag.oldId, newId);
+      categoryIdMap.set(category.oldId, newId);
     }
 
     // Map old task IDs to new Convex IDs (for recurring parent references)
@@ -72,9 +72,9 @@ export const importFromDexie = mutation({
 
     // First pass: insert all tasks without recurringParentId
     for (const task of args.tasks) {
-      const newTagIds = task.oldTagIds
-        ?.map((oldId) => tagIdMap.get(oldId))
-        .filter((id): id is Id<'tags'> => id !== undefined);
+      const newCategoryIds = task.oldCategoryIds
+        ?.map((oldId) => categoryIdMap.get(oldId))
+        .filter((id): id is Id<'categories'> => id !== undefined);
 
       const newId = await ctx.db.insert('tasks', {
         title: task.title,
@@ -83,7 +83,7 @@ export const importFromDexie = mutation({
         priority: task.priority,
         dueDateMs: task.dueDateMs,
         subtasks: task.subtasks,
-        tagIds: newTagIds,
+        categoryIds: newCategoryIds,
         createdAtMs: task.createdAtMs,
         updatedAtMs: task.updatedAtMs,
         isRecurringParent: task.isRecurringParent,
@@ -111,7 +111,7 @@ export const importFromDexie = mutation({
     }
 
     return {
-      tagsImported: args.tags.length,
+      categoriesImported: args.categories.length,
       tasksImported: args.tasks.length,
     };
   },
@@ -140,9 +140,9 @@ export function DataMigration({ children }: { children: React.ReactNode }) {
       }
       
       const tasks = await db.tasks.count();
-      const tags = await db.tags.count();
+      const categories = await db.categories.count();
       
-      if (tasks > 0 || tags > 0) {
+      if (tasks > 0 || categories > 0) {
         setNeedsMigration(true);
       } else {
         localStorage.setItem(MIGRATION_KEY, 'true');
@@ -157,12 +157,12 @@ export function DataMigration({ children }: { children: React.ReactNode }) {
     
     try {
       const tasks = await db.tasks.toArray();
-      const tags = await db.tags.toArray();
+      const categories = await db.categories.toArray();
 
-      const mappedTags = tags.map((tag) => ({
-        oldId: tag.id!,
-        name: tag.name,
-        color: tag.color,
+      const mappedCategories = categories.map((category) => ({
+        oldId: category.id!,
+        name: category.name,
+        color: category.color,
       }));
 
       const mappedTasks = tasks.map((task) => ({
@@ -179,7 +179,7 @@ export function DataMigration({ children }: { children: React.ReactNode }) {
           priority: s.priority,
           dueDateMs: s.dueDate?.getTime(),
         })),
-        oldTagIds: task.tags?.map((t) => t.id),
+        oldCategoryIds: task.categories?.map((t) => t.id),
         createdAtMs: task.createdAt.getTime(),
         updatedAtMs: task.updatedAt.getTime(),
         isRecurringParent: task.isRecurringParent,
@@ -196,7 +196,7 @@ export function DataMigration({ children }: { children: React.ReactNode }) {
         isCustomized: task.isCustomized,
       }));
 
-      await importMutation({ tags: mappedTags, tasks: mappedTasks });
+      await importMutation({ categories: mappedCategories, tasks: mappedTasks });
       
       localStorage.setItem(MIGRATION_KEY, 'true');
       setNeedsMigration(false);
@@ -250,8 +250,8 @@ export default function App() {
 ```
 
 ## Acceptance Criteria
-- [ ] Import mutation handles tags and tasks
-- [ ] ID references correctly mapped (tags, recurring parents)
+- [ ] Import mutation handles categories and tasks
+- [ ] ID references correctly mapped (categories, recurring parents)
 - [ ] Migration UI shows for users with existing data
 - [ ] Migration completes successfully
 - [ ] `localStorage` flag prevents re-migration

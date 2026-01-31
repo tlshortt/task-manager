@@ -22,7 +22,7 @@ export function mapTaskDocToTask(doc: Doc<'tasks'>): Task {
     priority: doc.priority,
     dueDate: doc.dueDateMs ? new Date(doc.dueDateMs) : undefined,
     subtasks: doc.subtasks?.map(mapSubtaskDocToSubtask),
-    tagIds: doc.tagIds,
+    categoryIds: doc.categoryIds,
     createdAt: new Date(doc.createdAtMs),
     updatedAt: new Date(doc.updatedAtMs),
     isRecurringParent: doc.isRecurringParent,
@@ -69,7 +69,7 @@ export function mapTaskToArgs(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>
       priority: s.priority,
       dueDateMs: s.dueDate?.getTime(),
     })),
-    tagIds: task.tagIds,
+    categoryIds: task.categoryIds,
     recurrence: task.recurrence ? {
       frequency: task.recurrence.frequency,
       interval: task.recurrence.interval,
@@ -91,7 +91,7 @@ export interface Task {
   id?: Id<'tasks'>;  // Changed from number
   // ... rest stays same
   recurringParentId?: Id<'tasks'>;  // Changed from number
-  tagIds?: Id<'tags'>[];  // Changed from Tag[]
+  categoryIds?: Id<'categories'>[];  // Changed from Category[]
 }
 ```
 

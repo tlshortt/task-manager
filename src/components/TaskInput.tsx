@@ -244,7 +244,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
                 }
                 handleEscape(e);
               }}
-              placeholder="Tag name..."
+              placeholder="Category name..."
               className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
             />
             <div className="flex gap-1">
@@ -260,7 +260,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
               ))}
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-2">Type a name and click a color to add a tag</p>
+          <p className="text-xs text-gray-400 mt-2">Type a name and click a color to add a category</p>
         </div>
       )}
 

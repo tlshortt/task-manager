@@ -32,7 +32,7 @@ export const create = mutation({
     priority: v.union(v.literal('low'), v.literal('medium'), v.literal('high')),
     dueDateMs: v.optional(v.number()),
     subtasks: v.optional(v.array(/* subtask validator */)),
-    tagIds: v.optional(v.array(v.id('tags'))),
+    categoryIds: v.optional(v.array(v.id('categories'))),
     recurrence: v.optional(/* recurrence validator */),
   },
   handler: async (ctx, args) => {
@@ -162,7 +162,7 @@ export const generateInstances = mutation({
 });
 ```
 
-### 3.4 Create Tags Functions (`convex/tags.ts`)
+### 3.4 Create Categories Functions (`convex/categories.ts`)
 
 ```ts
 import { query, mutation } from './_generated/server';
@@ -170,19 +170,19 @@ import { v } from 'convex/values';
 
 export const list = query({
   handler: async (ctx) => {
-    return await ctx.db.query('tags').collect();
+    return await ctx.db.query('categories').collect();
   },
 });
 
 export const create = mutation({
   args: { name: v.string(), color: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db.insert('tags', args);
+    return await ctx.db.insert('categories', args);
   },
 });
 
 export const remove = mutation({
-  args: { id: v.id('tags') },
+  args: { id: v.id('categories') },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
   },
@@ -215,7 +215,7 @@ Move `src/utils/recurrenceUtils.ts` to work with timestamps:
 - [ ] `tasks.remove` returns deleted task for undo
 - [ ] `tasks.toggleComplete` works with undo support
 - [ ] Series mutations work correctly
-- [ ] `tags.list/create/remove` work
+- [ ] `categories.list/create/remove` work
 
 ## Dependencies
 - Phase 2 complete (schema deployed)

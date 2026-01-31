@@ -2,12 +2,12 @@
 
 ## Introduction
 
-Define Convex schema matching current Task/Tag TypeScript types. This enables type-safe database operations and prepares for data migration from Dexie to Convex.
+Define Convex schema matching current Task/Category TypeScript types. This enables type-safe database operations and prepares for data migration from Dexie to Convex.
 
 ## Goals
 
-- Create `convex/schema.ts` with tables for tasks and tags
-- Match existing TypeScript types (Task, Tag, Priority, Recurrence)
+- Create `convex/schema.ts` with tables for tasks and categories
+- Match existing TypeScript types (Task, Category, Priority, Recurrence)
 - Define appropriate indexes for common queries
 - Validate schema with automated tests
 
@@ -20,13 +20,13 @@ Define Convex schema matching current Task/Tag TypeScript types. This enables ty
 **Acceptance Criteria:**
 
 - [ ] Create `convex/schema.ts` with `defineSchema` and `defineTable`
-- [ ] Define `tags` table with `name` (string) and `color` (string)
-- [ ] Define `tasks` table with all required fields (title, description, completed, priority, dueDateMs, subtasks, tagIds, createdAtMs, updatedAtMs, recurrence fields)
+- [ ] Define `categories` table with `name` (string) and `color` (string)
+- [ ] Define `tasks` table with all required fields (title, description, completed, priority, dueDateMs, subtasks, categoryIds, createdAtMs, updatedAtMs, recurrence fields)
 - [ ] Priority uses `v.union` with literals: 'low', 'medium', 'high'
 - [ ] Subtasks defined as embedded array of objects
 - [ ] Recurrence object matches existing Recurrence type
 - [ ] Dates stored as milliseconds (number), not Date objects
-- [ ] `tagIds` references `Id<"tags">[]` (normalized)
+- [ ] `categoryIds` references `Id<"categories">[]` (normalized)
 - [ ] npm run typecheck passes
 
 ### US-002: Add Database Indexes
@@ -35,7 +35,7 @@ Define Convex schema matching current Task/Tag TypeScript types. This enables ty
 
 **Acceptance Criteria:**
 
-- [ ] `tags` table has index `by_name` on `['name']`
+- [ ] `categories` table has index `by_name` on `['name']`
 - [ ] `tasks` table has index `by_completed` on `['completed']`
 - [ ] `tasks` table has index `by_dueDateMs` on `['dueDateMs']`
 - [ ] `tasks` table has index `by_recurringParentId` on `['recurringParentId']`
@@ -50,7 +50,7 @@ Define Convex schema matching current Task/Tag TypeScript types. This enables ty
 
 - [ ] Create `convex/schema.test.ts`
 - [ ] Test that schema exports default defineSchema result
-- [ ] Test that `tasks` and `tags` tables are defined
+- [ ] Test that `tasks` and `categories` tables are defined
 - [ ] Test that required fields exist on each table
 - [ ] Test that indexes are defined
 - [ ] npm run test passes
@@ -63,7 +63,7 @@ Define Convex schema matching current Task/Tag TypeScript types. This enables ty
 - FR-4: Priority type: `v.union(v.literal('low'), v.literal('medium'), v.literal('high'))`
 - FR-5: Recurrence frequency: `v.union(v.literal('daily'), v.literal('weekly'), v.literal('monthly'), v.literal('yearly'))`
 - FR-6: Subtask embedded as `v.array(v.object({...}))`
-- FR-7: Tag references use `v.id('tags')` for type-safe foreign keys
+- FR-7: Category references use `v.id('categories')` for type-safe foreign keys
 
 ## Non-Goals
 
@@ -77,7 +77,7 @@ Define Convex schema matching current Task/Tag TypeScript types. This enables ty
 - Reference existing types in `src/types/index.ts` for field mapping
 - Dexie uses `Date` objects; Convex uses milliseconds (`number`)
 - Dexie uses `id?: number`; Convex auto-generates `_id: Id<"table">`
-- Dexie embeds full `Tag[]`; Convex normalizes to `tagIds: Id<"tags">[]`
+- Dexie embeds full `Category[]`; Convex normalizes to `categoryIds: Id<"categories">[]`
 
 ## Success Metrics
 

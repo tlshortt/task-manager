@@ -1,7 +1,7 @@
 {
   "projectName": "Convex Migration Phase 3 - Functions",
   "branchName": "feature/convex-functions",
-  "description": "Implement Convex queries and mutations to replace Dexie operations. Create task and tag functions including support for recurring tasks, series operations, and proper timestamp handling.",
+  "description": "Implement Convex queries and mutations to replace Dexie operations. Create task and category functions including support for recurring tasks, series operations, and proper timestamp handling.",
   "created": "2026-01-29",
   "tasks": [
     {
@@ -24,7 +24,7 @@
       "description": "As a developer, I need a mutation to create tasks with support for both regular and recurring tasks.",
       "acceptanceCriteria": [
         "Export 'create' mutation in convex/tasks.ts",
-        "Accept args: title (string), description (optional string), completed (boolean), priority (enum), dueDateMs (optional number), subtasks (optional array), tagIds (optional array of tag IDs), recurrence (optional object)",
+        "Accept args: title (string), description (optional string), completed (boolean), priority (enum), dueDateMs (optional number), subtasks (optional array), categoryIds (optional array of category IDs), recurrence (optional object)",
         "Set createdAtMs and updatedAtMs to current timestamp",
         "Handle recurring tasks: set isRecurringParent=true for parent task",
         "Return inserted task ID",
@@ -127,12 +127,12 @@
     },
     {
       "id": "US-009",
-      "title": "Create tags query function",
-      "description": "As a developer, I need a Convex query to list all tags.",
+      "title": "Create categories query function",
+      "description": "As a developer, I need a Convex query to list all categories.",
       "acceptanceCriteria": [
-        "Create convex/tags.ts file",
+        "Create convex/categories.ts file",
         "Export 'list' query with no args",
-        "Query returns all tags from ctx.db.query('tags').collect()",
+        "Query returns all categories from ctx.db.query('categories').collect()",
         "Import query and mutation from './_generated/server'",
         "npm run typecheck passes"
       ],
@@ -141,13 +141,13 @@
     },
     {
       "id": "US-010",
-      "title": "Create tag create mutation",
-      "description": "As a developer, I need a mutation to create new tags.",
+      "title": "Create category create mutation",
+      "description": "As a developer, I need a mutation to create new categories.",
       "acceptanceCriteria": [
-        "Export 'create' mutation in convex/tags.ts",
+        "Export 'create' mutation in convex/categories.ts",
         "Accept args: name (string), color (string)",
-        "Insert tag with ctx.db.insert('tags', args)",
-        "Return inserted tag ID",
+        "Insert category with ctx.db.insert('categories', args)",
+        "Return inserted category ID",
         "npm run typecheck passes"
       ],
       "passes": true,
@@ -155,12 +155,12 @@
     },
     {
       "id": "US-011",
-      "title": "Create tag remove mutation",
-      "description": "As a developer, I need a mutation to delete tags.",
+      "title": "Create category remove mutation",
+      "description": "As a developer, I need a mutation to delete categories.",
       "acceptanceCriteria": [
-        "Export 'remove' mutation in convex/tags.ts",
-        "Accept args: id (tag ID)",
-        "Delete tag with ctx.db.delete()",
+        "Export 'remove' mutation in convex/categories.ts",
+        "Accept args: id (category ID)",
+        "Delete category with ctx.db.delete()",
         "npm run typecheck passes"
       ],
       "passes": true,
