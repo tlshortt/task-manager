@@ -1,0 +1,26 @@
+{
+  "projectName": "MainLayout Filter State Wiring",
+  "branchName": "feature/mainlayout-filter-state-wiring",
+  "description": "Add filter selection state in MainLayout and wire it to the Filters dropdown component.",
+  "created": "2026-01-31",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Track filter selections in MainLayout and wire to Filters dropdown",
+      "description": "As a developer, I need MainLayout to own filter selection state and pass it to the Filters dropdown so filtering works end-to-end.",
+      "acceptanceCriteria": [
+        "Add recurrenceFilter state defaulting to 'all' with type RecurrenceFilter",
+        "Add categoryFilter state defaulting to 'all' with type CategoryFilter",
+        "Add priorityFilter state defaulting to 'all' with type PriorityFilter",
+        "Use setRecurrenceFilter, setCategoryFilter, setPriorityFilter handlers",
+        "Pass recurrence, category, priority to the Filters dropdown component",
+        "Pass onRecurrenceChange, onCategoryChange, onPriorityChange to the Filters dropdown component",
+        "Keep filter state near filter + searchQuery in MainLayout",
+        "Include new filters in filtered tasks useMemo dependency list",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}

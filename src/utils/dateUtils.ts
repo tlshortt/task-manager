@@ -32,7 +32,6 @@ export function groupTasksByDate(tasks: Task[]): Map<string, Task[]> {
       key = 'no-date';
     } else {
       // Normalize to start of day and format for consistent grouping
-      // (handles string dates from IndexedDB and timezone edge cases)
       const normalizedDate = startOfDay(new Date(task.dueDate));
       const dateKey = format(normalizedDate, 'yyyy-MM-dd');
 

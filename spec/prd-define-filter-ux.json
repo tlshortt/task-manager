@@ -1,0 +1,46 @@
+{
+  "projectName": "Define Filter UX",
+  "branchName": "feature/define-filter-ux",
+  "description": "Define dropdown filter UX for recurrence, category, and priority with defaults and responsive placement.",
+  "created": "2026-01-31",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Define dropdown filter layout and placement",
+      "description": "As a user, I want filter dropdowns placed consistently so I can narrow tasks quickly.",
+      "acceptanceCriteria": [
+        "Place filters under search and above status tabs",
+        "Left-align on desktop and stack vertically on mobile",
+        "Use native select controls with consistent height",
+        "Apply focus ring: focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-002",
+      "title": "Define recurrence filter options",
+      "description": "As a user, I want recurrence options to quickly narrow recurring tasks.",
+      "acceptanceCriteria": [
+        "Options: All (default), Recurring, Non-recurring, Daily, Weekly, Monthly, Yearly",
+        "Label: “Recurrence” with aria-label",
+        "Default selection is All"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-003",
+      "title": "Define category and priority filter options",
+      "description": "As a user, I want category and priority options to narrow by tags and urgency.",
+      "acceptanceCriteria": [
+        "Category options: All (default), Uncategorized, then tag list sorted A→Z",
+        "If no tags, show only All and Uncategorized",
+        "Priority options: All (default), Low, Medium, High",
+        "Labels: “Category” and “Priority” with aria-labels"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+- Add tests for new filter logic + UI interactions.
+  - utils: applyTaskFilters recurrence/category/priority (incl uncategorized + frequency).
+  - utils: combined filters ensure AND behavior.
+  - components: FilterDropdowns renders options + fires change events.
+  - components: tag list sorted alphabetically.
+  - integration: MainLayout updates list + empty state when dropdowns filter to zero.
+  - tests touching IndexedDB clear DB in beforeEach.

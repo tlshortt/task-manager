@@ -2,7 +2,7 @@
  * Filter utility functions for task management
  */
 
-import type { Task, FilterType } from '@/types';
+import type { Task, FilterType, Id, RecurrencePattern, TaskFilters } from '@/types';
 import { isOverdue } from './dateUtils';
 
 /**
@@ -80,4 +80,59 @@ export function filterAndSearchTasks(
 ): Task[] {
   const filtered = filterTasks(tasks, filter);
   return searchTasks(filtered, searchQuery);
+}
+
+function getRecurrenceFrequency(
+  task: Task,
+  parentRecurrenceById?: Map<Id<'tasks'>, RecurrencePattern['frequency']>
+): RecurrencePattern['frequency'] | undefined {
+  if (task.recurrence?.frequency) {
+    return task.recurrence.frequency;
+  }
+  if (task.recurringParentId && parentRecurrenceById) {
+    return parentRecurrenceById.get(task.recurringParentId);
+  }
+  return undefined;
+}
+
+export function applyTaskFilters(
+  tasks: Task[],
+  filters: TaskFilters,
+  parentRecurrenceById?: Map<Id<'tasks'>, RecurrencePattern['frequency']>
+): Task[] {
+  return tasks.filter((task) => {
+    if (filters.priority !== 'all' && task.priority !== filters.priority) {
+      return false;
+    }
+
+    if (filters.category !== 'all') {
+      if (filters.category === 'uncategorized') {
+        if (task.tagIds && task.tagIds.length > 0) {
+          return false;
+        }
+      } else if (!task.tagIds?.includes(filters.category)) {
+        return false;
+      }
+    }
+
+    if (filters.recurrence !== 'all') {
+      const hasRecurrence = Boolean(task.recurrence || task.recurringParentId || task.isRecurringParent);
+
+      if (filters.recurrence === 'recurring') {
+        return hasRecurrence;
+      }
+      if (filters.recurrence === 'non-recurring') {
+        return !hasRecurrence;
+      }
+
+      const frequency = getRecurrenceFrequency(task, parentRecurrenceById);
+      return frequency === filters.recurrence;
+    }
+
+    return true;
+  });
+}
+
+export function removeRecurringParents(tasks: Task[]): Task[] {
+  return tasks.filter(task => !task.isRecurringParent);
 }

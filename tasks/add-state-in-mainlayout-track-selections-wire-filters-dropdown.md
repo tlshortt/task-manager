@@ -1,0 +1,6 @@
+- Add state in MainLayout to track selections; wire to new Filters dropdown component.
+  - State: `recurrenceFilter: RecurrenceFilter = 'all'`, `categoryFilter: CategoryFilter = 'all'`, `priorityFilter: PriorityFilter = 'all'`.
+  - Handlers: `setRecurrenceFilter`, `setCategoryFilter`, `setPriorityFilter`.
+  - Pass to dropdown: `recurrence`, `category`, `priority`, `onRecurrenceChange`, `onCategoryChange`, `onPriorityChange`.
+  - Keep in MainLayout near `filter` + `searchQuery`; include in `useMemo` deps for filtered tasks.
+  - Data persistence uses Convex (no IndexedDB references).

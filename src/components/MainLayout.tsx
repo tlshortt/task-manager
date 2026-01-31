@@ -1,5 +1,6 @@
 import { useState, useRef, lazy, Suspense, useCallback, useMemo } from 'react';
 import { AppHeader } from './AppHeader';
+import { FilterDropdowns } from './FilterDropdowns';
 import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
@@ -12,9 +13,20 @@ import { useTasks } from '@/hooks/useTasks';
 import { useTags } from '@/hooks/useTags';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
-import { filterAndSearchTasks, getFilterCounts } from '@/utils/filters';
+import { applyTaskFilters, filterAndSearchTasks, getFilterCounts, removeRecurringParents } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
-import type { FilterType, Priority, Task, ViewMode, Subtask, RecurrencePattern, Id } from '@/types';
+import type {
+  FilterType,
+  Priority,
+  Task,
+  ViewMode,
+  Subtask,
+  RecurrencePattern,
+  Id,
+  RecurrenceFilter,
+  CategoryFilter,
+  PriorityFilter,
+} from '@/types';
 
 const EmptyState = lazy(() => import('./EmptyState').then(module => ({ default: module.EmptyState })));
 const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').then(module => ({ default: module.KeyboardShortcutsModal })));
@@ -24,6 +36,9 @@ export function MainLayout() {
   const { tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete } = useTasks();
   const { tags } = useTags();
   const [filter, setFilter] = useState<FilterType>('current');
+  const [recurrenceFilter, setRecurrenceFilter] = useState<RecurrenceFilter>('all');
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [priorityFilter, setPriorityFilter] = useState<PriorityFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
@@ -41,13 +56,41 @@ export function MainLayout() {
     onSearch: () => searchInputRef.current?.focus(),
   });
 
+  const recurrenceByParentId = useMemo(() => {
+    const map = new Map<Id<'tasks'>, RecurrencePattern['frequency']>();
+    if (!tasks) return map;
+    for (const task of tasks) {
+      if (task.isRecurringParent && task.id && task.recurrence?.frequency) {
+        map.set(task.id, task.recurrence.frequency);
+      }
+    }
+    return map;
+  }, [tasks]);
+
   // Get filtered tasks (excluding recurring parents)
   const filteredTasks = useMemo(
     () => {
       const filtered = tasks ? filterAndSearchTasks(tasks, filter, debouncedSearchQuery) : [];
-      return filtered.filter(task => !task.isRecurringParent);
+      const withDropdowns = applyTaskFilters(
+        filtered,
+        {
+          recurrence: recurrenceFilter,
+          category: categoryFilter,
+          priority: priorityFilter,
+        },
+        recurrenceByParentId
+      );
+      return removeRecurringParents(withDropdowns);
     },
-    [tasks, filter, debouncedSearchQuery]
+    [
+      tasks,
+      filter,
+      debouncedSearchQuery,
+      recurrenceFilter,
+      categoryFilter,
+      priorityFilter,
+      recurrenceByParentId,
+    ]
   );
 
   // Separate recurring instances from regular tasks
@@ -151,6 +194,16 @@ export function MainLayout() {
           ref={searchInputRef}
           value={searchQuery}
           onChange={setSearchQuery}
+        />
+
+        <FilterDropdowns
+          tags={tags}
+          recurrence={recurrenceFilter}
+          category={categoryFilter}
+          priority={priorityFilter}
+          onRecurrenceChange={setRecurrenceFilter}
+          onCategoryChange={setCategoryFilter}
+          onPriorityChange={setPriorityFilter}
         />
 
         <FilterTabs

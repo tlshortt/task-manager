@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { filterTasks, getFilterCounts, searchTasks, filterAndSearchTasks } from './filters';
-import type { Task } from '@/types';
+import { filterTasks, getFilterCounts, searchTasks, filterAndSearchTasks, applyTaskFilters, removeRecurringParents } from './filters';
+import type { Task, TaskFilters, RecurrencePattern, Id } from '@/types';
 import { testId } from '@/types';
 
 describe('filterTasks', () => {
@@ -354,5 +354,178 @@ describe('filterAndSearchTasks', () => {
     const results = filterAndSearchTasks(tasks, 'completed', 'fix');
     expect(results).toHaveLength(1);
     expect(results[0]?.id).toBe('2');
+  });
+});
+
+describe('applyTaskFilters', () => {
+  const now = new Date();
+  const workTag = testId<'tags'>('tag-work');
+  const homeTag = testId<'tags'>('tag-home');
+  const parentId = testId<'tasks'>('parent-1');
+
+  const tasks: Task[] = [
+    {
+      id: parentId,
+      title: 'Daily parent',
+      completed: false,
+      priority: 'low',
+      recurrence: { frequency: 'daily', interval: 1 },
+      isRecurringParent: true,
+      tagIds: [workTag],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: testId('child-1'),
+      title: 'Daily instance',
+      completed: false,
+      priority: 'medium',
+      recurringParentId: parentId,
+      tagIds: [homeTag],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: testId('weekly-1'),
+      title: 'Weekly task',
+      completed: false,
+      priority: 'high',
+      recurrence: { frequency: 'weekly', interval: 1, daysOfWeek: [1] },
+      tagIds: [],
+      createdAt: now,
+      updatedAt: now,
+    },
+    {
+      id: testId('plain-1'),
+      title: 'Plain task',
+      completed: false,
+      priority: 'low',
+      createdAt: now,
+      updatedAt: now,
+    },
+  ];
+
+  const parentRecurrenceById = new Map<Id<'tasks'>, RecurrencePattern['frequency']>([
+    [parentId, 'daily'],
+  ]);
+
+  it('filters by recurrence frequency using parent mappings', () => {
+    const filters: TaskFilters = {
+      recurrence: 'daily',
+      category: 'all',
+      priority: 'all',
+    };
+
+    const results = applyTaskFilters(tasks, filters, parentRecurrenceById);
+    expect(results.map((task) => task.id)).toEqual([parentId, testId('child-1')]);
+  });
+
+  it('filters uncategorized and priority values', () => {
+    const filters: TaskFilters = {
+      recurrence: 'all',
+      category: 'uncategorized',
+      priority: 'high',
+    };
+
+    const results = applyTaskFilters(tasks, filters, parentRecurrenceById);
+    expect(results.map((task) => task.id)).toEqual([testId('weekly-1')]);
+  });
+
+  it('filters by specific category tag', () => {
+    const filters: TaskFilters = {
+      recurrence: 'all',
+      category: workTag,
+      priority: 'all',
+    };
+
+    const results = applyTaskFilters(tasks, filters, parentRecurrenceById);
+    expect(results.map((task) => task.id)).toEqual([parentId]);
+  });
+});
+
+describe('removeRecurringParents', () => {
+  it('removes recurring parent tasks', () => {
+    const tasks: Task[] = [
+      {
+        id: testId<'tasks'>('parent-1'),
+        title: 'Parent',
+        completed: false,
+        priority: 'low',
+        isRecurringParent: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: testId<'tasks'>('child-1'),
+        title: 'Child',
+        completed: false,
+        priority: 'low',
+        recurringParentId: testId<'tasks'>('parent-1'),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    const results = removeRecurringParents(tasks);
+    expect(results.map((task) => task.id)).toEqual([testId<'tasks'>('child-1')]);
+  });
+});
+
+describe('filter pipeline order', () => {
+  it('applies status/search, then dropdown filters, then removes parents', () => {
+    const parentId = testId<'tasks'>('parent-2');
+    const tasks: Task[] = [
+      {
+        id: parentId,
+        title: 'Report daily',
+        completed: true,
+        priority: 'high',
+        recurrence: { frequency: 'daily', interval: 1 },
+        isRecurringParent: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: testId<'tasks'>('child-2'),
+        title: 'Report daily',
+        completed: true,
+        priority: 'high',
+        recurringParentId: parentId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: testId<'tasks'>('other-1'),
+        title: 'Report weekly',
+        completed: true,
+        priority: 'high',
+        recurrence: { frequency: 'weekly', interval: 1, daysOfWeek: [1] },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: testId<'tasks'>('other-2'),
+        title: 'Report daily',
+        completed: false,
+        priority: 'high',
+        recurrence: { frequency: 'daily', interval: 1 },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+
+    const parentRecurrenceById = new Map<Id<'tasks'>, RecurrencePattern['frequency']>([
+      [parentId, 'daily'],
+    ]);
+
+    const statusAndSearch = filterAndSearchTasks(tasks, 'completed', 'report');
+    const withDropdowns = applyTaskFilters(statusAndSearch, {
+      recurrence: 'daily',
+      category: 'all',
+      priority: 'all',
+    }, parentRecurrenceById);
+    const finalResults = removeRecurringParents(withDropdowns);
+
+    expect(finalResults.map((task) => task.id)).toEqual([testId<'tasks'>('child-2')]);
   });
 });

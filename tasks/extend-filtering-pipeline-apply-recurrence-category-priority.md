@@ -1,0 +1,7 @@
+- Extend filtering pipeline (after status + search): apply recurrence/category/priority.
+  - Call `applyTaskFilters(filtered, { recurrence, category, priority }, recurrenceByParentId)` after `filterAndSearchTasks`.
+  - Recurrence: include `recurring`, `non-recurring`, and frequency-specific (daily/weekly/monthly/yearly).
+  - Category: `all`, `uncategorized` (no tags), or tag id match.
+  - Priority: `all`, `low`, `medium`, `high`.
+  - Exclude recurring parents from final list.
+  - Keep pipeline: status/search → dropdown filters → remove parents → grouping.

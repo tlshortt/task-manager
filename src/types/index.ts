@@ -15,6 +15,25 @@ export type FilterType = 'current' | 'overdue' | 'completed';
 
 export type ViewMode = 'list' | 'calendar';
 
+export type RecurrenceFilter =
+  | 'all'
+  | 'recurring'
+  | 'non-recurring'
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'yearly';
+
+export type CategoryFilter = 'all' | 'uncategorized' | Id<'tags'>;
+
+export type PriorityFilter = 'all' | Priority;
+
+export interface TaskFilters {
+  recurrence: RecurrenceFilter;
+  category: CategoryFilter;
+  priority: PriorityFilter;
+}
+
 export interface Subtask {
   id: string;
   title: string;

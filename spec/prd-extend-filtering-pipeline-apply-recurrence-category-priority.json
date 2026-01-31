@@ -1,0 +1,24 @@
+{
+  "projectName": "Extend Filtering Pipeline",
+  "branchName": "feature/extend-filtering-pipeline",
+  "description": "Apply recurrence, category, and priority filters after status + search and exclude recurring parents before grouping.",
+  "created": "2026-01-31",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Apply recurrence, category, priority filters in pipeline",
+      "description": "As a developer, I need the filtering pipeline to apply dropdown filters after status and search so results match selections.",
+      "acceptanceCriteria": [
+        "Call applyTaskFilters(filtered, { recurrence, category, priority }, recurrenceByParentId) after filterAndSearchTasks",
+        "Recurrence filter supports: recurring, non-recurring, daily, weekly, monthly, yearly",
+        "Category filter supports: all, uncategorized (no tags), tag id match",
+        "Priority filter supports: all, low, medium, high",
+        "Exclude recurring parent tasks from final filtered list",
+        "Pipeline order: status/search → dropdown filters → remove parents → grouping",
+        "npm run typecheck passes"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}
