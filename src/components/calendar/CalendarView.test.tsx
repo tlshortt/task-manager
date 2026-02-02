@@ -26,8 +26,8 @@ const createTask = (overrides: Partial<Task> = {}): Task => ({
 
 describe('CalendarView', () => {
   const mockTasks: Task[] = [
-    createTask({ id: testId('1'), title: 'Task 1', dueDate: new Date(2026, 0, 15) }),
-    createTask({ id: testId('2'), title: 'Task 2', dueDate: new Date(2026, 0, 20) }),
+    createTask({ id: testId('1'), title: 'Task 1', dueDate: new Date(2026, 1, 15) }),
+    createTask({ id: testId('2'), title: 'Task 2', dueDate: new Date(2026, 1, 20) }),
   ];
 
   const defaultProps = {
@@ -98,7 +98,7 @@ describe('CalendarView', () => {
     await user.click(day15);
 
     // Wait for modal to appear
-    await screen.findByText(/January 15, 2026/i);
+    await screen.findByText(/February 15, 2026/i);
 
     // Find and click the task toggle button in the modal (use getAllByRole in case there are multiple)
     const toggleButtons = screen.getAllByRole('button', { name: /Mark Task 1 complete/i });
@@ -121,7 +121,7 @@ describe('CalendarView', () => {
     await user.click(day15);
 
     // Modal should appear with date
-    const modalHeader = await screen.findByText(/January 15, 2026/i);
+    const modalHeader = await screen.findByText(/February 15, 2026/i);
     expect(modalHeader).toBeInTheDocument();
     
     // Task should be in modal (use getAllByText since it might appear in calendar preview too)
@@ -140,14 +140,14 @@ describe('CalendarView', () => {
     if (!day15) throw new Error('Day 15 not found');
     await user.click(day15);
 
-    await screen.findByText(/January 15, 2026/i);
+    await screen.findByText(/February 15, 2026/i);
 
     // Close modal
     const closeButton = screen.getByRole('button', { name: 'Close' });
     await user.click(closeButton);
 
     // Modal should be closed
-    expect(screen.queryByText(/January 15, 2026/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/February 15, 2026/i)).not.toBeInTheDocument();
   });
 
   it('navigates to previous month when prev button is clicked', async () => {
@@ -237,7 +237,7 @@ describe('CalendarView', () => {
     if (!day15) throw new Error('Day 15 not found');
     await user.click(day15);
 
-    await screen.findByText(/January 15, 2026/i);
+    await screen.findByText(/February 15, 2026/i);
 
     // Delete task (use getAllByRole in case there are multiple)
     const deleteButtons = screen.getAllByRole('button', { name: /Delete Task 1/i });

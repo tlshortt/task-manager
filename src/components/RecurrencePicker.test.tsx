@@ -64,13 +64,15 @@ describe('RecurrencePicker', () => {
 
     onChange.mockClear();
 
-    const monButton = screen.getByLabelText('Repeat on Mon');
-    fireEvent.click(monButton);
+    // Click on a day that's not the current day to ensure we're adding, not removing
+    // Current day is Monday (1), so click Tuesday (2) to add it
+    const tueButton = screen.getByLabelText('Repeat on Tue');
+    fireEvent.click(tueButton);
 
     expect(onChange).toHaveBeenCalledWith(
       expect.objectContaining({
         frequency: 'weekly',
-        daysOfWeek: expect.arrayContaining([1]),
+        daysOfWeek: expect.arrayContaining([2]),
       })
     );
   });
