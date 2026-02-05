@@ -1,13 +1,6 @@
+import { vi } from "vitest";
 import { create, deleteSeries, generateInstances, list, remove, toggleComplete, update, updateSeries } from "./tasks";
-import { createTestCtx } from "./testUtils";
-
-type Handler<TArgs, TResult> = (ctx: { db: unknown }, args: TArgs) => Promise<TResult>;
-
-const run = async <TArgs, TResult>(
-  fn: { _handler: Handler<TArgs, TResult> },
-  ctx: { db: unknown },
-  args: TArgs
-) => fn._handler(ctx, args);
+import { createTestCtx, runHandler } from "./testUtils";
 
 describe("tasks", () => {
   beforeEach(() => {
@@ -22,13 +15,13 @@ describe("tasks", () => {
   it("creates and lists tasks", async () => {
     const ctx = createTestCtx();
 
-    const id = await run(create, ctx, {
+    const id = await runHandler(create, ctx, {
       title: "Task A",
       completed: false,
       priority: "low",
     });
 
-    const tasks = await run(list, ctx, {});
+    const tasks = await runHandler(list, ctx, {});
 
     expect(tasks).toHaveLength(1);
     expect(tasks[0]?._id).toBe(id);
@@ -38,7 +31,7 @@ describe("tasks", () => {
   it("sets isRecurringParent when recurrence is provided", async () => {
     const ctx = createTestCtx();
 
-    const id = await run(create, ctx, {
+    const id = await runHandler(create, ctx, {
       title: "Recurring",
       completed: false,
       priority: "medium",
@@ -55,7 +48,7 @@ describe("tasks", () => {
   it("updates tasks and refreshes updatedAtMs", async () => {
     const ctx = createTestCtx();
 
-    const id = await run(create, ctx, {
+    const id = await runHandler(create, ctx, {
       title: "Before",
       completed: false,
       priority: "high",
@@ -63,7 +56,7 @@ describe("tasks", () => {
 
     vi.setSystemTime(new Date("2026-01-30T01:00:00.000Z"));
 
-    await run(update, ctx, {
+    await runHandler(update, ctx, {
       id,
       title: "After",
     });
@@ -76,13 +69,13 @@ describe("tasks", () => {
   it("removes tasks and returns the deleted task", async () => {
     const ctx = createTestCtx();
 
-    const id = await run(create, ctx, {
+    const id = await runHandler(create, ctx, {
       title: "Delete me",
       completed: false,
       priority: "medium",
     });
 
-    const deleted = await run(remove, ctx, { id });
+    const deleted = await runHandler(remove, ctx, { id });
 
     expect(deleted?._id).toBe(id);
     expect(await ctx.db.get(id)).toBeNull();
@@ -91,13 +84,13 @@ describe("tasks", () => {
   it("toggles completion and returns previous value", async () => {
     const ctx = createTestCtx();
 
-    const id = await run(create, ctx, {
+    const id = await runHandler(create, ctx, {
       title: "Toggle",
       completed: false,
       priority: "low",
     });
 
-    const oldCompleted = await run(toggleComplete, ctx, { id });
+    const oldCompleted = await runHandler(toggleComplete, ctx, { id });
     const task = await ctx.db.get(id);
 
     expect(oldCompleted).toBe(false);
@@ -133,7 +126,7 @@ describe("tasks", () => {
       updatedAtMs: Date.now(),
     });
 
-    await run(deleteSeries, ctx, { parentId });
+    await runHandler(deleteSeries, ctx, { parentId });
 
     expect(await ctx.db.get(parentId)).toBeNull();
     expect(await ctx.db.get(instanceA)).toBeNull();
@@ -185,7 +178,7 @@ describe("tasks", () => {
       updatedAtMs: now,
     });
 
-    await run(updateSeries, ctx, {
+    await runHandler(updateSeries, ctx, {
       parentId,
       updates: {
         title: "Updated",
@@ -220,12 +213,12 @@ describe("tasks", () => {
       updatedAtMs: Date.now(),
     });
 
-    const result = await run(generateInstances, ctx, {
+    const result = await runHandler(generateInstances, ctx, {
       parentId,
       lookaheadDays: 30,
     });
 
-    const tasks = await run(list, ctx, {});
+    const tasks = await runHandler(list, ctx, {});
     const instances = tasks.filter((task) => task.recurringParentId === parentId);
 
     expect(result.count).toBe(3);
