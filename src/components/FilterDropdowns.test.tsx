@@ -11,7 +11,8 @@ const tags: Tag[] = [
 ];
 
 describe('FilterDropdowns', () => {
-  it('renders recurrence options with default selection', () => {
+  it('renders recurrence options with default selection', async () => {
+    const user = userEvent.setup();
     render(
       <FilterDropdowns
         tags={tags}
@@ -24,8 +25,13 @@ describe('FilterDropdowns', () => {
       />
     );
 
-    const recurrenceSelect = screen.getByLabelText('Recurrence') as HTMLSelectElement;
-    expect(recurrenceSelect.value).toBe('all');
+    // Radix Select renders a trigger button; click to open dropdown
+    const recurrenceTrigger = screen.getByRole('combobox', { name: 'Recurrence' });
+    expect(recurrenceTrigger).toBeInTheDocument();
+
+    await user.click(recurrenceTrigger);
+
+    // Options are rendered inside the portal
     expect(screen.getByRole('option', { name: 'Recurring' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Non-recurring' })).toBeInTheDocument();
     expect(screen.getByRole('option', { name: 'Daily' })).toBeInTheDocument();
@@ -34,7 +40,8 @@ describe('FilterDropdowns', () => {
     expect(screen.getByRole('option', { name: 'Yearly' })).toBeInTheDocument();
   });
 
-  it('sorts category tags A to Z after All and Uncategorized', () => {
+  it('sorts category tags A to Z after All and Uncategorized', async () => {
+    const user = userEvent.setup();
     render(
       <FilterDropdowns
         tags={tags}
@@ -47,12 +54,15 @@ describe('FilterDropdowns', () => {
       />
     );
 
-    const categorySelect = screen.getByLabelText('Category') as HTMLSelectElement;
-    const options = Array.from(categorySelect.options).map((option) => option.textContent);
+    const categoryTrigger = screen.getByRole('combobox', { name: 'Category' });
+    await user.click(categoryTrigger);
+
+    const options = screen.getAllByRole('option').map((option) => option.textContent);
     expect(options).toEqual(['All', 'Uncategorized', 'Alpha', 'Work']);
   });
 
-  it('shows only All and Uncategorized when no tags', () => {
+  it('shows only All and Uncategorized when no tags', async () => {
+    const user = userEvent.setup();
     render(
       <FilterDropdowns
         tags={[]}
@@ -65,8 +75,10 @@ describe('FilterDropdowns', () => {
       />
     );
 
-    const categorySelect = screen.getByLabelText('Category') as HTMLSelectElement;
-    const options = Array.from(categorySelect.options).map((option) => option.textContent);
+    const categoryTrigger = screen.getByRole('combobox', { name: 'Category' });
+    await user.click(categoryTrigger);
+
+    const options = screen.getAllByRole('option').map((option) => option.textContent);
     expect(options).toEqual(['All', 'Uncategorized']);
   });
 
@@ -88,12 +100,22 @@ describe('FilterDropdowns', () => {
       />
     );
 
-    await user.selectOptions(screen.getByLabelText('Recurrence'), 'weekly');
-    await user.selectOptions(screen.getByLabelText('Category'), tags[0]!.id);
-    await user.selectOptions(screen.getByLabelText('Priority'), 'high');
-
+    // Change recurrence
+    const recurrenceTrigger = screen.getByRole('combobox', { name: 'Recurrence' });
+    await user.click(recurrenceTrigger);
+    await user.click(screen.getByRole('option', { name: 'Weekly' }));
     expect(onRecurrenceChange).toHaveBeenCalledWith('weekly');
+
+    // Change category
+    const categoryTrigger = screen.getByRole('combobox', { name: 'Category' });
+    await user.click(categoryTrigger);
+    await user.click(screen.getByRole('option', { name: 'Work' }));
     expect(onCategoryChange).toHaveBeenCalledWith(tags[0]!.id);
+
+    // Change priority
+    const priorityTrigger = screen.getByRole('combobox', { name: 'Priority' });
+    await user.click(priorityTrigger);
+    await user.click(screen.getByRole('option', { name: 'High' }));
     expect(onPriorityChange).toHaveBeenCalledWith('high');
   });
 });

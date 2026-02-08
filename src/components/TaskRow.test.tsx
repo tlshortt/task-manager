@@ -72,8 +72,8 @@ describe('TaskRow', () => {
       />
     );
 
-    // Get the check button by aria-label
-    const checkButton = screen.getByRole('button', { name: 'Mark Test Task complete' });
+    // Checkbox uses role="checkbox" with Radix UI
+    const checkButton = screen.getByRole('checkbox', { name: 'Mark Test Task complete' });
     await user.click(checkButton);
 
     expect(onToggle).toHaveBeenCalledWith(mockTask);
@@ -121,8 +121,8 @@ describe('TaskRow', () => {
     expect(title.className).toContain('line-through');
     expect(title.className).toContain('text-gray-400');
 
-    const checkButton = screen.getByRole('button', { name: 'Mark Test Task incomplete' });
-    expect(checkButton.className).toContain('bg-purple-600');
+    const checkButton = screen.getByRole('checkbox', { name: 'Mark Test Task incomplete' });
+    expect(checkButton).toHaveAttribute('data-state', 'checked');
   });
 
   it('shows correct priority color', () => {

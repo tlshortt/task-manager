@@ -1,5 +1,7 @@
 import X from 'lucide-react/dist/esm/icons/x';
 import type { Tag } from '@/types';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface TagBadgeProps {
   tag: Tag;
@@ -25,8 +27,14 @@ export function TagBadge({ tag, onRemove, size = 'sm' }: TagBadgeProps) {
   const sizeClasses = size === 'sm' ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1';
 
   return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full font-medium ${colors.bg} ${colors.text} ${sizeClasses}`}
+    <Badge
+      variant="secondary"
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full font-medium border-0',
+        colors.bg,
+        colors.text,
+        sizeClasses
+      )}
     >
       {tag.name}
       {onRemove && (
@@ -41,7 +49,7 @@ export function TagBadge({ tag, onRemove, size = 'sm' }: TagBadgeProps) {
           <X className="w-3 h-3" />
         </button>
       )}
-    </span>
+    </Badge>
   );
 }
 

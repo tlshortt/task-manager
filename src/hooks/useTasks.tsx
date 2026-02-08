@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from 'convex/react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { api } from '../../convex/_generated/api';
 import type { Task, Id, Priority } from '@/types';
 import { mapTaskDocToTask, mapTaskToArgs } from '@/utils/convexMappers';
@@ -90,82 +90,52 @@ export function useTasks(): UseTasksReturn {
   const deleteTask = async (id: Id<'tasks'>) => {
     const deletedTask = await removeMutation({ id });
 
-    toast(
-      (t) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span>Task deleted</span>
-          <button
-            onClick={async () => {
-              // Restore the deleted task
-              const restoreArgs = mapTaskToArgs({
-                title: deletedTask.title,
-                description: deletedTask.description,
-                completed: deletedTask.completed,
-                priority: deletedTask.priority,
-                dueDate: deletedTask.dueDateMs ? new Date(deletedTask.dueDateMs) : undefined,
-                subtasks: deletedTask.subtasks?.map((st: {
-                  id: string;
-                  title: string;
-                  completed: boolean;
-                  priority?: Priority;
-                  dueDateMs?: number;
-                }) => ({
-                  id: st.id,
-                  title: st.title,
-                  completed: st.completed,
-                  priority: st.priority,
-                  dueDate: st.dueDateMs ? new Date(st.dueDateMs) : undefined,
-                })),
-                tagIds: deletedTask.tagIds,
-                recurrence: deletedTask.recurrence,
-              });
-              await createMutation(restoreArgs);
-              toast.dismiss(t.id);
-            }}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#a78bfa',
-              cursor: 'pointer',
-              fontWeight: '500',
-            }}
-          >
-            Undo
-          </button>
-        </div>
-      ),
-      { duration: 5000 }
-    );
+    toast('Task deleted', {
+      duration: 5000,
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          const restoreArgs = mapTaskToArgs({
+            title: deletedTask.title,
+            description: deletedTask.description,
+            completed: deletedTask.completed,
+            priority: deletedTask.priority,
+            dueDate: deletedTask.dueDateMs ? new Date(deletedTask.dueDateMs) : undefined,
+            subtasks: deletedTask.subtasks?.map((st: {
+              id: string;
+              title: string;
+              completed: boolean;
+              priority?: Priority;
+              dueDateMs?: number;
+            }) => ({
+              id: st.id,
+              title: st.title,
+              completed: st.completed,
+              priority: st.priority,
+              dueDate: st.dueDateMs ? new Date(st.dueDateMs) : undefined,
+            })),
+            tagIds: deletedTask.tagIds,
+            recurrence: deletedTask.recurrence,
+          });
+          await createMutation(restoreArgs);
+        },
+      },
+    });
   };
 
   const toggleComplete = async (id: Id<'tasks'>) => {
     const oldCompleted = await toggleMutation({ id });
 
     const message = !oldCompleted ? 'Task completed' : 'Task reopened';
-    toast(
-      (t) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span>{message}</span>
-          <button
-            onClick={async () => {
-              // Toggle back to previous state
-              await toggleMutation({ id });
-              toast.dismiss(t.id);
-            }}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#a78bfa',
-              cursor: 'pointer',
-              fontWeight: '500',
-            }}
-          >
-            Undo
-          </button>
-        </div>
-      ),
-      { duration: 5000 }
-    );
+    toast(message, {
+      duration: 5000,
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          await toggleMutation({ id });
+        },
+      },
+    });
   };
 
   return {

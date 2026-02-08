@@ -30,6 +30,30 @@ if (typeof window !== 'undefined' && typeof window.localStorage?.getItem !== 'fu
   })
 }
 
+// Mock ResizeObserver for Radix UI components
+class ResizeObserverMock {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+window.ResizeObserver = ResizeObserverMock;
+
+// Mock pointer capture APIs for Radix UI Select/Popover
+if (!Element.prototype.hasPointerCapture) {
+  Element.prototype.hasPointerCapture = () => false;
+}
+if (!Element.prototype.setPointerCapture) {
+  Element.prototype.setPointerCapture = () => {};
+}
+if (!Element.prototype.releasePointerCapture) {
+  Element.prototype.releasePointerCapture = () => {};
+}
+
+// Mock scrollIntoView for Radix UI Select items
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 // Mock matchMedia for dark mode tests
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

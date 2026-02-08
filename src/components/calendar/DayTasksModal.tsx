@@ -1,8 +1,12 @@
-import { useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
-import X from 'lucide-react/dist/esm/icons/x';
 import type { Task } from '@/types';
 import { TaskRow } from '../TaskRow';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface DayTasksModalProps {
   isOpen: boolean;
@@ -25,47 +29,16 @@ export function DayTasksModal({
   onDelete,
   tagsById,
 }: DayTasksModalProps) {
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isOpen, handleKeyDown]);
-
-  if (!isOpen) return null;
-
   const formattedDate = format(date, 'EEEE, MMMM d, yyyy');
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white dark:bg-slate-800 rounded-none sm:rounded-xl shadow-xl max-w-2xl w-full h-full sm:h-auto sm:mx-4 sm:max-h-[80vh] overflow-hidden flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="max-w-2xl h-full sm:h-auto sm:max-h-[80vh] rounded-none sm:rounded-lg p-0 gap-0">
+        <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700">
+          <DialogTitle className="text-sm sm:text-lg">
             {formattedDate}
-          </h2>
-          <button
-            onClick={onClose}
-            className="min-h-[44px] min-w-[44px] p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors active:bg-gray-200 dark:active:bg-gray-600 flex items-center justify-center touch-manipulation"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
+          </DialogTitle>
+        </DialogHeader>
 
         <div className="flex-1 overflow-y-auto">
           {tasks.length === 0 ? (
@@ -87,7 +60,7 @@ export function DayTasksModal({
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

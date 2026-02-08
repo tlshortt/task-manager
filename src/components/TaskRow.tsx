@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Task, Subtask, Tag } from '@/types';
-import Check from 'lucide-react/dist/esm/icons/check';
 import Trash2 from 'lucide-react/dist/esm/icons/trash-2';
 import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
@@ -9,6 +8,8 @@ import { TagBadge } from './TagBadge';
 import { SubtaskList } from './SubtaskList';
 import { EditableText } from './EditableText';
 import { RecurrenceBadge } from './RecurrenceBadge';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
 
 interface TaskRowProps {
   task: Task;
@@ -50,22 +51,18 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete, tagsById }: TaskRo
     onUpdate({ ...task, subtasks });
   };
 
-  // TODO: Re-enable when tag display is implemented with Convex
-  // const handleRemoveTag = (tagId: string) => {
-  //   const updatedTagIds = (task.tagIds || []).filter((id) => id !== tagId);
-  //   onUpdate({ ...task, tagIds: updatedTagIds });
-  // };
-
   return (
-    <div 
+    <div
       className="border-b border-gray-100 dark:border-gray-700 last:border-b-0"
       style={{ contentVisibility: 'auto' }}
     >
       <div className="group flex items-center py-4 px-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
         {/* Expand button for subtasks */}
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setIsExpanded(!isExpanded)}
-          className={`w-5 h-5 flex items-center justify-center flex-shrink-0 mr-1 transition-opacity ${
+          className={`w-5 h-5 flex-shrink-0 mr-1 ${
             hasSubtasks ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           aria-label={isExpanded ? 'Collapse subtasks' : 'Expand subtasks'}
@@ -75,20 +72,15 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete, tagsById }: TaskRo
           ) : (
             <ChevronRight className="w-4 h-4 text-gray-400" />
           )}
-        </button>
+        </Button>
 
         {/* Check button */}
-        <button
-          onClick={() => onToggle(task)}
-          className={`w-5 h-5 rounded border-2 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center flex-shrink-0 mr-3 ${
-            task.completed
-              ? 'bg-purple-600 border-purple-600 dark:bg-purple-500 dark:border-purple-500'
-              : 'border-gray-300 dark:border-gray-500 hover:border-purple-400 dark:hover:border-purple-400'
-          }`}
+        <Checkbox
+          checked={task.completed}
+          onCheckedChange={() => onToggle(task)}
+          className="w-5 h-5 rounded border-2 flex-shrink-0 mr-3 data-[state=checked]:bg-primary"
           aria-label={task.completed ? `Mark ${task.title} incomplete` : `Mark ${task.title} complete`}
-        >
-          {task.completed && <Check className="w-3 h-3 text-white" />}
-        </button>
+        />
 
         {/* Task info */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -153,13 +145,15 @@ export function TaskRow({ task, onToggle, onUpdate, onDelete, tagsById }: TaskRo
 
         {/* Action icons */}
         <div className="w-16 sm:w-24 flex items-center justify-center gap-1 sm:gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onDelete(task)}
-            className="p-2 min-w-[44px] min-h-[44px] hover:bg-red-100 dark:hover:bg-red-900 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 flex items-center justify-center"
+            className="text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900"
             aria-label={`Delete ${task.title}`}
           >
-            <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-          </button>
+            <Trash2 className="w-5 h-5" />
+          </Button>
         </div>
       </div>
 

@@ -1,5 +1,11 @@
-import X from 'lucide-react/dist/esm/icons/x';
 import { KEYBOARD_SHORTCUTS } from '@/hooks/useKeyboardShortcuts';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
@@ -7,31 +13,14 @@ interface KeyboardShortcutsModalProps {
 }
 
 export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsModalProps) {
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full mx-4 overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-            Keyboard Shortcuts
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-            aria-label="Close"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Keyboard Shortcuts</DialogTitle>
+        </DialogHeader>
 
-        <div className="px-6 py-4 space-y-3">
+        <div className="space-y-3">
           {KEYBOARD_SHORTCUTS.map((shortcut) => (
             <div
               key={shortcut.key}
@@ -47,12 +36,14 @@ export function KeyboardShortcutsModal({ isOpen, onClose }: KeyboardShortcutsMod
           ))}
         </div>
 
-        <div className="px-6 py-4 bg-gray-50 dark:bg-slate-900 text-center">
+        <Separator />
+
+        <div className="text-center">
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Press <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs font-mono">?</kbd> to toggle this menu
           </span>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import X from 'lucide-react/dist/esm/icons/x';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import type { RecurrencePattern } from '@/types';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Toggle } from '@/components/ui/toggle';
+import { DatePicker } from '@/components/ui/date-picker';
+import { Button } from '@/components/ui/button';
 
 interface RecurrencePickerProps {
   value?: RecurrencePattern;
@@ -70,15 +71,14 @@ export function RecurrencePicker({ value, onChange, onClose }: RecurrencePickerP
     }
   };
 
-  const handleEndDateChange = (date: Date | null) => {
-    const newEndDate = date || undefined;
-    setEndDate(newEndDate);
+  const handleEndDateChange = (date?: Date) => {
+    setEndDate(date);
 
     if (frequency) {
       const pattern: RecurrencePattern = {
         frequency,
         interval: 1,
-        endDate: newEndDate,
+        endDate: date,
       };
 
       if (frequency === 'weekly') {
@@ -113,33 +113,38 @@ export function RecurrencePicker({ value, onChange, onClose }: RecurrencePickerP
           Repeat
         </label>
         {frequency && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="sm"
             onClick={handleClear}
-            className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 h-auto px-1 py-0"
             aria-label="Clear recurrence"
           >
             Clear
-          </button>
+          </Button>
         )}
       </div>
 
       <div className="space-y-2">
-        <select
-          value={frequency || ''}
-          onChange={(e) =>
+        <Select
+          value={frequency || 'none'}
+          onValueChange={(val) =>
             handleFrequencyChange(
-              e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly' | undefined || undefined
+              val === 'none' ? undefined : val as 'daily' | 'weekly' | 'monthly' | 'yearly'
             )
           }
-          className="w-full text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
-          aria-label="Recurrence frequency"
         >
-          <option value="">None</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
+          <SelectTrigger aria-label="Recurrence frequency" className="w-full text-sm">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">None</SelectItem>
+            <SelectItem value="daily">Daily</SelectItem>
+            <SelectItem value="weekly">Weekly</SelectItem>
+            <SelectItem value="monthly">Monthly</SelectItem>
+          </SelectContent>
+        </Select>
 
         {frequency === 'weekly' && (
           <div className="space-y-2">
@@ -148,20 +153,20 @@ export function RecurrencePicker({ value, onChange, onClose }: RecurrencePickerP
             </label>
             <div className="flex gap-2 flex-wrap">
               {DAYS_OF_WEEK.map(({ value: day, label }) => (
-                <button
+                <Toggle
                   key={day}
-                  type="button"
-                  onClick={() => handleDayToggle(day)}
-                  className={`px-3 py-1.5 text-xs rounded-lg border transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 ${
+                  pressed={daysOfWeek.includes(day)}
+                  onPressedChange={() => handleDayToggle(day)}
+                  size="sm"
+                  className={`px-3 py-1.5 text-xs ${
                     daysOfWeek.includes(day)
-                      ? 'bg-purple-600 text-white border-purple-600'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-purple-400'
+                      ? 'bg-purple-600 text-white data-[state=on]:bg-purple-600 data-[state=on]:text-white'
+                      : ''
                   }`}
-                  aria-pressed={daysOfWeek.includes(day)}
                   aria-label={`Repeat on ${label}`}
                 >
                   {label}
-                </button>
+                </Toggle>
               ))}
             </div>
           </div>
@@ -172,27 +177,13 @@ export function RecurrencePicker({ value, onChange, onClose }: RecurrencePickerP
             <label className="text-xs text-gray-500 dark:text-gray-400">
               Ends on (optional):
             </label>
-            <div className="relative">
-              <DatePicker
-                selected={endDate}
-                onChange={handleEndDateChange}
-                dateFormat="MMM d, yyyy"
-                placeholderText="Never"
-                minDate={new Date()}
-                className="w-full text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
-                aria-label="Recurrence end date"
-              />
-              {endDate && (
-                <button
-                  type="button"
-                  onClick={() => handleEndDateChange(null)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 dark:hover:bg-gray-600 rounded"
-                  aria-label="Clear end date"
-                >
-                  <X className="w-3 h-3 text-gray-500" />
-                </button>
-              )}
-            </div>
+            <DatePicker
+              date={endDate}
+              onDateChange={handleEndDateChange}
+              placeholder="Never"
+              minDate={new Date()}
+              className="w-full text-sm"
+            />
           </div>
         )}
       </div>

@@ -89,9 +89,19 @@ describe('TaskInput', () => {
     await user.type(input, 'Task with deadline');
     await user.click(dateButton);
 
-    // react-datepicker uses formatted date input (MMM d, yyyy format)
-    const dateInput = screen.getByLabelText('Task deadline');
-    await user.type(dateInput, 'Dec 31, 2026');
+    // shadcn DatePicker renders a popover button; click to open calendar
+    const pickDateButton = screen.getByText('Select date');
+    await user.click(pickDateButton);
+
+    // Select day 15 from the calendar - react-day-picker renders buttons inside gridcells
+    const dayButtons = screen.getAllByRole('gridcell');
+    const day15Cell = dayButtons.find((cell) => cell.textContent === '15');
+    expect(day15Cell).toBeTruthy();
+    // Click the button inside the gridcell
+    const day15Button = day15Cell!.querySelector('button');
+    if (day15Button) {
+      await user.click(day15Button);
+    }
 
     await user.click(plusButton);
 
@@ -99,7 +109,7 @@ describe('TaskInput', () => {
     const callArgs = onAddTask.mock.calls[0];
     expect(callArgs?.[0]).toBe('Task with deadline');
     expect(callArgs?.[1]).toBeInstanceOf(Date);
-    expect(callArgs?.[1]?.toISOString().split('T')[0]).toBe('2026-12-31');
+    expect(callArgs?.[1]?.getDate()).toBe(15);
   });
 
   it('does not call onAddTask when plus button is clicked with empty input', async () => {
