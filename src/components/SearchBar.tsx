@@ -1,6 +1,8 @@
 import Search from 'lucide-react/dist/esm/icons/search';
 import X from 'lucide-react/dist/esm/icons/x';
 import { forwardRef } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface SearchBarProps {
   value: string;
@@ -16,24 +18,26 @@ export const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
           <Search className="h-5 w-5 text-gray-400 dark:text-gray-500" />
         </div>
 
-        <input
+        <Input
           ref={ref}
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           aria-label="Search tasks"
-          className="w-full pl-11 pr-10 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-colors duration-150"
+          className="w-full pl-11 pr-10 py-3 h-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
         />
 
         {value && (
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => onChange('')}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded"
+            className="absolute inset-y-0 right-0 mr-1 my-auto h-8 w-8"
             aria-label="Clear search"
           >
             <X className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-          </button>
+          </Button>
         )}
       </div>
     );

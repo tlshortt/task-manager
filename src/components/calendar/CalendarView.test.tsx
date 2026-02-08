@@ -100,8 +100,8 @@ describe('CalendarView', () => {
     // Wait for modal to appear
     await screen.findByText(/February 15, 2026/i);
 
-    // Find and click the task toggle button in the modal (use getAllByRole in case there are multiple)
-    const toggleButtons = screen.getAllByRole('button', { name: /Mark Task 1 complete/i });
+    // Find and click the task toggle checkbox in the modal (use getAllByRole in case there are multiple)
+    const toggleButtons = screen.getAllByRole('checkbox', { name: /Mark Task 1 complete/i });
     const toggleButton = toggleButtons[toggleButtons.length - 1];
     if (!toggleButton) throw new Error('Toggle button not found');
     await user.click(toggleButton); // Use last one (should be in modal)

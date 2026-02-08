@@ -1,18 +1,22 @@
 import { useRef, useImperativeHandle, forwardRef } from 'react';
 import Plus from 'lucide-react/dist/esm/icons/plus';
-import Calendar from 'lucide-react/dist/esm/icons/calendar';
+import CalendarIcon from 'lucide-react/dist/esm/icons/calendar';
 import TagIcon from 'lucide-react/dist/esm/icons/tag';
 import FileText from 'lucide-react/dist/esm/icons/file-text';
 import ListTodo from 'lucide-react/dist/esm/icons/list-todo';
 import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import X from 'lucide-react/dist/esm/icons/x';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import type { Priority, Subtask, RecurrencePattern, Id } from '@/types';
 import { TagBadge, TAG_COLORS } from './TagBadge';
 import { RecurrencePicker } from './RecurrencePicker';
 import { useTaskForm } from '@/hooks/useTaskForm';
 import { useTags } from '@/hooks/useTags';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { DatePicker } from '@/components/ui/date-picker';
+import { cn } from '@/lib/utils';
 
 interface TaskInputProps {
   onAddTask: (title: string, dueDate?: Date, priority?: Priority, tagIds?: Id<'tags'>[], description?: string, subtasks?: Subtask[], recurrence?: RecurrencePattern) => void;
@@ -78,18 +82,20 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-card p-4">
+    <Card className="p-4">
       <form onSubmit={handleSubmit} className="flex items-center gap-3">
-        <button
+        <Button
           type="submit"
+          variant="ghost"
+          size="icon"
           aria-label="Add task"
           disabled={!title.trim()}
-          className="p-1 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+          className="flex-shrink-0 hover:bg-purple-100 dark:hover:bg-purple-900/30"
         >
           <Plus className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-        </button>
+        </Button>
 
-        <input
+        <Input
           ref={inputRef}
           type="text"
           value={title}
@@ -100,7 +106,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           placeholder="Add a new task..."
           aria-label="New task title"
-          className="flex-1 border-0 focus:ring-0 focus:outline-none placeholder:text-gray-400 dark:placeholder:text-gray-500 text-gray-900 dark:text-white dark:bg-gray-800 min-h-[44px] py-2"
+          className="flex-1 border-0 shadow-none focus-visible:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-500 text-gray-900 dark:text-white dark:bg-transparent min-h-[44px] py-2"
         />
 
         {/* Priority picker */}
@@ -113,15 +119,19 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
               aria-label={`${p} priority`}
               aria-checked={priority === p}
               role="radio"
-              className={`w-4 h-4 rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 ${
-                p === 'low' ? 'bg-gray-400' : p === 'medium' ? 'bg-amber-500' : 'bg-red-500'
-              } ${priority === p ? 'ring-2 ring-offset-1 ring-purple-500 scale-110' : 'opacity-50 hover:opacity-75'}`}
+              className={cn(
+                'w-4 h-4 rounded-full transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1',
+                p === 'low' ? 'bg-gray-400' : p === 'medium' ? 'bg-amber-500' : 'bg-red-500',
+                priority === p ? 'ring-2 ring-offset-1 ring-purple-500 scale-110' : 'opacity-50 hover:opacity-75'
+              )}
             />
           ))}
         </div>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowTagPicker(!showTagPicker);
             setShowDatePicker(false);
@@ -131,14 +141,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           aria-label={showTagPicker ? 'Hide category picker' : 'Add categories'}
           aria-expanded={showTagPicker}
-          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+          className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 min-h-[44px]"
         >
           <TagIcon className="w-4 h-4" />
           <span className="hidden sm:inline">Categories</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowDatePicker(!showDatePicker);
             setShowTagPicker(false);
@@ -148,14 +160,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           aria-label={showDatePicker ? 'Hide deadline picker' : 'Show deadline picker'}
           aria-expanded={showDatePicker}
-          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+          className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 min-h-[44px]"
         >
-          <Calendar className="w-4 h-4" />
+          <CalendarIcon className="w-4 h-4" />
           <span className="hidden sm:inline">Deadline</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowDescription(!showDescription);
             setShowDatePicker(false);
@@ -165,14 +179,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           aria-label={showDescription ? 'Hide note' : 'Add note'}
           aria-expanded={showDescription}
-          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+          className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 min-h-[44px]"
         >
           <FileText className="w-4 h-4" />
           <span className="hidden sm:inline">Note</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowSubtasks(!showSubtasks);
             setShowDatePicker(false);
@@ -182,14 +198,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           aria-label={showSubtasks ? 'Hide subtasks' : 'Add subtasks'}
           aria-expanded={showSubtasks}
-          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]"
+          className="text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 min-h-[44px]"
         >
           <ListTodo className="w-4 h-4" />
           <span className="hidden sm:inline">Subtasks</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={() => {
             setShowRecurrencePicker(!showRecurrencePicker);
             setShowDatePicker(false);
@@ -199,11 +217,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           }}
           aria-label={showRecurrencePicker ? 'Hide recurrence' : 'Set recurrence'}
           aria-expanded={showRecurrencePicker}
-          className={`flex items-center gap-1.5 text-sm ${recurrence ? 'text-purple-600 dark:text-purple-400' : 'text-gray-500 dark:text-gray-400'} hover:text-purple-600 dark:hover:text-purple-400 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded px-2 py-2 min-h-[44px]`}
+          className={cn(
+            'min-h-[44px]',
+            recurrence
+              ? 'text-purple-600 dark:text-purple-400'
+              : 'text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400'
+          )}
         >
           <Repeat className="w-4 h-4" />
           <span className="hidden sm:inline">Repeat</span>
-        </button>
+        </Button>
       </form>
 
       {/* Current tags display */}
@@ -218,14 +241,9 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       {showDatePicker && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
           <DatePicker
-            selected={dueDate}
-            onChange={handleDateChange}
-            onKeyDown={handleEscape}
-            dateFormat="MMM d, yyyy"
-            placeholderText="Select date"
-            calendarClassName="custom-calendar"
-            aria-label="Task deadline"
-            className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none min-h-[44px]"
+            date={dueDate}
+            onDateChange={(day) => handleDateChange(day ?? null)}
+            placeholder="Select date"
           />
         </div>
       )}
@@ -233,7 +251,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       {showTagPicker && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2 flex-wrap">
-            <input
+            <Input
               type="text"
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
@@ -245,7 +263,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
                 handleEscape(e);
               }}
               placeholder="Category name..."
-              className="text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
+              className="w-auto text-sm"
             />
             <div className="flex gap-1">
               {TAG_COLORS.map((color) => (
@@ -266,14 +284,14 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
 
       {showDescription && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-          <textarea
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             onKeyDown={handleEscape}
             placeholder="Add a note..."
             aria-label="Task description"
             rows={3}
-            className="w-full text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none resize-none"
+            className="resize-none"
           />
         </div>
       )}
@@ -281,7 +299,7 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
       {showSubtasks && (
         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="text"
               value={newSubtaskTitle}
               onChange={(e) => setNewSubtaskTitle(e.target.value)}
@@ -294,17 +312,18 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
               }}
               placeholder="Add a subtask..."
               aria-label="New subtask title"
-              className="flex-1 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none"
+              className="flex-1 text-sm"
             />
-            <button
+            <Button
               type="button"
+              size="icon"
               onClick={addSubtask}
               disabled={!newSubtaskTitle.trim()}
-              className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
               aria-label="Add subtask"
+              className="bg-purple-600 text-white hover:bg-purple-700"
             >
               <Plus className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
           {subtasks.length > 0 && (
             <div className="mt-2 space-y-1">
@@ -316,14 +335,16 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
                   <span className="flex-1 text-sm text-gray-700 dark:text-gray-300">
                     {subtask.title}
                   </span>
-                  <button
+                  <Button
                     type="button"
+                    variant="ghost"
+                    size="icon"
                     onClick={() => removeSubtask(subtask.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded transition-opacity"
+                    className="opacity-0 group-hover:opacity-100 h-6 w-6 hover:bg-red-100 dark:hover:bg-red-900/30 transition-opacity"
                     aria-label={`Remove subtask: ${subtask.title}`}
                   >
                     <X className="w-3 h-3 text-red-500" />
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -350,6 +371,6 @@ export const TaskInput = forwardRef<TaskInputHandle, TaskInputProps>(function Ta
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 })

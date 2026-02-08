@@ -1,5 +1,7 @@
 import Repeat from 'lucide-react/dist/esm/icons/repeat';
 import type { RecurrencePattern } from '@/types';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface RecurrenceBadgeProps {
   pattern: RecurrencePattern;
@@ -38,12 +40,16 @@ export function RecurrenceBadge({ pattern, size = 'sm' }: RecurrenceBadgeProps) 
   const sizeClasses = size === 'sm' ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1';
 
   return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 ${sizeClasses}`}
+    <Badge
+      variant="secondary"
+      className={cn(
+        'inline-flex items-center gap-1 rounded-full font-medium border-0 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300',
+        sizeClasses
+      )}
       aria-label={`Recurring task: ${label}`}
     >
       <Repeat className="w-3 h-3" />
       {label}
-    </span>
+    </Badge>
   );
 }

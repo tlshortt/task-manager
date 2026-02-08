@@ -1,8 +1,11 @@
 import { useState } from 'react';
-import Check from 'lucide-react/dist/esm/icons/check';
 import Plus from 'lucide-react/dist/esm/icons/plus';
 import X from 'lucide-react/dist/esm/icons/x';
+import Check from 'lucide-react/dist/esm/icons/check';
 import type { Subtask } from '@/types';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface SubtaskListProps {
   subtasks: Subtask[];
@@ -51,18 +54,13 @@ export function SubtaskList({ subtasks, onUpdate, disabled }: SubtaskListProps) 
           key={subtask.id}
           className="group flex items-center gap-2 py-1"
         >
-          <button
-            onClick={() => handleToggle(subtask.id)}
+          <Checkbox
+            checked={subtask.completed}
+            onCheckedChange={() => handleToggle(subtask.id)}
             disabled={disabled}
-            className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${
-              subtask.completed
-                ? 'bg-purple-600 border-purple-600 dark:bg-purple-500'
-                : 'border-gray-300 dark:border-gray-500 hover:border-purple-400'
-            }`}
+            className="h-4 w-4 data-[state=checked]:bg-primary"
             aria-label={subtask.completed ? 'Mark incomplete' : 'Mark complete'}
-          >
-            {subtask.completed && <Check className="w-3 h-3 text-white" />}
-          </button>
+          />
           <span
             className={`text-sm flex-1 ${
               subtask.completed
@@ -72,20 +70,22 @@ export function SubtaskList({ subtasks, onUpdate, disabled }: SubtaskListProps) 
           >
             {subtask.title}
           </span>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => handleDelete(subtask.id)}
             disabled={disabled}
-            className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 dark:hover:bg-red-900 rounded transition-opacity"
+            className="opacity-0 group-hover:opacity-100 h-6 w-6 text-red-500 hover:bg-red-100 dark:hover:bg-red-900 transition-opacity"
             aria-label="Delete subtask"
           >
-            <X className="w-3 h-3 text-red-500" />
-          </button>
+            <X className="w-3 h-3" />
+          </Button>
         </div>
       ))}
 
       {isAdding ? (
         <div className="flex items-center gap-2">
-          <input
+          <Input
             type="text"
             value={newSubtask}
             onChange={(e) => setNewSubtask(e.target.value)}
@@ -97,36 +97,40 @@ export function SubtaskList({ subtasks, onUpdate, disabled }: SubtaskListProps) 
               }
             }}
             placeholder="Add subtask..."
-            className="flex-1 text-sm px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="flex-1 text-sm h-8"
             autoFocus
           />
-          <button
+          <Button
+            size="sm"
             onClick={handleAdd}
-            className="p-1 bg-purple-600 text-white rounded hover:bg-purple-700"
             aria-label="Add subtask"
           >
             <Check className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => {
               setIsAdding(false);
               setNewSubtask('');
             }}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+            className="h-8 w-8"
             aria-label="Cancel"
           >
             <X className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       ) : (
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => setIsAdding(true)}
           disabled={disabled}
-          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 py-1"
+          className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 h-auto py-1 px-0"
         >
           <Plus className="w-3 h-3" />
           Add subtask
-        </button>
+        </Button>
       )}
     </div>
   );

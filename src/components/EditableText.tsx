@@ -1,4 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 interface EditableTextProps {
   value: string;
@@ -75,13 +78,13 @@ export function EditableText({
   if (isEditing) {
     if (multiline) {
       return (
-        <textarea
+        <Textarea
           ref={textareaRef}
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={save}
-          className={inputClassName}
+          className={cn(inputClassName)}
           placeholder={placeholder}
           aria-label={ariaLabel}
           onClick={(e) => e.stopPropagation()}
@@ -90,14 +93,14 @@ export function EditableText({
       );
     }
     return (
-      <input
+      <Input
         ref={inputRef}
         type="text"
         value={editValue}
         onChange={(e) => setEditValue(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={save}
-        className={inputClassName}
+        className={cn(inputClassName)}
         placeholder={placeholder}
         aria-label={ariaLabel}
         onClick={(e) => e.stopPropagation()}
@@ -106,13 +109,13 @@ export function EditableText({
   }
 
   return (
-    <div 
-      onClick={startEditing} 
-      className={className} 
-      role="button" 
-      tabIndex={0} 
-      onKeyDown={(e) => { 
-        if (e.key === 'Enter') startEditing(e); 
+    <div
+      onClick={startEditing}
+      className={className}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') startEditing(e);
       }}
     >
       {value || placeholder}

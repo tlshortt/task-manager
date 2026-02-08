@@ -1,6 +1,7 @@
 import Moon from 'lucide-react/dist/esm/icons/moon';
 import Sun from 'lucide-react/dist/esm/icons/sun';
 import { format } from 'date-fns';
+import { Button } from '@/components/ui/button';
 
 interface AppHeaderProps {
   isDark: boolean;
@@ -18,9 +19,10 @@ export function AppHeader({ isDark, onToggleDarkMode }: AppHeaderProps) {
       {/* Right: Date and dark mode toggle */}
       <div className="flex items-center gap-4">
         <span className="text-gray-500 dark:text-gray-400 text-sm">{today}</span>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={onToggleDarkMode}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
           {isDark ? (
@@ -28,7 +30,7 @@ export function AppHeader({ isDark, onToggleDarkMode }: AppHeaderProps) {
           ) : (
             <Moon className="w-5 h-5 text-gray-600" />
           )}
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,4 +1,12 @@
 import type { CategoryFilter, PriorityFilter, RecurrenceFilter, Tag } from '@/types';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface FilterDropdownsProps {
   tags: Tag[] | undefined;
@@ -20,66 +28,64 @@ export function FilterDropdowns({
   onPriorityChange,
 }: FilterDropdownsProps) {
   const sortedTags = tags ? [...tags].sort((a, b) => a.name.localeCompare(b.name)) : [];
-  const selectClassName =
-    'w-full sm:w-48 h-11 px-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-slate-900';
 
   return (
     <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
       <div className="flex flex-col gap-1 w-full sm:w-48">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Recurrence
-        </label>
-        <select
-          aria-label="Recurrence"
-          value={recurrence}
-          onChange={(event) => onRecurrenceChange(event.target.value as RecurrenceFilter)}
-          className={selectClassName}
-        >
-          <option value="all">All</option>
-          <option value="recurring">Recurring</option>
-          <option value="non-recurring">Non-recurring</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
+        </Label>
+        <Select value={recurrence} onValueChange={(value) => onRecurrenceChange(value as RecurrenceFilter)}>
+          <SelectTrigger aria-label="Recurrence" className="w-full sm:w-48 h-11">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="recurring">Recurring</SelectItem>
+            <SelectItem value="non-recurring">Non-recurring</SelectItem>
+            <SelectItem value="daily">Daily</SelectItem>
+            <SelectItem value="weekly">Weekly</SelectItem>
+            <SelectItem value="monthly">Monthly</SelectItem>
+            <SelectItem value="yearly">Yearly</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-col gap-1 w-full sm:w-48">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Category
-        </label>
-        <select
-          aria-label="Category"
-          value={category}
-          onChange={(event) => onCategoryChange(event.target.value as CategoryFilter)}
-          className={selectClassName}
-        >
-          <option value="all">All</option>
-          <option value="uncategorized">Uncategorized</option>
-          {sortedTags.map((tag) => (
-            <option key={tag.id} value={tag.id}>
-              {tag.name}
-            </option>
-          ))}
-        </select>
+        </Label>
+        <Select value={category} onValueChange={(value) => onCategoryChange(value as CategoryFilter)}>
+          <SelectTrigger aria-label="Category" className="w-full sm:w-48 h-11">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="uncategorized">Uncategorized</SelectItem>
+            {sortedTags.map((tag) => (
+              <SelectItem key={tag.id} value={tag.id}>
+                {tag.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="flex flex-col gap-1 w-full sm:w-48">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <Label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           Priority
-        </label>
-        <select
-          aria-label="Priority"
-          value={priority}
-          onChange={(event) => onPriorityChange(event.target.value as PriorityFilter)}
-          className={selectClassName}
-        >
-          <option value="all">All</option>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
+        </Label>
+        <Select value={priority} onValueChange={(value) => onPriorityChange(value as PriorityFilter)}>
+          <SelectTrigger aria-label="Priority" className="w-full sm:w-48 h-11">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="low">Low</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="high">High</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

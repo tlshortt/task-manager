@@ -13,6 +13,12 @@ export { TagBadge, TAG_COLORS } from './TagBadge';
 export { SubtaskList } from './SubtaskList';
 export { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 export { ViewModeToggle } from './ViewModeToggle';
+export { FilterDropdowns } from './FilterDropdowns';
+export { EditableText } from './EditableText';
+export { RecurrencePicker } from './RecurrencePicker';
+export { RecurrenceBadge } from './RecurrenceBadge';
+export { RecurringTaskGroup } from './RecurringTaskGroup';
+export { SearchBar } from './SearchBar';
 
 // Calendar components
 export {

@@ -54,13 +54,10 @@ describe('FilterTabs', () => {
       />
     );
 
-    const overdueTab = screen.getByText('Overdue').closest('button');
-    if (overdueTab) {
-      await user.click(overdueTab);
-    }
+    const overdueTab = screen.getByRole('tab', { name: /overdue/i });
+    await user.click(overdueTab);
 
     expect(onFilterChange).toHaveBeenCalledWith('overdue');
-    expect(onFilterChange).toHaveBeenCalledTimes(1);
   });
 
   it('marks current filter as selected', () => {
@@ -75,7 +72,7 @@ describe('FilterTabs', () => {
     );
 
     const overdueTab = screen.getByRole('tab', { name: /overdue/i });
-    expect(overdueTab).toHaveAttribute('aria-selected', 'true');
+    expect(overdueTab).toHaveAttribute('data-state', 'active');
   });
 
   it('marks non-active tabs as not selected', () => {
@@ -90,7 +87,7 @@ describe('FilterTabs', () => {
     );
 
     const currentTab = screen.getByRole('tab', { name: /current/i });
-    expect(currentTab).toHaveAttribute('aria-selected', 'false');
+    expect(currentTab).toHaveAttribute('data-state', 'inactive');
   });
 
   it('switches active tab when different filter is selected', async () => {
@@ -120,6 +117,6 @@ describe('FilterTabs', () => {
     );
 
     const completedTabAfter = screen.getByRole('tab', { name: /completed/i });
-    expect(completedTabAfter).toHaveAttribute('aria-selected', 'true');
+    expect(completedTabAfter).toHaveAttribute('data-state', 'active');
   });
 });

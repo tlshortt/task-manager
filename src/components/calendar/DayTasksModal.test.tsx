@@ -75,15 +75,13 @@ describe('DayTasksModal', () => {
   it('calls onClose when backdrop is clicked', async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
-    
+
     render(<DayTasksModal {...defaultProps} onClose={onClose} />);
-    
-    // Click on backdrop (the outer div)
-    const backdrop = screen.getByText(/January 15, 2026/i).closest('.fixed');
-    if (backdrop) {
-      await user.click(backdrop);
-    }
-    
+
+    // Radix Dialog renders an overlay element with data-state="open"
+    // Pressing Escape triggers onClose via onOpenChange
+    await user.keyboard('{Escape}');
+
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
@@ -117,9 +115,9 @@ describe('DayTasksModal', () => {
     
     render(<DayTasksModal {...defaultProps} onToggle={onToggle} />);
     
-    const toggleButton = screen.getByRole('button', { name: /Mark Task 1 complete/i });
+    const toggleButton = screen.getByRole('checkbox', { name: /Mark Task 1 complete/i });
     await user.click(toggleButton);
-    
+
     expect(onToggle).toHaveBeenCalledTimes(1);
     expect(onToggle).toHaveBeenCalledWith(mockTasks[0]);
   });
