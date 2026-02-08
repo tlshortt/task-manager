@@ -1,18 +1,16 @@
 import type { GenericId } from "convex/values";
-import type { RegisteredMutation, RegisteredQuery } from "convex/server";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyRegistered = RegisteredMutation<any, any, any> | RegisteredQuery<any, any, any>;
 
 /**
- * Runs a Convex handler function with test context
+ * Runs a Convex handler function with test context.
+ * Convex registered functions expose the handler as `_handler`.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runHandler<TArgs, TResult>(
-  fn: AnyRegistered & { handler: (ctx: unknown, args: TArgs) => Promise<TResult> },
+  fn: { _handler: (ctx: unknown, args: TArgs) => Promise<TResult> },
   ctx: TestCtx,
   args: TArgs
 ): Promise<TResult> {
-  return fn.handler(ctx, args);
+  return fn._handler(ctx, args);
 }
 
 type TableName = "tasks" | "tags";
