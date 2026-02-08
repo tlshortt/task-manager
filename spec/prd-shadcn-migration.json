@@ -1,0 +1,256 @@
+{
+  "projectName": "shadcn/ui Migration",
+  "branchName": "feature/shadcn-ui-migration",
+  "description": "Migrate all 33 custom UI components to shadcn/ui primitives, replacing react-datepicker and react-hot-toast, while preserving the purple/navy/gray visual identity and dark mode support.",
+  "created": "2026-02-07",
+  "tasks": [
+    {
+      "id": "US-001",
+      "title": "Foundation Setup - Install Dependencies and Configure Tooling",
+      "description": "As a developer, I want to install shadcn/ui utility dependencies and configure the project foundation so that all subsequent component migrations have the required infrastructure in place.",
+      "acceptanceCriteria": [
+        "tailwind-merge, clsx, class-variance-authority, tailwindcss-animate, and @radix-ui/react-slot are installed",
+        "src/lib/utils.ts exists and exports a cn() helper using clsx and twMerge",
+        "components.json exists at project root with style: new-york, rsc: false, baseColor: slate, cssVariables: true, and correct aliases",
+        "tailwind.config.js includes shadcn CSS variable color references (background, foreground, primary, secondary, destructive, muted, accent, popover, card, border, input, ring) using hsl(var(--name)) pattern",
+        "tailwind.config.js retains existing custom colors (navy-800, navy-900, purple-accent, blue-accent) and safelist",
+        "tailwindcss-animate plugin is added to tailwind.config.js",
+        "src/index.css is rewritten with CSS variables mapping current palette for light and dark modes, react-datepicker overrides and unused .btn/.card/.input classes are removed",
+        "ResizeObserver mock is added to src/test/setup.ts",
+        "npm run build compiles without errors",
+        "npm run test passes all 19 test files"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-002",
+      "title": "Add shadcn Base Components via CLI",
+      "description": "As a developer, I want to scaffold all required shadcn/ui components into src/components/ui/ so that they are available for migration in subsequent phases.",
+      "acceptanceCriteria": [
+        "shadcn CLI has added button, input, textarea, select, checkbox, dialog, badge, tabs, card, collapsible, calendar, popover, sonner, label, toggle, and separator components to src/components/ui/",
+        "All required Radix primitives and react-day-picker and sonner are auto-installed",
+        "A custom DatePicker composite component exists at src/components/ui/date-picker.tsx with props: date, onDateChange, placeholder, minDate, className",
+        "npm run build compiles without errors"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-003",
+      "title": "Migrate Badge Components",
+      "description": "As a developer, I want to migrate TagBadge, PriorityBadge, and RecurrenceBadge to use shadcn Badge primitives so that badge styling is consistent and accessible.",
+      "acceptanceCriteria": [
+        "TagBadge wraps with shadcn Badge variant='secondary' while retaining custom 8-color colorMap",
+        "PriorityBadge adopts cn() for class merging",
+        "RecurrenceBadge wraps with shadcn Badge variant='secondary' with indigo custom classes",
+        "PriorityBadge.test.tsx is updated if DOM structure changes",
+        "npm run build compiles without errors",
+        "npm run test passes all tests",
+        "Badges render correctly in both light and dark mode"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-004",
+      "title": "Migrate EditableText Component",
+      "description": "As a developer, I want to migrate EditableText to use shadcn Input and Textarea so that inline editing uses consistent form primitives.",
+      "acceptanceCriteria": [
+        "Native <input> in EditableText is replaced with shadcn Input",
+        "Native <textarea> in EditableText is replaced with shadcn Textarea",
+        "Click-to-edit logic remains unchanged",
+        "Parent inputClassName is merged via cn()",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-005",
+      "title": "Migrate Buttons Across All Components",
+      "description": "As a developer, I want to migrate all button elements across AppHeader, CalendarHeader, SubtaskList, RecurrencePicker, TaskRow, and TaskInput to shadcn Button variants so that button styling and accessibility is consistent.",
+      "acceptanceCriteria": [
+        "AppHeader icon buttons (theme toggle, shortcuts) use Button variant='ghost' size='icon'",
+        "CalendarHeader nav buttons use Button variant='ghost' size='icon' and Today button uses Button variant='outline' size='sm'",
+        "SubtaskList add button uses Button variant='default' size='sm' and delete buttons use Button variant='ghost' size='icon' with red class",
+        "RecurrencePicker standalone buttons use appropriate shadcn Button variants",
+        "TaskRow delete button uses Button variant='ghost' size='icon' with red class and other icon buttons use Button variant='ghost' size='icon'",
+        "TaskInput submit button uses Button variant='default' and toolbar toggles use Button variant='ghost' size='sm'",
+        "CalendarDay.tsx day cell remains as native <button>",
+        "TaskRow.test.tsx is updated if button query selectors change",
+        "TaskInput.test.tsx is updated if button query selectors change",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-006",
+      "title": "Migrate Checkboxes in TaskRow and SubtaskList",
+      "description": "As a developer, I want to replace custom checkbox buttons with shadcn Checkbox so that task completion toggles are accessible and consistent.",
+      "acceptanceCriteria": [
+        "TaskRow custom <button> checkbox is replaced with shadcn Checkbox with data-[state=checked]:bg-primary",
+        "SubtaskList checkbox uses same pattern with smaller size (h-4 w-4)",
+        "TaskRow.test.tsx is updated for Radix checkbox role interactions",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-007",
+      "title": "Migrate FilterDropdowns to shadcn Select",
+      "description": "As a developer, I want to replace native <select> elements in FilterDropdowns with shadcn Select primitives so that dropdowns have consistent styling and accessibility.",
+      "acceptanceCriteria": [
+        "All 3 native <select> elements are replaced with Select/SelectTrigger/SelectContent/SelectItem",
+        "Label components are added for each select",
+        "FilterDropdowns.test.tsx is updated from fireEvent.change() on native selects to userEvent.click() on Radix combobox triggers and getByRole('option')",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-008",
+      "title": "Migrate Tabs and Toggles",
+      "description": "As a developer, I want to migrate FilterTabs and ViewModeToggle to shadcn Tabs so that tab navigation and view switching use consistent accessible primitives.",
+      "acceptanceCriteria": [
+        "FilterTabs replaces custom role='tablist' buttons with Tabs/TabsList/TabsTrigger with transparent background and border-bottom active indicator",
+        "FilterTabs does not use TabsContent (content rendering is external in MainLayout)",
+        "ViewModeToggle replaces custom toggle buttons with Tabs/TabsList/TabsTrigger using default pill styling",
+        "FilterTabs.test.tsx is updated if role/interaction changes",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-009",
+      "title": "Migrate Dialogs",
+      "description": "As a developer, I want to migrate KeyboardShortcutsModal and DayTasksModal to shadcn Dialog so that modals have proper focus trapping, escape handling, and accessibility out of the box.",
+      "acceptanceCriteria": [
+        "KeyboardShortcutsModal replaces custom fixed overlay with Dialog/DialogContent/DialogHeader/DialogTitle and adds Separator before footer",
+        "Manual Escape listener and overlay click handler are removed from KeyboardShortcutsModal",
+        "DayTasksModal uses same Dialog migration with responsive classes: h-full sm:h-auto sm:max-h-[80vh] rounded-none sm:rounded-lg",
+        "Manual useEffect + addEventListener('keydown') for Escape is removed from DayTasksModal",
+        "DayTasksModal.test.tsx is updated to use screen queries instead of container queries for Radix portal rendering",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-010",
+      "title": "Migrate Collapsible Groups",
+      "description": "As a developer, I want to migrate TaskDateGroup and RecurringTaskGroup to use shadcn Card and Collapsible so that expand/collapse sections use accessible primitives.",
+      "acceptanceCriteria": [
+        "TaskDateGroup replaces manual useState expand/collapse with Collapsible/CollapsibleTrigger/CollapsibleContent",
+        "TaskDateGroup wraps task list in Card and trigger uses Button variant='ghost' via asChild",
+        "If expand/collapse state is controlled by parent, open/onOpenChange props are used",
+        "RecurringTaskGroup follows the same Card + Collapsible pattern",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-011",
+      "title": "Replace react-datepicker with shadcn Calendar",
+      "description": "As a developer, I want to replace react-datepicker with the custom shadcn DatePicker composite in TaskInput and RecurrencePicker so that date selection uses consistent primitives and the react-datepicker dependency can be removed.",
+      "acceptanceCriteria": [
+        "TaskInput replaces react-datepicker import with custom DatePicker composite from src/components/ui/date-picker.tsx",
+        "RecurrencePicker replaces react-datepicker with custom DatePicker composite",
+        "RecurrencePicker frequency <select> is migrated to shadcn Select",
+        "RecurrencePicker day-of-week toggle buttons are migrated to shadcn Toggle with pressed/onPressedChange",
+        "TaskInput.test.tsx is updated for Calendar popover button trigger instead of react-datepicker input",
+        "RecurrencePicker.test.tsx is updated for date picker and native select interaction changes",
+        "npm run build compiles without errors",
+        "npm run test passes all tests",
+        "Date selection works correctly via Calendar popover for both due dates and recurrence end dates"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-012",
+      "title": "Replace react-hot-toast with Sonner",
+      "description": "As a developer, I want to replace react-hot-toast with Sonner so that toast notifications use a modern, consistent UI library.",
+      "acceptanceCriteria": [
+        "App.tsx replaces <Toaster> from react-hot-toast with <Toaster> from @/components/ui/sonner",
+        "All toast() calls in src/hooks/useTasks.tsx are rewritten to use Sonner API with toast('message', { action: { label, onClick } }) pattern",
+        "Undo logic in deleteTask and toggleComplete uses Sonner action pattern",
+        "Toast styling preserves navy background, white text, and purple action button via Toaster toastOptions",
+        "App.test.tsx is updated for Toaster component swap",
+        "npm run build compiles without errors",
+        "npm run test passes all tests",
+        "Delete task shows Sonner toast with working Undo action",
+        "Complete task shows Sonner toast with working Undo action"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-013",
+      "title": "Migrate SearchBar",
+      "description": "As a developer, I want to migrate SearchBar to use shadcn Input and Button so that search input styling is consistent with the rest of the UI.",
+      "acceptanceCriteria": [
+        "Native <input> in SearchBar is replaced with shadcn Input",
+        "Icon prefix/suffix wrapper layout is preserved",
+        "forwardRef is preserved for keyboard shortcut focus from MainLayout",
+        "Clear button uses Button variant='ghost' size='icon'",
+        "SearchBar.test.tsx is updated if input query selectors change",
+        "npm run build compiles without errors",
+        "npm run test passes all tests"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-014",
+      "title": "Migrate TaskInput Remaining Elements",
+      "description": "As a developer, I want to migrate remaining input elements and the container in TaskInput to shadcn primitives so that the task creation form is fully migrated.",
+      "acceptanceCriteria": [
+        "Main text input uses shadcn Input (borderless, no ring)",
+        "Description textarea uses shadcn Textarea",
+        "Tag name input uses shadcn Input",
+        "Subtask inline input uses shadcn Input",
+        "Outer container uses shadcn Card",
+        "TaskInput.test.tsx is updated if DOM queries change",
+        "MainLayout.test.tsx is updated if DOM structure changes affect integration queries",
+        "npm run build compiles without errors",
+        "npm run test passes all tests",
+        "Full task creation flow works: title, priority, date, categories, notes, subtasks, recurrence"
+      ],
+      "passes": false,
+      "completed": false
+    },
+    {
+      "id": "US-015",
+      "title": "Cleanup and Final Verification",
+      "description": "As a developer, I want to remove unused dependencies, audit CSS, update barrel exports, and remove stale imports so that the codebase is clean after the migration.",
+      "acceptanceCriteria": [
+        "react-datepicker, @types/react-datepicker, and react-hot-toast are uninstalled",
+        "src/index.css contains only CSS variable definitions and global styles with no react-datepicker overrides or unused component classes",
+        "src/components/index.ts exports all components including previously missing: FilterDropdowns, EditableText, RecurrencePicker, RecurrenceBadge, RecurringTaskGroup, DayTasksModal, SearchBar",
+        "All migrated files have no stale or unused imports",
+        "npm run test passes all 19 test files",
+        "npm run build produces a clean production build",
+        "Theme shows purple accent, gray/slate backgrounds, and purple focus rings in both light and dark mode",
+        "Dialogs close on Escape and click-outside with proper focus trap",
+        "Collapsible sections expand and collapse correctly",
+        "Keyboard shortcuts work including ? to open shortcuts modal",
+        "App is usable at 320px-768px mobile viewport"
+      ],
+      "passes": false,
+      "completed": false
+    }
+  ]
+}
