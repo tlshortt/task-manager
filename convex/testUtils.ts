@@ -4,7 +4,6 @@ import type { GenericId } from "convex/values";
  * Runs a Convex handler function with test context.
  * Convex registered functions expose the handler as `_handler`.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function runHandler<TArgs, TResult>(
   fn: { _handler: (ctx: unknown, args: TArgs) => Promise<TResult> },
   ctx: TestCtx,

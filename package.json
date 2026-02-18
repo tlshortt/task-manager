@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "NODE_NO_WARNINGS=1 NODE_OPTIONS= vitest run",
-    "test:watch": "NODE_NO_WARNINGS=1 NODE_OPTIONS= vitest"
+    "test:watch": "NODE_NO_WARNINGS=1 NODE_OPTIONS= vitest",
+    "test:visual": "bash scripts/visual-snapshots.sh"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",

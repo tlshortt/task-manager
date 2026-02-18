@@ -26,6 +26,7 @@ npm-debug.log*
 
 # Testing
 coverage/
+snapshots/*.png
 
 # Ralphy worktrees / sandboxes
 .ralphy/
