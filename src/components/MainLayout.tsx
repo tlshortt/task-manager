@@ -5,6 +5,8 @@ import { FilterTabs } from './FilterTabs';
 import { SearchBar } from './SearchBar';
 import { TaskInput } from './TaskInput';
 import { TaskDateGroup } from './TaskDateGroup';
+import { TaskRow } from './TaskRow';
+import { Card } from '@/components/ui/card';
 import { RecurringTaskGroup } from './RecurringTaskGroup';
 import { ViewModeToggle } from './ViewModeToggle';
 import { CalendarView } from './calendar';
@@ -16,6 +18,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 import { applyTaskFilters, filterAndSearchTasks, getFilterCounts, removeRecurringParents } from '@/utils/filters';
 import { groupTasksByDate, formatDateLabel, sortDateGroups } from '@/utils/dateUtils';
+import { sortTasks } from '@/utils/sorting';
 import type {
   FilterType,
   Priority,
@@ -142,6 +145,13 @@ export function MainLayout() {
   const groupedTasks = groupTasksByDate(regularTasks);
   const sortedGroups = sortDateGroups(groupedTasks);
 
+  // When sorting by non-date fields, render a flat sorted list
+  const isFlatSort = sortState.field !== 'dueDate';
+  const flatSortedTasks = useMemo(
+    () => isFlatSort ? sortTasks(filteredTasks, sortState) : [],
+    [isFlatSort, filteredTasks, sortState]
+  );
+
   // Filter tasks with due dates for calendar view
   const calendarTasks = useMemo(
     () => filteredTasks.filter((task) => task.dueDate !== undefined),
@@ -234,6 +244,27 @@ export function MainLayout() {
             onDelete={handleDelete}
             tagsById={tagsById}
           />
+        ) : isFlatSort ? (
+          flatSortedTasks.length === 0 ? (
+            <Suspense fallback={null}>
+              <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
+            </Suspense>
+          ) : (
+            <main>
+              <Card className="overflow-hidden p-0" role="region" aria-label="Sorted tasks">
+                {flatSortedTasks.map((task) => (
+                  <TaskRow
+                    key={task.id}
+                    task={task}
+                    onToggle={handleToggle}
+                    onUpdate={handleUpdate}
+                    onDelete={handleDelete}
+                    tagsById={tagsById}
+                  />
+                ))}
+              </Card>
+            </main>
+          )
         ) : sortedGroups.length === 0 && recurringGroups.length === 0 ? (
           <Suspense fallback={null}>
             <EmptyState filter={filter} searchQuery={debouncedSearchQuery} />
