@@ -10,6 +10,13 @@ const tags: Tag[] = [
   { id: testId('1'), name: 'Alpha', color: 'green' },
 ];
 
+const defaultSortProps = {
+  sortField: 'dueDate' as const,
+  sortDirection: 'asc' as const,
+  onSortFieldChange: vi.fn(),
+  onSortDirectionToggle: vi.fn(),
+};
+
 describe('FilterDropdowns', () => {
   it('renders recurrence options with default selection', async () => {
     const user = userEvent.setup();
@@ -22,6 +29,7 @@ describe('FilterDropdowns', () => {
         onRecurrenceChange={vi.fn()}
         onCategoryChange={vi.fn()}
         onPriorityChange={vi.fn()}
+        {...defaultSortProps}
       />
     );
 
@@ -51,6 +59,7 @@ describe('FilterDropdowns', () => {
         onRecurrenceChange={vi.fn()}
         onCategoryChange={vi.fn()}
         onPriorityChange={vi.fn()}
+        {...defaultSortProps}
       />
     );
 
@@ -72,6 +81,7 @@ describe('FilterDropdowns', () => {
         onRecurrenceChange={vi.fn()}
         onCategoryChange={vi.fn()}
         onPriorityChange={vi.fn()}
+        {...defaultSortProps}
       />
     );
 
@@ -97,6 +107,7 @@ describe('FilterDropdowns', () => {
         onRecurrenceChange={onRecurrenceChange}
         onCategoryChange={onCategoryChange}
         onPriorityChange={onPriorityChange}
+        {...defaultSortProps}
       />
     );
 

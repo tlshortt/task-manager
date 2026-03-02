@@ -1,4 +1,4 @@
-import type { CategoryFilter, PriorityFilter, RecurrenceFilter, Tag } from '@/types';
+import type { CategoryFilter, PriorityFilter, RecurrenceFilter, SortField, SortDirection, Tag } from '@/types';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SortDropdown } from './SortDropdown';
 
 interface FilterDropdownsProps {
   tags: Tag[] | undefined;
@@ -16,6 +17,10 @@ interface FilterDropdownsProps {
   onRecurrenceChange: (value: RecurrenceFilter) => void;
   onCategoryChange: (value: CategoryFilter) => void;
   onPriorityChange: (value: PriorityFilter) => void;
+  sortField: SortField;
+  sortDirection: SortDirection;
+  onSortFieldChange: (field: SortField) => void;
+  onSortDirectionToggle: () => void;
 }
 
 export function FilterDropdowns({
@@ -26,6 +31,10 @@ export function FilterDropdowns({
   onRecurrenceChange,
   onCategoryChange,
   onPriorityChange,
+  sortField,
+  sortDirection,
+  onSortFieldChange,
+  onSortDirectionToggle,
 }: FilterDropdownsProps) {
   const sortedTags = tags ? [...tags].sort((a, b) => a.name.localeCompare(b.name)) : [];
 
@@ -87,6 +96,13 @@ export function FilterDropdowns({
           </SelectContent>
         </Select>
       </div>
+
+      <SortDropdown
+        field={sortField}
+        direction={sortDirection}
+        onSelectField={onSortFieldChange}
+        onToggleDirection={onSortDirectionToggle}
+      />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { RecurringTaskGroup } from './RecurringTaskGroup';
 import { ViewModeToggle } from './ViewModeToggle';
 import { CalendarView } from './calendar';
 import { useDarkMode } from '@/hooks/useDarkMode';
+import { useSortState } from '@/hooks/useSortState';
 import { useTasks } from '@/hooks/useTasks';
 import { useTags } from '@/hooks/useTags';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -33,6 +34,7 @@ const KeyboardShortcutsModal = lazy(() => import('./KeyboardShortcutsModal').the
 
 export function MainLayout() {
   const { isDark, toggle } = useDarkMode();
+  const { sortState, setSortField, toggleSortDirection } = useSortState();
   const { tasks, isLoading, addTask, updateTask, deleteTask, toggleComplete } = useTasks();
   const { tags } = useTags();
   const [filter, setFilter] = useState<FilterType>('current');
@@ -204,6 +206,10 @@ export function MainLayout() {
           onRecurrenceChange={setRecurrenceFilter}
           onCategoryChange={setCategoryFilter}
           onPriorityChange={setPriorityFilter}
+          sortField={sortState.field}
+          sortDirection={sortState.direction}
+          onSortFieldChange={setSortField}
+          onSortDirectionToggle={toggleSortDirection}
         />
 
         <FilterTabs
