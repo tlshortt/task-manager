@@ -11,7 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    exclude: ['**/node_modules/**', '**/dist/**', '.ralphy-worktrees/**'],
+    exclude: ['**/node_modules/**', '**/dist/**'],
   },
   resolve: {
     alias: {

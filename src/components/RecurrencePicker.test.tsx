@@ -67,15 +67,13 @@ describe('RecurrencePicker', () => {
   it('toggles days of week when clicked', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(<RecurrencePicker onChange={onChange} />);
-
-    const trigger = screen.getByRole('combobox', { name: 'Recurrence frequency' });
-    await user.click(trigger);
-    await user.click(screen.getByRole('option', { name: 'Weekly' }));
+    // Render with weekly already selected and Monday pre-selected so clicking
+    // Tuesday adds it (avoids the issue where today's day is auto-selected and
+    // clicking it would remove rather than add)
+    render(<RecurrencePicker value={{ frequency: 'weekly', interval: 1, daysOfWeek: [1] }} onChange={onChange} />);
 
     onChange.mockClear();
 
-    // Click on a day that's not the current day to ensure we're adding, not removing
     const tueButton = screen.getByLabelText('Repeat on Tue');
     await user.click(tueButton);
 
