@@ -28,6 +28,15 @@ export type CategoryFilter = 'all' | 'uncategorized' | Id<'tags'>;
 
 export type PriorityFilter = 'all' | Priority;
 
+export type SortField = 'dueDate' | 'priority' | 'title' | 'createdAt';
+
+export type SortDirection = 'asc' | 'desc';
+
+export interface SortState {
+  field: SortField;
+  direction: SortDirection;
+}
+
 export interface TaskFilters {
   recurrence: RecurrenceFilter;
   category: CategoryFilter;
