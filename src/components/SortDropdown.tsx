@@ -32,6 +32,8 @@ export function SortDropdown({ field, direction, onSelectField, onToggleDirectio
   };
 
   const DirectionIcon = direction === 'asc' ? ArrowUp : ArrowDown;
+  const isNonDefault = field !== 'dueDate' || direction !== 'asc';
+  const activeLabel = SORT_OPTIONS.find(o => o.value === field)?.label;
 
   return (
     <div className="flex flex-col gap-1 w-full sm:w-48">
@@ -45,10 +47,10 @@ export function SortDropdown({ field, direction, onSelectField, onToggleDirectio
             role="combobox"
             aria-expanded={open}
             aria-label="Sort by"
-            className="w-full sm:w-48 h-11 justify-between font-normal"
+            className={`w-full sm:w-48 h-11 justify-between font-normal ${isNonDefault ? 'border-primary/50 bg-primary/5 text-primary' : ''}`}
           >
             <span className="flex items-center gap-1.5">
-              {SORT_OPTIONS.find(o => o.value === field)?.label}
+              Sort: {activeLabel}
               <DirectionIcon className="h-3.5 w-3.5" />
             </span>
             <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
